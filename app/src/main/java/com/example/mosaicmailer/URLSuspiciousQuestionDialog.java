@@ -1,0 +1,65 @@
+package com.example.mosaicmailer;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
+
+public class URLSuspiciousQuestionDialog  extends DialogFragment {
+    MailBrowseActivity activity = null;
+    MailProcessing mp;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof MailBrowseActivity) {
+            this.activity = (MailBrowseActivity) activity;
+            mp = (MailProcessing) this.activity.getApplication();
+        }
+    }
+
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        //レイアウトの呼び出し
+        ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
+                .inflate(R.layout.url_suspect_dialog, null);
+
+        //実際のURL
+        TextView realURL = layout.findViewById(R.id.textView2);
+        realURL.setText("リンク先のURL\n"+mp.realURL);
+
+        //質問文1の表示
+        TextView question1 = layout.findViewById(R.id.textView4);
+        question1.setText("ドメイン名に紛らわしい文字が使用されていますか\n例)twltter, go0gle, wikipediａ");
+
+        //質問文2の表示
+        TextView question2 = layout.findViewById(R.id.textView6);
+        question2.setText("上記を踏まえて，このURLは怪しいですか");
+
+        layout.findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ボタンを押した時の処理
+                DialogFragment dialogFragment = new FinalQuestionDialog();
+                dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                dismiss();
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        return builder.setView(layout).create();
+    }
+}
