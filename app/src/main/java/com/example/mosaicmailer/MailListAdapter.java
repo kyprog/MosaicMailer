@@ -1,42 +1,62 @@
 package com.example.mosaicmailer;
 
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+
+import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 
 public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainViewHolder> {
 
     Context activity;
-    private List<mailData> mailDataList;
+    private List<Message> mailDataList = new ArrayList<Message>();
+    int lenMailDataList = 0;
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
 
-    MailListAdapter(Context context, List<mailData> mailDataList, RecyclerView recyclerView) {
+
+    MailListAdapter(Context context, RecyclerView recyclerView) {
         activity=context;
-        this.mailDataList = mailDataList;
         tmprecyclerView = recyclerView;
         mp = (MailProcessing)activity;
+        initMailData();
 
+    }
+
+    @NonNull
+    public void initMailData(){
+        int window=50;
+        int addPoint=mailDataList.size();
+        mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        lenMailDataList = mailDataList.size();
+    }
+
+    @NonNull
+    public void addMailData(){
+        int window=50;
+        int addPoint=mailDataList.size();
+        mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        lenMailDataList = mailDataList.size();
+        notifyItemRangeInserted(addPoint, window);
     }
 
     /**
@@ -71,7 +91,6 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_viewholder, parent, false);
         //ViewHolderを生成
         final MainViewHolder holder = new MainViewHolder(view);
-
         return holder;
     }
 
@@ -81,13 +100,38 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
      */
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
-        mailData mailData = this.mailDataList.get(position);
-        if(mailData.unread){
-            holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + mailData.sender + "</B></font>"));
-            holder.title.setText(Html.fromHtml("<B>" + mailData.title + "</B>"));
-        }else {
-            holder.sender.setText(Html.fromHtml(mailData.sender));
-            holder.title.setText(Html.fromHtml(mailData.title));
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                Message mailData = this.mailDataList.get(position);
+                boolean unread = !mailData.getFlags().contains(Flags.Flag.SEEN);
+                final InternetAddress addrFrom = (InternetAddress) mailData.getFrom()[0];
+
+                if(unread){
+                    if(addrFrom.getPersonal()==null){
+                        holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getAddress() + "</B></font>"));
+                    }else{
+                        holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
+                    }
+                    holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
+                }else {
+                    if(addrFrom.getPersonal()==null){
+                        holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
+                    }else{
+                        holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
+                    }
+                    holder.title.setText(Html.fromHtml(mailData.getSubject()));
+                }
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            countDownLatch.countDown();
+        });
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         //リストをタップしたときにデータを持って遷移する為の処理
@@ -97,7 +141,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
 
-                if(ps<mp.oldestMailPosition+1 && !mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
+                if(ps<mp.oldestMailPosition && !mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
                     mp.showSearchHeadUpAlert(v);
                     mp.changeShowSearchHeadUpAlertFlag(true);
                 }else if(mp.SearchHeadUpFlag){//探している状態で
@@ -116,12 +160,16 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
-                if( !(ps<mp.oldestMailPosition+1) && !mp.SearchHeadUpFlag){
+                if( !(ps<mp.oldestMailPosition) && !mp.SearchHeadUpFlag){
                     if( mp.showSearchHeadUpAlertFlag ){
                         mp.SearchHeadUpAlert.dismiss();
                         mp.changeShowSearchHeadUpAlertFlag(false);
                     }
                     mp.changeSearchHeadUpFlag(true);
+                }
+
+                if(ps==lenMailDataList-1){
+                    addMailData();
                 }
             }
         });

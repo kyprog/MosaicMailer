@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
             //System.out.println(mailaddress+","+password);
 
             mp.connect(mailaddress,password);
+            mp.getMailListAll();
             //mp.setTestString("MVMVMVM");
             Intent intent = new Intent(getApplication(), MailListActivity.class);
             startActivity(intent);

@@ -58,7 +58,7 @@ public class MailListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // Adapter生成してRecyclerViewにセット
-        RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), createMailData(), recyclerView);
+        RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
         recyclerView.setAdapter(mainAdapter);
 
         //(今，取得しているメッセージの中で)一番下の未読メールを取得する．
@@ -66,38 +66,5 @@ public class MailListActivity extends AppCompatActivity {
             mp.searchOldestMailPosition();
         });
 
-    }
-
-    @NonNull
-    private List<mailData> createMailData() {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        List<mailData> dataSet = new ArrayList<>();
-        Executors.newSingleThreadExecutor().execute(() -> {
-            int listLen=50;
-            mp.getMailListN(listLen);
-            for (int i=0;i<listLen;i++) {
-                mailData data = new mailData();
-                try {
-                    final InternetAddress addrFrom = (InternetAddress) mp.MessageList.get(i).getFrom()[0];
-                    data.sender = addrFrom.getPersonal();
-                    data.title =  mp.MessageList.get(i).getSubject();
-                    Flags flags = mp.MessageList.get(i).getFlags();
-                    if (!flags.contains(Flags.Flag.SEEN)){data.unread = true;}
-                    else{data.unread = false;}
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-
-                dataSet.add(data);
-            }
-            countDownLatch.countDown();
-        });
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return dataSet;
     }
 }

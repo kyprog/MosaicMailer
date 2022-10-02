@@ -81,7 +81,17 @@ public class MailProcessing extends Application {
 
     }
 
-    public void getMailListN(int getListLen) {// 新しいメールをn件取得する．
+    public void getMailListAll(){
+        try {
+            MessageList = Arrays.asList(inbox.getMessages());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        //新しい順になるように逆順に並び替える
+        Collections.reverse(MessageList);
+    }
+    /*
+    public void getMailListN(int getListLen) {// メールをn件取得する．
         try {
             int message_count = inbox.getMessageCount();
             MessageList = Arrays.asList(inbox.getMessages(message_count - getListLen + 1, message_count));
@@ -91,7 +101,7 @@ public class MailProcessing extends Application {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void setOpenMailPosition(int position) {// 開くメールの位置番号をsetする
         openMailPosition = position;
