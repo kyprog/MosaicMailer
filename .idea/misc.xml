@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/frame_style.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/shape_style.xml" value="0.2085" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_mail_browse.xml" value="0.19610507246376813" />
