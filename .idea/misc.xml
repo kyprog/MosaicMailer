@@ -5,18 +5,30 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/frame_style.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_inbox_24.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_not_interested_24.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_outlined_flag_24.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/shape_style.xml" value="0.2085" />
+        <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.2085" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_mail_browse.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_mail_list.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_navigation_menu.xml" value="0.12239583333333333" />
+        <entry key="app/src/main/res/layout/activity_navigationmenu.xml" value="0.28159790039062504" />
         <entry key="app/src/main/res/layout/design_layout_snackbar.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/final_question_dialog.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/item_recycler_viewholder.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.29375" />
         <entry key="app/src/main/res/layout/sender_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/url_suspect_dialog.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.375" />
         <entry key="app/src/main/res/menu/menu_button.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2085" />
       </map>
     </option>
   </component>

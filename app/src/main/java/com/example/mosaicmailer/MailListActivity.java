@@ -1,42 +1,31 @@
 package com.example.mosaicmailer;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.os.HandlerCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.concurrent.Executors;
 
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.internet.InternetAddress;
-
-public class MailListActivity extends AppCompatActivity {
+public class MailListActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     MailProcessing mp;
     String testStr=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_list);//xmlを読み込む
+        setContentView(R.layout.activity_navigation_menu);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
         //testStr = mp.getTestString();
 
@@ -44,6 +33,21 @@ public class MailListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("受信トレイ");
+
+        // DrawerToggle
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
+        if(drawer==null){System.out.println("drawer==null");}
+        if(toggle==null){System.out.println("toggle==null");}
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // NavigationView Listener
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         //recyclerView
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -65,6 +69,12 @@ public class MailListActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.searchOldestMailPosition();
         });
+    }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return false;
     }
 }
