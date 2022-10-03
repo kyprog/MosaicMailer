@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -40,8 +42,8 @@ public class MailListActivity extends AppCompatActivity
                 this, drawer, toolbar,
                 R.string.drawer_open,
                 R.string.drawer_close);
-        if(drawer==null){System.out.println("drawer==null");}
-        if(toggle==null){System.out.println("toggle==null");}
+        //if(drawer==null){System.out.println("drawer==null");}
+        //if(toggle==null){System.out.println("toggle==null");}
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -73,8 +75,18 @@ public class MailListActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        switch (item.getItemId()) {
+            case R.id.setting:
+                // ...処理を書きます
+                Intent intent = new Intent(getApplication(),SettingActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                // ...処理を書きます
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                break;
+        }
         return false;
     }
 }

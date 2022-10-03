@@ -30,6 +30,9 @@
         <activity
             android:name=".MailBrowseActivity" >
         </activity>
+        <activity
+            android:name=".SettingActivity" >
+        </activity>
     </application>
 
 </manifest>
