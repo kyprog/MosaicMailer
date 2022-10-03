@@ -23,11 +23,11 @@
         android:layout_height="wrap_content"
         android:text="注意喚起メールの送信元"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextMailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/headsUpMailAddress"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextMailAddress"
+        android:id="@+id/headsUpMailAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="204dp"
@@ -46,11 +46,11 @@
         android:layout_height="wrap_content"
         android:text="注意喚起メールのキーワード"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName4"
+        app:layout_constraintBottom_toTopOf="@+id/headsUpKeyword"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/headsUpKeyword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextMailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/headsUpMailAddress" />
 
     <Button
         android:id="@+id/button7"
@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="68dp"
         android:text="登録"
+        android:onClick="addTermsOnClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
