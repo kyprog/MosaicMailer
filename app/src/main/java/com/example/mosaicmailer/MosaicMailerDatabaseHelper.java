@@ -25,6 +25,15 @@ public class MosaicMailerDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (db != null) {
+            db.execSQL("DROP TABLE IF EXISTS books");
+            onCreate(db);
+        }
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
     }
 
     public void fileDelete(){
