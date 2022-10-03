@@ -33,6 +33,12 @@
         <activity
             android:name=".SettingActivity" >
         </activity>
+        <activity
+            android:name=".SettingHeadUpActivity" >
+        </activity>
+        <activity
+            android:name=".AddHeadUpTermsActivity" >
+        </activity>
     </application>
 
 </manifest>

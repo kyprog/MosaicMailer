@@ -14,6 +14,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/shape_style.xml" value="0.2085" />
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.2085" />
+        <entry key="app/src/main/res/layout/activity_add_headsup_terms.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_mail_browse.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_mail_list.xml" value="0.19610507246376813" />
@@ -21,6 +22,7 @@
         <entry key="app/src/main/res/layout/activity_navigation_menu.xml" value="0.12239583333333333" />
         <entry key="app/src/main/res/layout/activity_navigationmenu.xml" value="0.28159790039062504" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_setting_headup.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/design_layout_snackbar.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/final_question_dialog.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/item_recycler_viewholder.xml" value="0.19610507246376813" />

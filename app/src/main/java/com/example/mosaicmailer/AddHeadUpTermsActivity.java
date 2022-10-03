@@ -1,23 +1,21 @@
 package com.example.mosaicmailer;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class SettingActivity extends AppCompatActivity {
+public class AddHeadUpTermsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);//xmlを読み込む
+        setContentView(R.layout.activity_add_headsup_terms);//xmlを読み込む
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle("設定");
+        //getSupportActionBar().setTitle("注意喚起メールの設定");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -28,10 +26,5 @@ public class SettingActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
-    }
-
-    public void headUpOnClick(View v) {
-        Intent intent = new Intent(getApplication(), SettingHeadUpActivity.class);
-        startActivity(intent);
     }
 }
