@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.URLSpan;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -96,6 +97,16 @@ public class MailBrowseActivity extends AppCompatActivity {
         });
 
     }
+
+    // メニューをActivity上に設置する
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 参照するリソースは上でリソースファイルに付けた名前と同じもの
+        getMenuInflater().inflate(R.menu.activity_mail_browse_menu_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 
     //戻るボタンで戻る
     @Override

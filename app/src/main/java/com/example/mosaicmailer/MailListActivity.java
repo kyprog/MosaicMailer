@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -72,6 +73,32 @@ public class MailListActivity extends AppCompatActivity
             mp.searchOldestMailPosition();
         });
     }
+
+    // メニューをActivity上に設置する
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 参照するリソースは上でリソースファイルに付けた名前と同じもの
+        getMenuInflater().inflate(R.menu.activity_mail_list_menu_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // メニューが選択されたときの処理
+    /*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuItem1:
+                ...
+                return true;
+
+            case R.id.menuItem2:
+                ...
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }*/
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
