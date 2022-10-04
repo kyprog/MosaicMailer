@@ -122,8 +122,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
                 Intent intent = new Intent(activity, MailBrowseActivity.class);
                 // Activity以外からActivityを呼び出すためのフラグを設定
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //開く位置のセット
+                mp.setOpenSearchResultListPosition(ps);
                 // 引き渡す値
-                intent.putExtra("position", ps);
+                intent.putExtra("ListType", "Search");
                 activity.startActivity(intent);
             }
         });

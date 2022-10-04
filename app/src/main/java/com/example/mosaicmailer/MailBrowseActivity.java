@@ -48,10 +48,14 @@ public class MailBrowseActivity extends AppCompatActivity {
         mp.showCheckAlert(getWindow().getDecorView());
 
         //データを受け取る
-        int position = getIntent().getIntExtra("position", 0);
+        String ListType = getIntent().getStringExtra("ListType");
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                msg = mp.MessageList.get(position);
+                if(ListType.equals("MailList")){
+                    msg = mp.MessageList.get(mp.openMessageListPosition);
+                }else{
+                    msg = mp.SearchResultList.get(mp.openSearchResultListPosition);
+                }
 
                 //メールの件名を取得
                 String subject =  msg.getSubject();

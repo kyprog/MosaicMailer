@@ -25,13 +25,21 @@ import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 
 public class MailProcessing extends Application {
+    //操作
     Session session=null;
     Store store = null;
     Folder inbox = null;
+
+    //MessageList関連
     List<Message> MessageList = new ArrayList<Message>();
-    List<Message> SearchResultList = new ArrayList<Message>();
-    int openMailPosition=0;
+    int openMessageListPosition=0;
     int oldestMailPosition=0;
+
+    //SearchResultList関連
+    List<Message> SearchResultList = new ArrayList<Message>();
+    int openSearchResultListPosition=0;
+
+    //ダイアログ関連
     boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
     boolean showSearchHeadUpAlertFlag=false;//SearchHeadUpAlertアラートが出現しているかどうか
     Snackbar SearchHeadUpAlert = null;
@@ -81,7 +89,7 @@ public class MailProcessing extends Application {
 
             // 5. Get folder and open the INBOX folder in the store.
             inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_ONLY);
+            inbox.open(Folder.READ_WRITE);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -110,8 +118,12 @@ public class MailProcessing extends Application {
         }
     }*/
 
-    public void setOpenMailPosition(int position) {// 開くメールの位置番号をsetする
-        openMailPosition = position;
+    public void setOpenMessageListPosition(int position) {// メール一覧の開くメールの位置番号をsetする
+        this.openMessageListPosition = position;
+    }
+
+    public void setOpenSearchResultListPosition(int position) {// 検索結果一覧の開くメールの位置番号をsetする
+        this.openSearchResultListPosition = position;
     }
 
     public void changeSearchHeadUpFlag(boolean status) {
