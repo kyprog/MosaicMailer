@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -53,7 +52,7 @@ public class MailListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //recyclerView
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.search_recycler_view);
 
         // RecyclerViewのレイアウトサイズを変更しない設定をONにする
         // パフォーマンス向上のための設定。
@@ -82,23 +81,19 @@ public class MailListActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
-    // メニューが選択されたときの処理
-    /*
+    // ツールバーのメニューが選択されたときの処理
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuItem1:
-                ...
-                return true;
-
-            case R.id.menuItem2:
-                ...
+            case R.id.search:
+                Intent intent = new Intent(getApplication(),SearchActivity.class);
+                startActivity(intent);
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }*/
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -18,12 +18,18 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.search.BodyTerm;
+import javax.mail.search.FromStringTerm;
+import javax.mail.search.OrTerm;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
 
 public class MailProcessing extends Application {
     Session session=null;
     Store store = null;
     Folder inbox = null;
     List<Message> MessageList = new ArrayList<Message>();
+    List<Message> SearchResultList = new ArrayList<Message>();
     int openMailPosition=0;
     int oldestMailPosition=0;
     boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
@@ -34,6 +40,7 @@ public class MailProcessing extends Application {
     String mailURL = "";
     String senderName = "";
     String senderMailAddress = "";
+
 
     @Override
     public void onCreate() {
@@ -165,4 +172,23 @@ public class MailProcessing extends Application {
         this.senderMailAddress = senderMailAddress;
     }
 
+    public List<Message> searchMessages(String s) {
+        try {
+            //検索条件の設定
+            SearchTerm[] terms = {
+                    new SubjectTerm(s),
+                    new FromStringTerm(s),
+                    new BodyTerm(s)
+            };
+
+            SearchTerm term = new OrTerm(terms);
+            SearchResultList = Arrays.asList(inbox.search(term));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        //新しい順になるように逆順に並び替える
+        Collections.reverse(SearchResultList);
+
+        return SearchResultList;
+    }
 }
