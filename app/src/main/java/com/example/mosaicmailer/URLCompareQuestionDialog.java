@@ -3,14 +3,9 @@ package com.example.mosaicmailer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,7 +45,7 @@ public class URLCompareQuestionDialog extends DialogFragment {
         TextView question = layout.findViewById(R.id.textView5);
         question.setText("\nメールに表示されているURLとリンク先のURLは同じですか？");
 
-        layout.findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(R.id.YesButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // ボタンを押した時の処理

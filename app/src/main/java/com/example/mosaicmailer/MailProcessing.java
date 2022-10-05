@@ -20,6 +20,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.search.AndTerm;
 import javax.mail.search.BodyTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
@@ -226,5 +227,70 @@ public class MailProcessing extends Application {
         }else if(ListType.equals("Search")){
             searchMessages(presentSearchWord);
         }
+    }
+
+    public boolean existSender() {
+
+        InternetAddress addrFrom;
+        int senderCount=0;
+        String senderTmp;
+        String senderAddressTmp;
+        for(Message m : MessageList){
+            try {
+                addrFrom = (InternetAddress) m.getFrom()[0];
+                senderTmp = addrFrom.getPersonal();
+                if(senderTmp==null){
+                    senderAddressTmp = addrFrom.getAddress();
+                    if(senderAddressTmp.equals(senderMailAddress)){
+                        senderCount++;
+                        if(senderCount>=2){
+                            return true;
+                        }
+                    }
+                }else if(senderTmp.equals(senderName)){
+                    senderCount++;
+                    if(senderCount>=2){
+                        return true;
+                    }
+                }
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return false;
+    }
+
+    public boolean existNameandAddress() {
+        InternetAddress addrFrom;
+        int senderCount=0;
+        String senderNameTmp;
+        String senderAddressTmp;
+        for(Message m : MessageList){
+            try {
+                addrFrom = (InternetAddress) m.getFrom()[0];
+                senderNameTmp = addrFrom.getPersonal();
+                senderAddressTmp = addrFrom.getAddress();
+                if(senderNameTmp==null){
+                    if(senderAddressTmp.equals(senderMailAddress)){
+                        senderCount++;
+                        if(senderCount>=2){
+                            return true;
+                        }
+                    }
+                }else if(senderNameTmp.equals(senderName) && senderAddressTmp.equals(senderMailAddress)){
+                    senderCount++;
+                    if(senderCount>=2){
+                        return true;
+                    }
+                }
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return false;
     }
 }

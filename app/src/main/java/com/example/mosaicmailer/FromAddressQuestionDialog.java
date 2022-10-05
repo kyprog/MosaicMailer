@@ -1,9 +1,10 @@
 package com.example.mosaicmailer;
 
+import static android.os.Looper.getMainLooper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
+
+import java.util.concurrent.Executors;
 
 public class FromAddressQuestionDialog extends DialogFragment {
     MailBrowseActivity activity = null;
@@ -45,13 +48,43 @@ public class FromAddressQuestionDialog extends DialogFragment {
 
         //質問文の表示
         TextView question = layout.findViewById(R.id.textView5);
-        question.setText("メールアドレスは普段届いているものですか");
+        question.setText("その差出人名とメールアドレスの組み合わせは過去に来たことがありますか？");
 
-        layout.findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
+        //Yesボタン押下時の処理
+        layout.findViewById(R.id.YesButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ボタンを押した時の処理
-                dismiss();
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    boolean exist = mp.existNameandAddress();
+                    HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                        if(exist){//本当に来ている
+                            dismiss();
+                        }
+                        else{//本当は来ていない
+                            TextView question = layout.findViewById(R.id.textView11);
+                            question.setText("そのような組み合わせからのメールは来ていません");
+                        }
+                    });
+                });
+            }
+        });
+
+        //Noボタン押下時の処理
+        layout.findViewById(R.id.NoButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    boolean exist = mp.existNameandAddress();
+                    HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                        if(exist){//本当は来ている
+                            TextView question = layout.findViewById(R.id.textView11);
+                            question.setText("その組み合わせからのメールは来ていますが？");
+                        }
+                        else{//本当に来ていない
+                            dismiss();
+                        }
+                    });
+                });
             }
         });
 
