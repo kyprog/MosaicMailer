@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(String mailaddress, String password) {
-        Executors.newSingleThreadExecutor().execute(() -> {
 
+        Executors.newSingleThreadExecutor().execute(() -> {
             //System.out.println(mailaddress+","+password);
             mp.connect(mailaddress,password);
             mp.getMailListAll();

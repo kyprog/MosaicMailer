@@ -3,6 +3,8 @@ package com.example.mosaicmailer;
 import android.app.Application;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class MailProcessing extends Application {
     //SearchResultList関連
     List<Message> SearchResultList = new ArrayList<Message>();
     int openSearchResultListPosition=0;
+    String presentSearchWord="";
 
     //ダイアログ関連
     boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
@@ -83,11 +86,9 @@ public class MailProcessing extends Application {
 
             session = Session.getInstance(props, null);
 
-            // 4. Get the POP3 store provider and connect to the store.
             store = session.getStore("imap");
             store.connect("outlook.office365.com", 993, username, password);
 
-            // 5. Get folder and open the INBOX folder in the store.
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
         } catch (MessagingException e) {
@@ -156,6 +157,7 @@ public class MailProcessing extends Application {
             Flags flags = null;
 
             try {
+                if(message == null){System.out.println("message==null");}
                 flags = message.getFlags();
                 if (!flags.contains(Flags.Flag.SEEN)){
                     oldestMailPosition=oldestTmp;
@@ -185,6 +187,7 @@ public class MailProcessing extends Application {
     }
 
     public List<Message> searchMessages(String s) {
+        presentSearchWord=s;
         try {
             //検索条件の設定
             SearchTerm[] terms = {
@@ -202,5 +205,26 @@ public class MailProcessing extends Application {
         Collections.reverse(SearchResultList);
 
         return SearchResultList;
+    }
+
+    public void deleteMessage(Message msg) {
+        Folder deleted = null;
+        try {
+            //deleted = store.getFolder("削除済みアイテム");
+            msg.setFlag(Flags.Flag.DELETED, true);
+            //deleted.appendMessages(new Message[]{msg});
+            inbox.close(true);
+            inbox.open(Folder.READ_WRITE);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reloadMessageList(@NonNull String ListType){
+        if(ListType.equals("MailList")){
+            getMailListAll();
+        }else if(ListType.equals("Search")){
+            searchMessages(presentSearchWord);
+        }
     }
 }

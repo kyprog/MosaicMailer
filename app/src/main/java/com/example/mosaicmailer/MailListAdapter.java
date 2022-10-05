@@ -1,6 +1,8 @@
 package com.example.mosaicmailer;
 
 
+import static android.os.Looper.getMainLooper;
+
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.os.HandlerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -33,7 +36,6 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
 
-
     MailListAdapter(Context context, RecyclerView recyclerView) {
         activity=context;
         tmprecyclerView = recyclerView;
@@ -46,7 +48,11 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
     public void initMailData(){
         int window=50;
         int addPoint=mailDataList.size();
-        mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        if(addPoint+window < mp.MessageList.size()){
+            mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        }else if( (addPoint+window >= mp.MessageList.size()) && !(addPoint>=mp.MessageList.size())){
+            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()-1));
+        }
         lenMailDataList = mailDataList.size();
     }
 
@@ -54,7 +60,11 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
     public void addMailData(){
         int window=50;
         int addPoint=mailDataList.size();
-        mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        if(addPoint+window < mp.MessageList.size()){
+            mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
+        }else if( (addPoint+window >= mp.MessageList.size()) && !(addPoint>=mp.MessageList.size())){
+            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()-1));
+        }
         lenMailDataList = mailDataList.size();
         notifyItemRangeInserted(addPoint, window);
     }
@@ -153,6 +163,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                     // 引き渡す値
                     intent.putExtra("ListType", "MailList");
                     activity.startActivity(intent);
+
                 }
 
             }

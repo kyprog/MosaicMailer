@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -14,10 +15,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.URLSpan;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +33,7 @@ public class MailBrowseActivity extends AppCompatActivity {
     MailProcessing mp;
     static MailBrowseActivity instance = new MailBrowseActivity();
     Message msg;
+    String ListType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class MailBrowseActivity extends AppCompatActivity {
         mp.showCheckAlert(getWindow().getDecorView());
 
         //データを受け取る
-        String ListType = getIntent().getStringExtra("ListType");
+        ListType = getIntent().getStringExtra("ListType");
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
                 if(ListType.equals("MailList")){
@@ -110,7 +114,28 @@ public class MailBrowseActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
+    // ツールバーのメニューが選択されたときの処理
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                CountDownLatch countDownLatch = new CountDownLatch(1);
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    mp.deleteMessage(msg);
+                    mp.reloadMessageList(ListType);
+                    countDownLatch.countDown();
+                });
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     //戻るボタンで戻る
     @Override

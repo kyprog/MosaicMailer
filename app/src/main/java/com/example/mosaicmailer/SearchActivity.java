@@ -8,6 +8,7 @@ import androidx.core.os.HandlerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 public class SearchActivity extends AppCompatActivity {
@@ -31,17 +32,15 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         searchRecyclerView.setLayoutManager(layoutManager);
 
+        RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
+        searchRecyclerView.setAdapter(mainAdapter);
+
 
         //検索ボックスに入力されたときの処理を定義
         SearchView sv = findViewById(R.id.searchView);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
                 Executors.newSingleThreadExecutor().execute(() -> {
                     //javamailで検索し，該当するメッセージ一覧を取得する
                     mp.searchMessages(s);
@@ -53,10 +52,33 @@ public class SearchActivity extends AppCompatActivity {
                         searchRecyclerView.setAdapter(mainAdapter);
                     });
                 });
+                return false;
+            }
 
-
+            @Override
+            public boolean onQueryTextChange(String s) {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            //mp.reloadMessageList("Search");
+            RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), searchRecyclerView);
+            countDownLatch.countDown();
+            //処理結果をhandler経由でUIに反映
+            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                searchRecyclerView.setAdapter(mainAdapter);
+            });
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

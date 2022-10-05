@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.os.HandlerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 public class MailListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     MailProcessing mp;
     String testStr=null;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class MailListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //recyclerView
-        RecyclerView recyclerView = findViewById(R.id.search_recycler_view);
+        recyclerView = findViewById(R.id.search_recycler_view);
 
         // RecyclerViewのレイアウトサイズを変更しない設定をONにする
         // パフォーマンス向上のための設定。
@@ -71,6 +74,26 @@ public class MailListActivity extends AppCompatActivity
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.searchOldestMailPosition();
         });
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            //mp.reloadMessageList("MailList");
+            RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
+            countDownLatch.countDown();
+            //処理結果をhandler経由でUIに反映
+            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                recyclerView.setAdapter(mainAdapter);
+            });
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // メニューをActivity上に設置する
