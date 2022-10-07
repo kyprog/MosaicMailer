@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/PhishingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -39,7 +39,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/DontKnowPhishingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,7 +51,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/NoPhishingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

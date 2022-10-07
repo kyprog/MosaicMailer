@@ -48,10 +48,15 @@ public class MailProcessing extends Application {
     boolean showSearchHeadUpAlertFlag=false;//SearchHeadUpAlertアラートが出現しているかどうか
     Snackbar SearchHeadUpAlert = null;
     Snackbar CheckAlert = null;
+    Snackbar ReportAlert = null;
+    Snackbar DeleteAlert = null;
     String realURL = "";
     String mailURL = "";
     String senderName = "";
     String senderMailAddress = "";
+
+    //削除関連
+    boolean phishingFlag = false;
 
 
     @Override
@@ -145,11 +150,26 @@ public class MailProcessing extends Application {
     }
 
     public void showCheckAlert(View v){
-        CheckAlert = Snackbar.make(v, "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
+        CheckAlert = Snackbar.make(v.findViewById(R.id.body), "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
         CheckAlert.setBackgroundTint(getResources().getColor(R.color.red));
         CheckAlert.setTextColor(getResources().getColor(R.color.black));
         CheckAlert.show();
 
+    }
+
+    public void ReportAlert(View v) {
+        ReportAlert = Snackbar.make(v.findViewById(R.id.myCoordinatorLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
+        ReportAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        ReportAlert.setTextColor(getResources().getColor(R.color.black));
+        ReportAlert.setAction("しました",  view -> DeleteAlert(v));
+        ReportAlert.show();
+    }
+
+    public void DeleteAlert(View v) {
+        DeleteAlert = Snackbar.make(v.findViewById(R.id.body), "このフィッシングメールを削除してください", Snackbar.LENGTH_INDEFINITE);
+        DeleteAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        DeleteAlert.setTextColor(getResources().getColor(R.color.black));
+        DeleteAlert.show();
     }
 
     public void searchOldestMailPosition(){

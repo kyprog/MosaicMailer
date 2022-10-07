@@ -3,18 +3,11 @@ package com.example.mosaicmailer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
@@ -49,7 +42,7 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
         TextView question2 = layout.findViewById(R.id.textView6);
         question2.setText("上記を踏まえて，このURLは怪しいですか");
 
-        layout.findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(R.id.NoSuspectButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // ボタンを押した時の処理

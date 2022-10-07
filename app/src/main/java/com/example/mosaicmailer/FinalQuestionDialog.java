@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -30,7 +29,19 @@ public class FinalQuestionDialog   extends DialogFragment {
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
                 .inflate(R.layout.final_question_dialog, null);
 
-        layout.findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(R.id.PhishingButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ボタンを押した時の処理
+                activity.removeMosaic();
+                mp.CheckAlert.dismiss();
+                mp.ReportAlert(activity.getWindow().getDecorView());
+                mp.phishingFlag = true;
+                dismiss();
+            }
+        });
+
+        layout.findViewById(R.id.NoPhishingButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // ボタンを押した時の処理

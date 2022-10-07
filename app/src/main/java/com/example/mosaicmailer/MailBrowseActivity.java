@@ -29,7 +29,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-public class MailBrowseActivity extends AppCompatActivity {
+public class MailBrowseActivity extends AppCompatActivity{
     MailProcessing mp;
     static MailBrowseActivity instance = new MailBrowseActivity();
     Message msg;
@@ -130,6 +130,7 @@ public class MailBrowseActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                mp.phishingFlag = false;
                 finish();
                 return true;
             default:
@@ -140,7 +141,7 @@ public class MailBrowseActivity extends AppCompatActivity {
     //戻るボタンで戻る
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
+        if(!mp.phishingFlag){finish();}
         return super.onSupportNavigateUp();
     }
 
@@ -224,6 +225,5 @@ public class MailBrowseActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }
