@@ -39,7 +39,7 @@ public class URLCompareQuestionDialog extends DialogFragment {
 
         //メールに表示されているURL
         TextView mailURL = layout.findViewById(R.id.textView14);
-        mailURL.setText("メールに表示されているURL\n"+mp.realURL);
+        mailURL.setText("メールに表示されているURL\n"+mp.mailURL);
 
         //メールに表示されているURLと質問文の表示
         TextView question = layout.findViewById(R.id.textView5);

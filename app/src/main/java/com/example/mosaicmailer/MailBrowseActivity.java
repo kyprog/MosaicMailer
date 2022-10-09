@@ -1,39 +1,59 @@
 package com.example.mosaicmailer;
 
+import static java.lang.System.in;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.DialogFragment;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
-import android.text.style.URLSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
 
-public class MailBrowseActivity extends AppCompatActivity{
+public class MailBrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
+    ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
+
+    class LinkInfo{
+        String linkText;
+        String href;
+    }
+
+    class TagInfo {
+        int start;
+        int end;
+        boolean tagA;
+        boolean tagSlashA;
+        boolean startTag;
+        boolean leafStartTag;
+    }
+
     static MailBrowseActivity instance = new MailBrowseActivity();
     Message msg;
     String ListType;
+    WebView body;
+    String originalHTML;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +70,15 @@ public class MailBrowseActivity extends AppCompatActivity{
 
         //ナビゲーション表示
         mp.showCheckAlert(getWindow().getDecorView());
+
+        //webViewの準備
+        body = findViewById(R.id.body);
+        //body.getSettings().setLoadWithOverviewMode(true);
+        //body.getSettings().setUseWideViewPort(true);
+        body.getSettings().setBuiltInZoomControls(true);
+        body.getSettings().setDisplayZoomControls(false);
+        body.setLongClickable(true);
+        body.setOnLongClickListener(this);
 
         //データを受け取る
         ListType = getIntent().getStringExtra("ListType");
@@ -73,31 +102,22 @@ public class MailBrowseActivity extends AppCompatActivity{
                 mp.setSenderMailAddress(addrFrom.getAddress());
 
                 //メールの本文中のテキストをモザイク化しセッティング
-                SpannableString ss = Mosaic();
-                final Pattern STANDARD_URL_MATCH_PATTERN = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
-                Matcher m = STANDARD_URL_MATCH_PATTERN.matcher(ss.toString());
-                while(m.find()) {
-                    ss.setSpan(new URLSpan(m.group()){
-                        String mgroup=m.group();
-                        @Override
-                        public void onClick(View widget) {
-                            //System.out.println(mgroup);
-                            mp.setMailURL(mgroup);
-                            mp.setRealURL(mgroup);
-                            DialogFragment compare_dialog = new URLCompareQuestionDialog();
-                            compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
-                        }
-                    }, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
+                String mosaicMailStr = Mosaic();
 
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
                     ((TextView) findViewById(R.id.title)).setText(subject);
                     ((TextView) findViewById(R.id.sender)).setText(sender);
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
-                    ((TextView) findViewById(R.id.body)).setMovementMethod(new ScrollingMovementMethod());
-                    ((TextView) findViewById(R.id.body)).setText(ss);
-                    ((TextView) findViewById(R.id.body)).setMovementMethod(LinkMovementMethod.getInstance());
+                    body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
+
+                    System.out.println(mosaicMailStr);
+                    for(LinkInfo l : linkInfoList){
+                        System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
+                    }
+                    //body.setMovementMethod(new ScrollingMovementMethod());
+                    //((TextView) findViewById(R.id.body)).setText(ss);
+                    //((TextView) findViewById(R.id.body)).setMovementMethod(LinkMovementMethod.getInstance());
                 });
             } catch (MessagingException e) {
                 e.printStackTrace();
@@ -145,6 +165,27 @@ public class MailBrowseActivity extends AppCompatActivity{
         return super.onSupportNavigateUp();
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if(v == body){
+            //長押しした箇所の情報を取得
+            WebView.HitTestResult hittestresult = body.getHitTestResult();
+            String url = hittestresult.getExtra();
+            for(LinkInfo linkTmp : linkInfoList){
+                if(url.equals(linkTmp.href)){
+                    url = url.replace("#","");
+                    mp.setMailURL(linkTmp.linkText);
+                    mp.setRealURL(url);
+                    //System.out.println(linkTmp.linkText);
+                    DialogFragment compare_dialog = new URLCompareQuestionDialog();
+                    compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
+                   break;
+                }
+            }
+        }
+        return false;
+    }
+
     //メールアドレス確認ポップアップの表示
     public void QuestionDialog(View view) {
         DialogFragment name_dialog = new FromNameQuestionDialog();
@@ -156,74 +197,189 @@ public class MailBrowseActivity extends AppCompatActivity{
         return instance;
     }
 
-    public void test() {
-        System.out.println("test test test test test");
-    }
-
-    public String multSquare(int n){
-        StringBuilder result = new StringBuilder();
-        for(int i=0; i<n; i++){
-            result.append("□");
-        }
-        return result.toString();
-    }
-
-    public SpannableString Mosaic(){
+    public String Mosaic(){
         try {
-            String content = msg.getContent().toString();
-            final Pattern STANDARD_URL_MATCH_PATTERN = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
-            Matcher m = STANDARD_URL_MATCH_PATTERN.matcher(content);
+            Object mailContent = msg.getContent();
+            if (mailContent instanceof String) {
+                //　text/planのメールの場合
+                String mailStr = mailContent.toString();
+                //html 形式に直す
 
-            char[] charContent = content.toCharArray();
-
-            int end = 0;
-            while(m.find()) {
-                for(int i=end; i<m.start(); i++){
-                    if(Character.toString(charContent[i]).matches("[^\n]")){
-                        charContent[i]='□';
-                    }
-                }
-                end = m.end()+1;
+            } else if (mailContent instanceof Multipart) {
+                //　Multipart形式のメールの場合
+                Multipart multiContent = (Multipart) mailContent;
+                String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
+                originalHTML = html;
+                return insertMosaicToHTML(html);//モザイク処理
+            } else if (mailContent instanceof InputStream) {
+                //よくわからん
             }
 
-            String MosaicContent =new String(charContent);
-
-            SpannableString ss = new SpannableString(MosaicContent);
-
-            return ss;
-
-        }  catch (MessagingException | IOException e) {
+        } catch (IOException | MessagingException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
+    }
+
+    public String insertMosaicToHTML(String html) {
+
+        //tagを正規表現で探す準備
+        String tagRegex = "<(\".*?\"|'.*?'|[^'\"])*?>";
+        Pattern tagPtrn = Pattern.compile(tagRegex, Pattern.CASE_INSENSITIVE);
+        Matcher tagMtch = tagPtrn.matcher(html);
+
+        //タグ情報リスト
+        ArrayList<TagInfo> tagInfoList = new ArrayList<>();
+
+        //タグ情報リスト内の</header>タグの情報が入ったindex
+        int styleInsertIndex = 0;
+
+        while (tagMtch.find()){
+            TagInfo t = new TagInfo();
+            t.start = tagMtch.start();
+            t.end = tagMtch.end();
+            t.tagA = tagMtch.group().startsWith("<a");
+            t.tagSlashA = tagMtch.group().startsWith("</a");
+            t.startTag = !tagMtch.group().startsWith("</");
+            int sizeTagInfoList = tagInfoList.size();
+            if(sizeTagInfoList>=1){
+                if(tagInfoList.get(sizeTagInfoList-1).startTag && !t.startTag){
+                    t.leafStartTag = false;
+                    tagInfoList.get(sizeTagInfoList-1).leafStartTag = true;
+                }
+            }else{
+                t.leafStartTag = false;
+            }
+            tagInfoList.add(t);
+            if(tagMtch.group().startsWith("</head") && styleInsertIndex==0){
+                styleInsertIndex = tagInfoList.size()-1;
+            }
+        }
+
+        //モザイク化用のStringBuilder
+        StringBuilder mosaicHtml = new StringBuilder();
+        mosaicHtml.append(html);
+        //ズレ
+        int diff = 0;
+        //bodyが見つかったかフラグ
+        boolean bodyFlag = false;
+        //aタグが見つかったかフラグ
+        boolean aFlag = false;
+        //mosaic開始タグ
+        String startMosaic = "<div id=\"Mosaic\">";
+        int startMosaicLen = startMosaic.length();
+        //mosaic終了タグ
+        String endMosaic = "</div>";
+        int endMosaicLen = endMosaic.length();
+        //モザイク化用のstyleタグ
+        String style = "<style>\n" +
+                "    #Mosaic{filter: blur(7px);}\n" +
+                "</style>";
+        int styleLen = style.length();
+
+
+        for(int i=styleInsertIndex; i<tagInfoList.size(); i++){
+            tagMtch.find(tagInfoList.get(i).start);
+            String group = tagMtch.group();
+            if(group.startsWith("</head")){
+                mosaicHtml.insert(tagInfoList.get(i).start + diff, style);
+                diff += styleLen;
+            }
+            else if(group.startsWith("<body")){
+                mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
+                diff += startMosaicLen;
+                bodyFlag = true;
+            }
+            else if(group.startsWith("</a")){
+                aFlag = false;
+                mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
+                diff += startMosaicLen;
+            }
+            else if(group.startsWith("</body")){
+                mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
+                diff += endMosaicLen;
+                break;
+            }
+            else if(group.startsWith("<a")){
+                aFlag = true;
+                mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
+                diff += endMosaicLen;
+
+                //リンクテキスト取得
+                LinkInfo anchor = new LinkInfo();
+                for(int j=i; j<tagInfoList.size(); j++){
+                    if(tagInfoList.get(j).leafStartTag){
+                        anchor.linkText = mosaicHtml.substring(tagInfoList.get(j).end + diff, tagInfoList.get(j+1).start + diff);
+                        break;
+                    }
+                }
+                //anchor.linkText = mosaicHtml.substring(tagInfoList.get(i).end + diff, tagInfoList.get(i+1).start + diff);
+                //System.out.println(anchor.linkText);
+
+                //URL取得
+                Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
+                Matcher StdUrlMtch = StdUrlPtrn.matcher(group);
+                StdUrlMtch.find(0);
+                anchor.href = StdUrlMtch.group();
+
+                //URLがユニークかどうかのフラグ
+                boolean uniqueHref = false;
+                //追加する#の数
+                int hashLen = 0;
+
+                while (!uniqueHref){
+                    uniqueHref = true;
+                    for(LinkInfo linkTmp : linkInfoList){
+                        if(anchor.href.equals(linkTmp.href)){
+                            anchor.href = anchor.href + "#";
+                            hashLen++;
+                            uniqueHref = false;
+                            break;
+                        }
+                    }
+                }
+
+                //#の追加
+                mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
+                diff += hashLen;
+
+                //linkInfoListに追加
+                linkInfoList.add(anchor);
+
+            }
+            else if(bodyFlag && !aFlag){
+                mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
+                diff += endMosaicLen;
+                mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
+                diff += startMosaicLen;
+            }
+        }
+        return mosaicHtml.toString();
+    }
+
+    public String extractHTMLinMlt(Multipart mltPart) {
+        try {
+            int count = mltPart.getCount();
+            String html;
+            for(int i=0; i<count; i++){
+
+                BodyPart bodypart = mltPart.getBodyPart(i);
+                String bodyContentType = bodypart.getContentType();
+
+                if(bodyContentType.contains("multipart")){
+                    Multipart multiContent = (Multipart) bodypart.getContent();
+                    html = extractHTMLinMlt(multiContent);
+                    if(html != null){return html;}
+                } else if(bodyContentType.contains("text/html")){
+                    return bodypart.getContent().toString();
+                }
+            }
+        } catch (MessagingException | IOException e) {e.printStackTrace();}
+        return null;
     }
 
     public void removeMosaic() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            try {
-                String content = msg.getContent().toString();
-                final Pattern STANDARD_URL_MATCH_PATTERN = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
-                Matcher m = STANDARD_URL_MATCH_PATTERN.matcher(content);
-
-                SpannableString ss = new SpannableString(content);
-                while (m.find()) {
-                    ss.setSpan(new URLSpan(m.group()) {
-                        @Override
-                        public void onClick(View widget) {
-                            URLCompareQuestionDialog compare_dialog = new URLCompareQuestionDialog();
-                            compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
-                        }
-                    }, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                //処理結果をhandler経由でUIに反映
-                HandlerCompat.createAsync(getMainLooper()).post(() -> {
-                    ((TextView) findViewById(R.id.body)).setText(ss);
-                });
-
-            } catch (MessagingException | IOException e) {
-                e.printStackTrace();
-            }
-        });
+        body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
     }
 
 }
