@@ -54,6 +54,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     String ListType;
     WebView body;
     String originalHTML;
+    String originalPlanText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,11 +201,12 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     public String Mosaic(){
         try {
             Object mailContent = msg.getContent();
-            if (mailContent instanceof String) {
+            if (mailContent instanceof String) {//"text/plain" コンテンツに対して返されるオブジェクトは、通常、String オブジェクト
                 //　text/planのメールの場合
-                String mailStr = mailContent.toString();
-                //html 形式に直す
-
+                originalPlanText = mailContent.toString();
+                String html = xformHTML(originalPlanText);//html形式に直す
+                originalHTML = html;
+                return insertMosaicToHTML(html);//モザイク処理
             } else if (mailContent instanceof Multipart) {
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
@@ -219,6 +221,74 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String xformHTML(String plainText) {
+
+        //plantextに対するURL探索用
+        Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
+        Matcher StdUrlMtch = StdUrlPtrn.matcher(plainText);
+
+        //編集用のHTML
+        StringBuilder editHtml = new StringBuilder("");
+
+        //エスケープ処理(URLは避ける)
+        int endIndex = 0;
+        int starIndex =0;
+        while (StdUrlMtch.find()){
+            starIndex = StdUrlMtch.start();
+            editHtml.append(escapeStr(plainText.substring( endIndex, starIndex )));
+            endIndex = StdUrlMtch.end();
+            editHtml.append(plainText.substring( starIndex, endIndex ));
+        }
+        editHtml.append(plainText.substring(endIndex));
+
+        //aタグ付与
+        ////editHtmlStrに対するURL探索用
+        String editHtmlStr = editHtml.toString();
+        Pattern MoUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
+        Matcher MoUrlMtch = MoUrlPtrn.matcher(editHtmlStr);
+        ////ズレ
+        int diff = 0;
+        while (MoUrlMtch.find()){
+            String aTag = "<a href=\"" + MoUrlMtch.group() + "\">";
+            String aTagSlash = "</a>";
+
+            //開始タグの挿入
+            editHtml.insert(MoUrlMtch.start() + diff, aTag);
+            diff += aTag.length();
+
+            //終了タグの挿入
+            editHtml.insert(MoUrlMtch.end() + diff, aTagSlash);
+            diff += aTagSlash.length();
+        }
+
+        //\nを<br>に変換
+        ////aタグ付与後のHTML文字列
+        String aHtmlStr = editHtml.toString();
+        aHtmlStr = aHtmlStr.replaceAll("\n", "<br>"); //メールとかに\nとか入れてたら，<br>に変換される．後で直す必要あり
+
+        //HTMLテンプレートに挿入
+        String textHtml = "<html><head></head><body>" + aHtmlStr + "</body></html>";
+
+        return textHtml;
+    }
+
+    private String escapeStr(String str) {
+        String escapeStr = str.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("©", "&copy;")
+                .replace("®", "&reg;")
+                .replace("™", "&trade;")
+                .replace(" ", "&nbsp;")
+                .replace("+", "&plus;")
+                .replace("−", "&minus;")
+                .replace("×", "&times;")
+                .replace("÷", "&divide;")
+                .replace("=", "&equals;");
+        return escapeStr;
     }
 
     public String insertMosaicToHTML(String html) {
@@ -345,6 +415,9 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
 
                 //linkInfoListに追加
                 linkInfoList.add(anchor);
+
+            }
+            else if(group.startsWith("<img") || group.startsWith("<br")){
 
             }
             else if(bodyFlag && !aFlag){
