@@ -151,10 +151,10 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
 
-                if(ps<mp.oldestMailPosition && !mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
+                if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
                     mp.showSearchHeadUpAlert(v);
                     mp.changeShowSearchHeadUpAlertFlag(true);
-                }else if(mp.SearchHeadUpFlag){//探している状態で
+                }else if(mp.SearchHeadUpFlag){//探した状態で
                     Intent intent = new Intent(activity, MailBrowseActivity.class);
                     // Activity以外からActivityを呼び出すためのフラグを設定
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -173,7 +173,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
-                if( !(ps<mp.oldestMailPosition) && !mp.SearchHeadUpFlag){
+                if( ps>=mp.oldestMailPosition && !mp.SearchHeadUpFlag){
                     if( mp.showSearchHeadUpAlertFlag ){
                         mp.SearchHeadUpAlert.dismiss();
                         mp.changeShowSearchHeadUpAlertFlag(false);

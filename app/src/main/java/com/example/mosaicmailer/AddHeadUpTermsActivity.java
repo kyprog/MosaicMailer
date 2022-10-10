@@ -39,6 +39,7 @@ public class AddHeadUpTermsActivity extends AppCompatActivity {
             cv.put("keyword", headsUpKeyword);
             db.insert("HeadsUpInfo", null, cv);
             //db.insertWithOnConflict("books", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }

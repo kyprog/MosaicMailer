@@ -55,6 +55,9 @@ public class MailProcessing extends Application {
     String senderName = "";
     String senderMailAddress = "";
 
+    //注意喚起メール関連
+    boolean existAlert = false; //注意喚起メールが来ているかどうかフラグ
+
     //削除関連
     boolean phishingFlag = false;
 
