@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.BodyPart;
+import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -34,6 +35,15 @@ import javax.mail.internet.InternetAddress;
 public class MailBrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
+    boolean MosaicMode = true;
+    boolean seen = false;
+
+    Message msg;
+    String ListType;
+    WebView body;
+    String originalHTML;
+    String originalPlanText;
+    static MailBrowseActivity instance = new MailBrowseActivity();
 
     class LinkInfo{
         String linkText;
@@ -49,13 +59,6 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
         boolean startTag;
         boolean leafStartTag;
     }
-
-    static MailBrowseActivity instance = new MailBrowseActivity();
-    Message msg;
-    String ListType;
-    WebView body;
-    String originalHTML;
-    String originalPlanText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,10 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
                     msg = mp.SearchResultList.get(mp.openSearchResultListPosition);
                 }
 
+                //このメールが既読か未読か調べる
+                seen = msg.getFlags().contains(Flags.Flag.SEEN);
+                if(seen){MosaicMode = false;}else{MosaicMode = true;}
+
                 //メールの件名を取得
                 String subject =  msg.getSubject();
 
@@ -111,12 +118,16 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
                     ((TextView) findViewById(R.id.title)).setText(subject);
                     ((TextView) findViewById(R.id.sender)).setText(sender);
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
-                    body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
+                    if(MosaicMode){
+                        body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
+                    }else{
+                        body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
+                    }
 
-                    System.out.println(mosaicMailStr);
+                    /*System.out.println(mosaicMailStr);
                     for(LinkInfo l : linkInfoList){
                         System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
-                    }
+                    }*/
                     //body.setMovementMethod(new ScrollingMovementMethod());
                     //((TextView) findViewById(R.id.body)).setText(ss);
                     //((TextView) findViewById(R.id.body)).setMovementMethod(LinkMovementMethod.getInstance());
@@ -163,7 +174,18 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     //戻るボタンで戻る
     @Override
     public boolean onSupportNavigateUp() {
-        if(!mp.phishingFlag){finish();}
+        Executors.newSingleThreadExecutor().execute(() -> {
+            if(MosaicMode){
+                try {
+                    msg.setFlag(Flags.Flag.SEEN, false);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                if(!mp.phishingFlag){finish();}
+            });
+        });
         return super.onSupportNavigateUp();
     }
 
@@ -455,6 +477,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
 
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
+        MosaicMode = false;
         mp.dropAlert(mp.openMessageListPosition);
     }
 
