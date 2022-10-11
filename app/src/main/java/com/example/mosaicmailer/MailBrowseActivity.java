@@ -420,7 +420,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
 
             }
             else if(group.startsWith("<img") || group.startsWith("<br")){
-
+                continue;
             }
             else if(bodyFlag && !aFlag){
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
