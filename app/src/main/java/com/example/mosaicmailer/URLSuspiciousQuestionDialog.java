@@ -15,6 +15,13 @@ import androidx.fragment.app.DialogFragment;
 public class URLSuspiciousQuestionDialog  extends DialogFragment {
     MailBrowseActivity activity = null;
     MailProcessing mp;
+    String[] quiestions = {
+            "一般的でないTLDが使われているか",
+            "全角の文字が使用されているか",
+            "サブドメインに公式ドメインが使われているかどうか",
+            "IPアドレスが使用されているか",
+            "全角文字が使用されているか"
+    };
 
     @Override
     public void onAttach(Activity activity) {
