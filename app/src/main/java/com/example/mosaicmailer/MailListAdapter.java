@@ -150,21 +150,36 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    boolean isAlert = mp.isAlertMessege(ps);
+                    HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                        if(mp.existAlert && isAlert){
+                            Intent intent = new Intent(activity, MailBrowseActivity.class);
+                            // Activity以外からActivityを呼び出すためのフラグを設定
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            //開く位置のセット
+                            mp.setOpenMessageListPosition(ps);
+                            // 引き渡す値
+                            intent.putExtra("ListType", "MailList");
+                            activity.startActivity(intent);
 
-                if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
-                    mp.showSearchHeadUpAlert(v);
-                    mp.changeShowSearchHeadUpAlertFlag(true);
-                }else if(mp.SearchHeadUpFlag){//探した状態で
-                    Intent intent = new Intent(activity, MailBrowseActivity.class);
-                    // Activity以外からActivityを呼び出すためのフラグを設定
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    //開く位置のセット
-                    mp.setOpenMessageListPosition(ps);
-                    // 引き渡す値
-                    intent.putExtra("ListType", "MailList");
-                    activity.startActivity(intent);
+                        }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
 
-                }
+                            mp.showSearchHeadUpAlert(v);
+                            mp.changeShowSearchHeadUpAlertFlag(true);
+
+                        }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
+                            Intent intent = new Intent(activity, MailBrowseActivity.class);
+                            // Activity以外からActivityを呼び出すためのフラグを設定
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            //開く位置のセット
+                            mp.setOpenMessageListPosition(ps);
+                            // 引き渡す値
+                            intent.putExtra("ListType", "MailList");
+                            activity.startActivity(intent);
+                        }
+                    });
+                });
 
             }
         });

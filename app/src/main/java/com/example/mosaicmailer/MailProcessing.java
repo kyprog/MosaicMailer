@@ -1,6 +1,8 @@
 package com.example.mosaicmailer;
 
 import android.app.Application;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.search.AndTerm;
 import javax.mail.search.BodyTerm;
+import javax.mail.search.FlagTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
@@ -57,6 +60,7 @@ public class MailProcessing extends Application {
 
     //注意喚起メール関連
     boolean existAlert = false; //注意喚起メールが来ているかどうかフラグ
+    List<Message> AlertList = new ArrayList<Message>();
 
     //削除関連
     boolean phishingFlag = false;
@@ -315,5 +319,69 @@ public class MailProcessing extends Application {
 
         }
         return false;
+    }
+
+    public void searchAlert() {//注意喚起メールを探す
+        MosaicMailerDatabaseHelper helper = null;
+        //注意喚起メール条件情報をDBから探す．
+        helper = new MosaicMailerDatabaseHelper(this);
+        String[] cols = {"_id", "mailaddress", "keyword"};
+        try {
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
+            if (cs.getCount()>0) {
+                cs.moveToFirst();
+                SearchTerm[] terms = {
+                        new FromStringTerm(cs.getString(1)),
+                        new SubjectTerm(cs.getString(2)),
+                        new FlagTerm(new Flags(Flags.Flag.SEEN), false)
+                };
+                SearchTerm SearchTerm = new AndTerm(terms);
+                AlertList = new ArrayList<Message>(Arrays.asList(inbox.search(SearchTerm)));
+
+                if(AlertList.size()>0){
+                    existAlert = true;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isAlertMessege(int ps) {
+        try {
+            Message msg = MessageList.get(ps);
+            String[] idMsgs = msg.getHeader("Message-ID");
+            String idMsg = idMsgs[0];
+            for(Message alert : AlertList){
+                String[] idAlerts = alert.getHeader("Message-ID");
+                String idAlert = idAlerts[0];
+                if(idMsg.equals(idAlert)){return true;}
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void dropAlert(int ps) {//dropついでにexist変更
+        try {
+            Message msg = MessageList.get(ps);
+            String[] idMsgs = msg.getHeader("Message-ID");
+            String idMsg = idMsgs[0];
+            for(int i=0; i<AlertList.size(); i++){
+                String[] idAlerts = AlertList.get(i).getHeader("Message-ID");
+                String idAlert = idAlerts[0];
+                if(idMsg.equals(idAlert)){
+                    AlertList.remove(i);
+                    if(AlertList.size()==0){
+                        existAlert = false;
+                    }
+                }
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

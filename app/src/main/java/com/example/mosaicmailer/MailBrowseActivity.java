@@ -453,6 +453,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
 
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
+        mp.dropAlert(mp.openMessageListPosition);
     }
 
 }

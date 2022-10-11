@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -68,13 +69,15 @@ public class MailListActivity extends AppCompatActivity
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Adapter生成してRecyclerViewにセット
-        RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
-        recyclerView.setAdapter(mainAdapter);
-
         //(今，取得しているメッセージの中で)一番下の未読メールを取得する．
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.searchOldestMailPosition();
+            mp.searchAlert();
+            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                // Adapter生成してRecyclerViewにセット
+                RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
+                recyclerView.setAdapter(mainAdapter);
+            });
         });
     }
 
