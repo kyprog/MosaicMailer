@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Random;
+
 public class URLSuspiciousQuestionDialog  extends DialogFragment {
     MailBrowseActivity activity = null;
     MailProcessing mp;
@@ -42,8 +44,10 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
         realURL.setText("リンク先のURL\n"+mp.realURL);
 
         //質問文1の表示
+        Random rand = new Random();
+        int quiestionsIndex = rand.nextInt(quiestions.length);
         TextView question1 = layout.findViewById(R.id.textView4);
-        question1.setText("ドメイン名に紛らわしい文字が使用されていますか\n例)twltter, go0gle, wikipediａ");
+        question1.setText(quiestions[quiestionsIndex]);
 
         //質問文2の表示
         TextView question2 = layout.findViewById(R.id.textView6);
