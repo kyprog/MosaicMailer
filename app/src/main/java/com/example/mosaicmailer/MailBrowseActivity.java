@@ -38,6 +38,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     class LinkInfo{
         String linkText;
         String href;
+        int countSharp;
     }
 
     class TagInfo {
@@ -174,7 +175,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
             String url = hittestresult.getExtra();
             for(LinkInfo linkTmp : linkInfoList){
                 if(url.equals(linkTmp.href)){
-                    url = url.replace("#","");
+                    url = url.substring(0, url.length()-linkTmp.countSharp);
                     mp.setMailURL(linkTmp.linkText);
                     mp.setRealURL(url);
                     //System.out.println(linkTmp.linkText);
@@ -412,6 +413,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
                 //#の追加
                 mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
                 diff += hashLen;
+                anchor.countSharp = hashLen;
 
                 //linkInfoListに追加
                 linkInfoList.add(anchor);
