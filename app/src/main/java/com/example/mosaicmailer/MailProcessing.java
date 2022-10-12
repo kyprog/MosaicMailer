@@ -58,6 +58,9 @@ public class MailProcessing extends Application {
     String senderName = "";
     String senderMailAddress = "";
 
+    //確認した位置
+    int linkInfoIndex = 0;
+
     //注意喚起メール関連
     boolean existAlert = false; //注意喚起メールが来ているかどうかフラグ
     List<Message> AlertList = new ArrayList<Message>();
@@ -363,6 +366,10 @@ public class MailProcessing extends Application {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void setLinkInfoIndex(int index){
+        linkInfoIndex = index;
     }
 
     public void dropAlert(int ps) {//dropついでにexist変更

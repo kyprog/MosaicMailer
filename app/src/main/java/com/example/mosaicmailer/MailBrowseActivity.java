@@ -37,6 +37,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
     boolean MosaicMode = true;
     boolean seen = false;
+    boolean checkedMailAddress = false;
 
     Message msg;
     String ListType;
@@ -49,6 +50,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
         String linkText;
         String href;
         int countSharp;
+        boolean check = false;
     }
 
     class TagInfo {
@@ -195,16 +197,19 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
             //長押しした箇所の情報を取得
             WebView.HitTestResult hittestresult = body.getHitTestResult();
             String url = hittestresult.getExtra();
+            int linkInfoIndex = 0;
             for(LinkInfo linkTmp : linkInfoList){
                 if(url.equals(linkTmp.href)){
                     url = url.substring(0, url.length()-linkTmp.countSharp);
                     mp.setMailURL(linkTmp.linkText);
                     mp.setRealURL(url);
                     //System.out.println(linkTmp.linkText);
+                    mp.setLinkInfoIndex(linkInfoIndex);
                     DialogFragment compare_dialog = new URLCompareQuestionDialog();
                     compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
                    break;
                 }
+                linkInfoIndex++;
             }
         }
         return false;
@@ -475,10 +480,26 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
         return null;
     }
 
+    public void setChecked(int index){
+        LinkInfo tmp = linkInfoList.get(index);
+        tmp.check = true;
+        linkInfoList.set(index,tmp);
+    }
+
+    public boolean checkedAll(){
+        if(!checkedMailAddress){return false;}
+        for(LinkInfo linkTmp : linkInfoList){
+            if(!linkTmp.check){return false;}
+        }
+        return true;
+    }
+
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
         MosaicMode = false;
         mp.dropAlert(mp.openMessageListPosition);
     }
+
+
 
 }

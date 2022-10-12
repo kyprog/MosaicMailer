@@ -93,8 +93,11 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
                         break;
                 }
                 if(judgeFlag){
-                    DialogFragment dialogFragment = new FinalQuestionDialog();
-                    dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    activity.setChecked(mp.linkInfoIndex);
+                    if(activity.checkedAll()){
+                        DialogFragment dialogFragment = new FinalQuestionDialog();
+                        dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    }
                     dismiss();
                 }
             }
@@ -128,8 +131,11 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
                         break;
                 }
                 if(judgeFlag){
-                    DialogFragment dialogFragment = new FinalQuestionDialog();
-                    dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    activity.setChecked(mp.linkInfoIndex);
+                    if(activity.checkedAll()){
+                        DialogFragment dialogFragment = new FinalQuestionDialog();
+                        dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    }
                     dismiss();
                 }
             }

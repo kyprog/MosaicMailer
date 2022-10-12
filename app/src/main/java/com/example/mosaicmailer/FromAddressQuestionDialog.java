@@ -58,6 +58,11 @@ public class FromAddressQuestionDialog extends DialogFragment {
                     boolean exist = mp.existNameandAddress();
                     HandlerCompat.createAsync(getMainLooper()).post(() ->{
                         if(exist){//本当に来ている
+                            activity.checkedMailAddress = true;
+                            if(activity.checkedAll()){
+                                DialogFragment dialogFragment = new FinalQuestionDialog();
+                                dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                            }
                             dismiss();
                         }
                         else{//本当は来ていない
@@ -81,6 +86,11 @@ public class FromAddressQuestionDialog extends DialogFragment {
                             question.setText("その組み合わせからのメールは来ていますが？");
                         }
                         else{//本当に来ていない
+                            activity.checkedMailAddress = true;
+                            if(activity.checkedAll()){
+                                DialogFragment dialogFragment = new FinalQuestionDialog();
+                                dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                            }
                             dismiss();
                         }
                     });
