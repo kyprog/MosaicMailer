@@ -12,17 +12,24 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import java.net.URI;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class URLSuspiciousQuestionDialog  extends DialogFragment {
     MailBrowseActivity activity = null;
     MailProcessing mp;
+    String URLdomain;
+    int quiestionsIndex = -1;
+    boolean judgeFlag = false;
+    TextView judgeText;
     String[] quiestions = {
             "一般的でないTLDが使われているか",
             "全角の文字が使用されているか",
-            "サブドメインに公式ドメインが使われているかどうか",
-            "IPアドレスが使用されているか",
-            "全角文字が使用されているか"
+            /*"サブドメインに公式ドメインが使われているかどうか",*/
+            "IPアドレスが使用されているか"
     };
 
     @Override
@@ -45,25 +52,138 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
 
         //質問文1の表示
         Random rand = new Random();
-        int quiestionsIndex = rand.nextInt(quiestions.length);
+        quiestionsIndex = rand.nextInt(quiestions.length);
         TextView question1 = layout.findViewById(R.id.textView4);
         question1.setText(quiestions[quiestionsIndex]);
+
+        //URLのドメインを取得
+        URLdomain=extractDomain();
+
+        judgeText = layout.findViewById(R.id.textView12);
 
         //質問文2の表示
         TextView question2 = layout.findViewById(R.id.textView6);
         question2.setText("上記を踏まえて，このURLは怪しいですか");
 
+        layout.findViewById(R.id.SuspectButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 怪しいボタンを押した時の処理
+                switch(quiestionsIndex){
+                    case 0://一般的でないTLDが使われているか
+                        if(!judgeCommonlyTLD(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("一般的なTLDです．もう一度確認してください");
+                        }
+                        break;
+                    case 1://全角の文字が使用されているか
+                        if(judgeContain2ByteC(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("全角の文字は使用されていません．もう一度確認してください");
+                        }
+                        break;
+                    case 2://IPアドレスが使用されているか
+                        if(judgeIP(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("IPアドレスは使用されていません．もう一度確認してください");
+                        }
+                        break;
+                }
+                if(judgeFlag){
+                    DialogFragment dialogFragment = new FinalQuestionDialog();
+                    dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    dismiss();
+                }
+            }
+        });
+
         layout.findViewById(R.id.NoSuspectButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ボタンを押した時の処理
-                DialogFragment dialogFragment = new FinalQuestionDialog();
-                dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
-                dismiss();
+                // 怪しくないボタンを押した時の処理
+                switch(quiestionsIndex){
+                    case 0://一般的でないTLDが使われているか
+                        if(judgeCommonlyTLD(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("一般的でないTLDです．もう一度確認してください");
+                        }
+                        break;
+                    case 1://全角の文字が使用されているか
+                        if(!judgeContain2ByteC(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("全角の文字が使用されています．もう一度確認してください");
+                        }
+                        break;
+                    case 2://IPアドレスが使用されているか
+                        if(!judgeIP(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("IPアドレスが使用されています．もう一度確認してください");
+                        }
+                        break;
+                }
+                if(judgeFlag){
+                    DialogFragment dialogFragment = new FinalQuestionDialog();
+                    dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
+                    dismiss();
+                }
             }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         return builder.setView(layout).create();
     }
+
+    public String extractDomain() {
+        String domain;
+        String url = mp.realURL;
+
+        if (url.contains("://")) {
+            domain = url.split("/")[2];
+        }
+        else {
+            domain = url.split("/")[0];
+        }
+
+        domain = domain.split(":")[0];
+        System.out.println(domain);
+
+        return domain;
+    }
+
+    public boolean judgeCommonlyTLD(String domain){
+        //一般的なTLDが使われているかどうかの判定
+        if(domain.endsWith(".com")||
+                domain.endsWith(".jp")){
+            return true;
+        }
+        return false;
+
+    }
+
+    public boolean judgeContain2ByteC(String domain){
+        //全角の文字が使用されているかどうかの判定
+        if((domain.getBytes().length) == domain.length()){return true;}
+        return false;
+    }
+
+    /*
+    public boolean judgeSubDomain(String domain){
+        //サブドメインに公式ドメインが使われているかどうかの判定
+    }*/
+
+    public boolean judgeIP(String domain){
+        //IPアドレスが使用されているかどうかの判定
+        String IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$";
+        Pattern IPptrn = Pattern.compile(IPregex, Pattern.CASE_INSENSITIVE);
+        Matcher IPmtch = IPptrn.matcher(domain);
+        if( IPmtch.find() ){return true;}
+        return false;
+    }
+
 }
