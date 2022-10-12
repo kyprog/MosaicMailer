@@ -21,50 +21,50 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="注意喚起メールの送信元"
+        android:text="注意喚起メールの送信元，正規表現タイプ"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/headsUpMailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/inputText8"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/headsUpMailAddress"
+        android:id="@+id/inputText8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="204dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="MailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="注意喚起メールのキーワード"
+        android:text="注意喚起メールのキーワード，URL"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/headsUpKeyword"
+        app:layout_constraintBottom_toTopOf="@+id/inputText9"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/headsUpKeyword"
+        android:id="@+id/inputText9"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="Keyword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headsUpMailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/inputText8"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/RegisterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="68dp"

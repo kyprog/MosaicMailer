@@ -34,10 +34,10 @@
             android:name=".SettingActivity" >
         </activity>
         <activity
-            android:name=".SettingHeadUpActivity" >
+            android:name=".SettingInfoActivity" >
         </activity>
         <activity
-            android:name=".AddHeadUpTermsActivity" >
+            android:name=".SettingAddActivity" >
         </activity>
         <activity
             android:name=".SearchActivity" >

@@ -20,6 +20,8 @@ public class MosaicMailerDatabaseHelper extends SQLiteOpenHelper {
         if (db != null) {
             db.execSQL("CREATE TABLE accountsInfo (_id INTEGER PRIMARY KEY, mailaddress TEXT, password TEXT);");
             db.execSQL("CREATE TABLE HeadsUpInfo (_id INTEGER PRIMARY KEY, mailaddress TEXT, keyword TEXT);");
+            db.execSQL("CREATE TABLE WhiteList (_id INTEGER PRIMARY KEY, type TEXT, URL TEXT);");
+            db.execSQL("CREATE TABLE BlackList (_id INTEGER PRIMARY KEY, type TEXT, URL TEXT);");
         }
     }
 

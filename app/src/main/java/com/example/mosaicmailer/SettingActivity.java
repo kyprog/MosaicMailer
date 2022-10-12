@@ -31,7 +31,23 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void headUpOnClick(View v) {
-        Intent intent = new Intent(getApplication(), SettingHeadUpActivity.class);
+        Intent intent = new Intent(getApplication(), SettingInfoActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("SettingType", "headUp");
+        startActivity(intent);
+    }
+
+    public void whiteOnClick(View v) {
+        Intent intent = new Intent(getApplication(), SettingInfoActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("SettingType", "white");
+        startActivity(intent);
+    }
+
+    public void blackOnClick(View v) {
+        Intent intent = new Intent(getApplication(), SettingInfoActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("SettingType", "black");
         startActivity(intent);
     }
 }
