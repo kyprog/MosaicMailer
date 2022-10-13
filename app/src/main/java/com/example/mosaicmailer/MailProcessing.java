@@ -163,8 +163,16 @@ public class MailProcessing extends Application {
 
     }
 
-    public void SearchPhishingAlert(View v){
+    public void SearchPhishingAlertInBrowse(View v){
         SearchHeadUpAlert = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
+        SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
+        SearchHeadUpAlert.show();
+
+    }
+
+    public void SearchPhishingAlertInList(View v){
+        SearchHeadUpAlert = Snackbar.make(v.findViewById(R.id.list_recycler_view), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
         SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
         SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
         SearchHeadUpAlert.show();

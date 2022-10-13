@@ -98,6 +98,9 @@ public class MailListActivity extends AppCompatActivity
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(mp.searchAlertMode){
+            mp.SearchPhishingAlertInList(this.getWindow().getDecorView());
+        }
     }
 
     // メニューをActivity上に設置する
