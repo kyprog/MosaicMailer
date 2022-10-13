@@ -62,8 +62,12 @@ public class MailProcessing extends Application {
     int linkInfoIndex = 0;
 
     //注意喚起メール関連
-    boolean existAlert = false; //注意喚起メールが来ているかどうかフラグ
+    boolean existAlert = false; //未読の注意喚起メールがあるかどうかのフラグ
     List<Message> AlertList = new ArrayList<Message>();
+    String sourceAlertMail = "";
+
+    //探索関連
+    boolean searchAlertMode = false;
 
     //削除関連
     boolean phishingFlag = false;
@@ -153,6 +157,14 @@ public class MailProcessing extends Application {
 
     public void showSearchHeadUpAlert(View v){
         SearchHeadUpAlert = Snackbar.make(v, "一番下の未読メールまでスクロールして注意喚起メールを探してください", Snackbar.LENGTH_INDEFINITE);
+        SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
+        SearchHeadUpAlert.show();
+
+    }
+
+    public void SearchPhishingAlert(View v){
+        SearchHeadUpAlert = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
         SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
         SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
         SearchHeadUpAlert.show();

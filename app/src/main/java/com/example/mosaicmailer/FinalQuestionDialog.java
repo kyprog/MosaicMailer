@@ -44,7 +44,10 @@ public class FinalQuestionDialog   extends DialogFragment {
         layout.findViewById(R.id.NoPhishingButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ボタンを押した時の処理
+                // フィッシングメールではないボタンを押した時の処理
+                if(mp.existAlert){//注意喚起メールの時
+                    mp.SearchPhishingAlert(activity.getWindow().getDecorView());
+                }
                 activity.removeMosaic();
                 mp.CheckAlert.dismiss();
                 dismiss();
