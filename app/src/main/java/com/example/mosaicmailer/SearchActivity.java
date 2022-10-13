@@ -71,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
                                 searchRecyclerView.setAdapter(mainAdapter);
                                 if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
                                     mp.allSeenSnackbar(searchRecyclerView);
+                                    mp.searchAlertMode = false;
                                 }
                             }else{
                                 mp.noKeywordAlert(searchRecyclerView);
@@ -97,11 +98,15 @@ public class SearchActivity extends AppCompatActivity {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             //mp.reloadMessageList("Search");
-            RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), searchRecyclerView);
+            RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
             countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 searchRecyclerView.setAdapter(mainAdapter);
+                if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
+                    mp.allSeenSnackbar(searchRecyclerView);
+                    mp.searchAlertMode = false;
+                }
             });
         });
         try {
