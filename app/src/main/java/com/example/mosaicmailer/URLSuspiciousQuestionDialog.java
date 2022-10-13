@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -174,7 +175,26 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
 
     public boolean judgeContain2ByteC(String domain){
         //全角の文字が使用されているかどうかの判定
-        if((domain.getBytes().length) == domain.length()){return true;}
+        char[] chars = domain.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if ((c <= '\u007e') || // 英数字
+                    (c == '\u00a5') || // \記号
+                    (c == '\u203e') || // ~記号
+                    (c >= '\uff61' && c <= '\uff9f') // 半角カナ
+            ) {
+                //System.out.print("半");
+            } else {
+                return true; //System.out.print("全");
+            }
+        }
+        /*
+        try {
+            if((domain.getBytes("SJIS").length) == domain.length()){return true;}
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }*/
+
         return false;
     }
 
