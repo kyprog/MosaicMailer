@@ -48,6 +48,7 @@ public class FinalQuestionDialog   extends DialogFragment {
                 if(mp.existAlert){//注意喚起メールの時
                     mp.SearchPhishingAlertInBrowse(activity.getWindow().getDecorView());
                     mp.searchAlertMode = true;
+                    mp.AlertMailSource = activity.originalHTML; //注意喚起メールの内容をmailprocessingにわたす
                 }
                 activity.removeMosaic();
                 mp.CheckAlert.dismiss();

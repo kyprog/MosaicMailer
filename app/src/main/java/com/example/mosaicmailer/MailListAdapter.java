@@ -225,7 +225,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
-                if( ps>=mp.oldestMailPosition && !mp.SearchHeadUpFlag){
+                if( ps+1>=mp.oldestMailPosition && !mp.SearchHeadUpFlag){
                     if( mp.showSearchHeadUpAlertFlag ){
                         mp.SearchHeadUpAlert.dismiss();
                         mp.changeShowSearchHeadUpAlertFlag(false);

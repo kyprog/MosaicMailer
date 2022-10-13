@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+
+import javax.mail.Flags;
+import javax.mail.MessagingException;
 
 public class SearchActivity extends AppCompatActivity {
     MailProcessing mp;
@@ -21,6 +25,12 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);//xmlを読み込む
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
+
+        //ツールバー
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //searchRecyclerView
         searchRecyclerView = findViewById(R.id.search_recycler_view);
@@ -41,6 +51,8 @@ public class SearchActivity extends AppCompatActivity {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String s) {
+                //注意喚起メールに含まれるキーワードかの判定
+                boolean searchedAlertKeyword = mp.AlertMailSource.contains(s);
                 Executors.newSingleThreadExecutor().execute(() -> {
                     //javamailで検索し，該当するメッセージ一覧を取得する
                     mp.searchMessages(s);
@@ -48,8 +60,25 @@ public class SearchActivity extends AppCompatActivity {
                     //処理結果をhandler経由でUIに反映
                     HandlerCompat.createAsync(getMainLooper()).post(() ->{
                         // Adapter生成してRecyclerViewにセット
-                        RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
-                        searchRecyclerView.setAdapter(mainAdapter);
+                        RecyclerView.Adapter mainAdapter = null;
+                        if(mp.searchAlertMode){
+                            if(searchedAlertKeyword){
+                                if(mp.noKeywordAlertFlag){
+                                    mp.noKeywordAlert.dismiss();
+                                    mp.noKeywordAlertFlag = false;
+                                }
+                                mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
+                                searchRecyclerView.setAdapter(mainAdapter);
+                                if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
+                                    mp.allSeenSnackbar(searchRecyclerView);
+                                }
+                            }else{
+                                mp.noKeywordAlert(searchRecyclerView);
+                            }
+                        }else{
+                            mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
+                            searchRecyclerView.setAdapter(mainAdapter);
+                        }
                     });
                 });
                 return false;
@@ -80,5 +109,12 @@ public class SearchActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    //戻るボタンで戻る
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -49,10 +50,15 @@ public class MailProcessing extends Application {
     //ダイアログ関連
     boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
     boolean showSearchHeadUpAlertFlag=false;//SearchHeadUpAlertアラートが出現しているかどうか
+    boolean noKeywordAlertFlag = false;
     Snackbar SearchHeadUpAlert = null;
     Snackbar CheckAlert = null;
     Snackbar ReportAlert = null;
     Snackbar DeleteAlert = null;
+    Snackbar SearchPhishingAlertInList = null;
+    Snackbar SearchPhishingAlertInBrowse = null;
+    Snackbar allSeenSnackbar = null;
+    Snackbar noKeywordAlert = null;
     String realURL = "";
     String mailURL = "";
     String senderName = "";
@@ -67,7 +73,8 @@ public class MailProcessing extends Application {
     String sourceAlertMail = "";
 
     //探索関連
-    boolean searchAlertMode = false;
+    boolean searchAlertMode = false; //フィッシングメールを探すフェーズかどうかのフラグ
+    String AlertMailSource = ""; //フィッシングメールを探すフェーズかどうかのフラグ
 
     //削除関連
     boolean phishingFlag = false;
@@ -164,19 +171,34 @@ public class MailProcessing extends Application {
     }
 
     public void SearchPhishingAlertInBrowse(View v){
-        SearchHeadUpAlert = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
-        SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
-        SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
-        SearchHeadUpAlert.show();
+        SearchPhishingAlertInBrowse = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
+        SearchPhishingAlertInBrowse.setBackgroundTint(getResources().getColor(R.color.red));
+        SearchPhishingAlertInBrowse.setTextColor(getResources().getColor(R.color.black));
+        SearchPhishingAlertInBrowse.show();
 
     }
 
     public void SearchPhishingAlertInList(View v){
-        SearchHeadUpAlert = Snackbar.make(v.findViewById(R.id.list_recycler_view), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
-        SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
-        SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
-        SearchHeadUpAlert.show();
+        SearchPhishingAlertInList = Snackbar.make(v.findViewById(R.id.list_recycler_view), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
+        SearchPhishingAlertInList.setBackgroundTint(getResources().getColor(R.color.red));
+        SearchPhishingAlertInList.setTextColor(getResources().getColor(R.color.black));
+        SearchPhishingAlertInList.show();
 
+    }
+
+    public void noKeywordAlert(View v) {
+        noKeywordAlert = Snackbar.make(v, "注意喚起メールに記載された単語で検索してください", Snackbar.LENGTH_INDEFINITE);
+        noKeywordAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        noKeywordAlert.setTextColor(getResources().getColor(R.color.black));
+        noKeywordAlert.show();
+        noKeywordAlertFlag = true;
+    }
+
+    public void allSeenSnackbar(View v) {
+        allSeenSnackbar = Snackbar.make(v, "全てのメールを確認しました", Snackbar.LENGTH_INDEFINITE);
+        allSeenSnackbar.setBackgroundTint(getResources().getColor(R.color.red));
+        allSeenSnackbar.setTextColor(getResources().getColor(R.color.black));
+        allSeenSnackbar.show();
     }
 
     public void showCheckAlert(View v){
@@ -239,16 +261,18 @@ public class MailProcessing extends Application {
 
     public List<Message> searchMessages(String s) {
         presentSearchWord=s;
+
         try {
             //検索条件の設定
             SearchTerm[] terms = {
                     new SubjectTerm(s),
-                    new FromStringTerm(s),
-                    new BodyTerm(s)
+                    new FromStringTerm(s)
+                    //,new BodyTerm(s)
             };
 
             SearchTerm term = new OrTerm(terms);
-            SearchResultList = Arrays.asList(inbox.search(term));
+            SearchResultList = new ArrayList<Message>(Arrays.asList(inbox.search(term)));
+            //SearchResultList = new ArrayList<Message>(Arrays.asList(inbox.search(term)));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -411,4 +435,16 @@ public class MailProcessing extends Application {
             e.printStackTrace();
         }
     }
+
+    public boolean allSeenInSearchResultList(){
+        for(Message msg : SearchResultList){
+            try{
+                if( !msg.getFlags().contains(Flags.Flag.SEEN) ){return false;}
+            }catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
 }
