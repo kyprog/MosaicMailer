@@ -38,12 +38,12 @@ public class MailProcessing extends Application {
 
     //MessageList関連
     List<Message> MessageList = new ArrayList<Message>();
-    int openMessageListPosition=0;
+    int openMessageListPosition=-1;
     int oldestMailPosition=0;
 
     //SearchResultList関連
     List<Message> SearchResultList = new ArrayList<Message>();
-    int openSearchResultListPosition=0;
+    int openSearchResultListPosition=-1;
     String presentSearchWord="";
 
     //ダイアログ関連

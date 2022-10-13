@@ -117,20 +117,56 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                 boolean unread = !mailData.getFlags().contains(Flags.Flag.SEEN);
                 final InternetAddress addrFrom = (InternetAddress) mailData.getFrom()[0];
 
-                if(unread){
-                    if(addrFrom.getPersonal()==null){
-                        holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getAddress() + "</B></font>"));
-                    }else{
-                        holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
+                if(mp.searchAlertMode){
+                    if(mp.openMessageListPosition == position){
+                        if(unread){
+                            if(addrFrom.getPersonal()==null){
+                                holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getAddress() + "</B></font>"));
+                            }else{
+                                holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
+                            }
+                            holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
+                        }else {
+                            if(addrFrom.getPersonal()==null){
+                                holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
+                            }else{
+                                holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
+                            }
+                            holder.title.setText(Html.fromHtml(mailData.getSubject()));
+                        }
+                    }else {
+                        if(unread){
+                            if(addrFrom.getPersonal()==null){
+                                holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>□□□□□□□□□□□□□□</B></font>"));
+                            }else{
+                                holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>□□□□□□□□□□□□□□</B></font>"));
+                            }
+                            holder.title.setText(Html.fromHtml("<B>□□□□□□□□□□□□□□□□□□□□□□□□□□□□</B>"));
+                        }else {
+                            if(addrFrom.getPersonal()==null){
+                                holder.sender.setText(Html.fromHtml("□□□□□□□□□□□□□□"));
+                            }else{
+                                holder.sender.setText(Html.fromHtml("□□□□□□□□□□□□□□"));
+                            }
+                            holder.title.setText(Html.fromHtml("□□□□□□□□□□□□□□□□□□□□□□□□□□□□"));
+                        }
                     }
-                    holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
-                }else {
-                    if(addrFrom.getPersonal()==null){
-                        holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
-                    }else{
-                        holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
+                }else{
+                    if(unread){
+                        if(addrFrom.getPersonal()==null){
+                            holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getAddress() + "</B></font>"));
+                        }else{
+                            holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
+                        }
+                        holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
+                    }else {
+                        if(addrFrom.getPersonal()==null){
+                            holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
+                        }else{
+                            holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
+                        }
+                        holder.title.setText(Html.fromHtml(mailData.getSubject()));
                     }
-                    holder.title.setText(Html.fromHtml(mailData.getSubject()));
                 }
             } catch (MessagingException e) {
                 e.printStackTrace();
