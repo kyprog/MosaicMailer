@@ -46,7 +46,8 @@ public class FinalQuestionDialog   extends DialogFragment {
             public void onClick(View v) {
                 // フィッシングメールではないボタンを押した時の処理
                 if(mp.existAlert){//注意喚起メールの時
-                    mp.SearchPhishingAlert(activity.getWindow().getDecorView());
+                    mp.SearchPhishingAlertInBrowse(activity.getWindow().getDecorView());
+                    mp.searchAlertMode = true;
                 }
                 activity.removeMosaic();
                 mp.CheckAlert.dismiss();
