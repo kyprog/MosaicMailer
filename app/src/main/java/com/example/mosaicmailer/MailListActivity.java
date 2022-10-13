@@ -58,7 +58,7 @@ public class MailListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //recyclerView
-        recyclerView = findViewById(R.id.search_recycler_view);
+        recyclerView = findViewById(R.id.list_recycler_view);
 
         // RecyclerViewのレイアウトサイズを変更しない設定をONにする
         // パフォーマンス向上のための設定。
@@ -69,10 +69,9 @@ public class MailListActivity extends AppCompatActivity
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        //(今，取得しているメッセージの中で)一番下の未読メールを取得する．
         Executors.newSingleThreadExecutor().execute(() -> {
-            mp.searchOldestMailPosition();
-            mp.searchAlert();
+            mp.searchOldestMailPosition();//(今，取得しているメッセージの中で)一番下の未読メールを取得する．
+            mp.searchAlert();//注意喚起メールが来ていないか調べる．
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 // Adapter生成してRecyclerViewにセット
                 RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
