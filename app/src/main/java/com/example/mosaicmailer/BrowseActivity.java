@@ -1,7 +1,5 @@
 package com.example.mosaicmailer;
 
-import static java.lang.System.in;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -32,7 +29,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
 
-public class MailBrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
+public class BrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
     boolean MosaicMode = true;
@@ -44,7 +41,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     WebView body;
     String originalHTML;
     String originalPlanText;
-    static MailBrowseActivity instance = new MailBrowseActivity();
+    static BrowseActivity instance = new BrowseActivity();
 
     class LinkInfo{
         String linkText;
@@ -65,7 +62,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_browse);//xmlを読み込む
+        setContentView(R.layout.browse_activity);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
 
         //ツールバー
@@ -205,7 +202,7 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
                     mp.setRealURL(url);
                     //System.out.println(linkTmp.linkText);
                     mp.setLinkInfoIndex(linkInfoIndex);
-                    DialogFragment compare_dialog = new URLCompareQuestionDialog();
+                    DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
                     compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
                    break;
                 }
@@ -217,12 +214,12 @@ public class MailBrowseActivity extends AppCompatActivity implements View.OnLong
 
     //メールアドレス確認ポップアップの表示
     public void QuestionDialog(View view) {
-        DialogFragment name_dialog = new FromNameQuestionDialog();
+        DialogFragment name_dialog = new BrowseQuestionFromNameDialog();
         name_dialog.show(getSupportFragmentManager(), "name_question_dialog");
     }
 
     // インスタンス取得メソッド
-    public static MailBrowseActivity getInstance() {
+    public static BrowseActivity getInstance() {
         return instance;
     }
 

@@ -13,7 +13,7 @@ public class SettingInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_info);//xmlを読み込む
+        setContentView(R.layout.setting_info_activity);//xmlを読み込む
 
         settingType = getIntent().getStringExtra("SettingType");
 

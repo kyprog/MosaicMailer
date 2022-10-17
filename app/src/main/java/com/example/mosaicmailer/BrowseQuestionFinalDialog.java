@@ -11,15 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
-public class FinalQuestionDialog   extends DialogFragment {
-    MailBrowseActivity activity = null;
+public class BrowseQuestionFinalDialog extends DialogFragment {
+    BrowseActivity activity = null;
     MailProcessing mp;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof MailBrowseActivity) {
-            this.activity = (MailBrowseActivity) activity;
+        if (activity instanceof BrowseActivity) {
+            this.activity = (BrowseActivity) activity;
             mp = (MailProcessing) this.activity.getApplication();
         }
     }
@@ -27,7 +27,7 @@ public class FinalQuestionDialog   extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //レイアウトの呼び出し
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
-                .inflate(R.layout.final_question_dialog, null);
+                .inflate(R.layout.browse_question_final_dialog, null);
 
         layout.findViewById(R.id.PhishingButton).setOnClickListener(new View.OnClickListener() {
             @Override

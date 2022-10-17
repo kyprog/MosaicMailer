@@ -12,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
-import javax.mail.Flags;
-import javax.mail.MessagingException;
-
 public class SearchActivity extends AppCompatActivity {
     MailProcessing mp;
     RecyclerView searchRecyclerView;
@@ -22,7 +19,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);//xmlを読み込む
+        setContentView(R.layout.search_activity);//xmlを読み込む
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
 

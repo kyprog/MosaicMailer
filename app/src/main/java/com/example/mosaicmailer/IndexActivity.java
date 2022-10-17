@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -19,11 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
-public class MailListActivity extends AppCompatActivity
+public class IndexActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     MailProcessing mp;
     String testStr=null;
@@ -33,7 +31,7 @@ public class MailListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_menu);//xmlを読み込む
+        setContentView(R.layout.index_navigation_menu);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
         //testStr = mp.getTestString();
 
@@ -74,7 +72,7 @@ public class MailListActivity extends AppCompatActivity
             mp.searchAlert();//注意喚起メールが来ていないか調べる．
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 // Adapter生成してRecyclerViewにセット
-                RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
+                RecyclerView.Adapter mainAdapter = new IndexAdapter(getApplication(), recyclerView);
                 recyclerView.setAdapter(mainAdapter);
             });
         });
@@ -86,7 +84,7 @@ public class MailListActivity extends AppCompatActivity
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             //mp.reloadMessageList("MailList");
-            RecyclerView.Adapter mainAdapter = new MailListAdapter(getApplication(), recyclerView);
+            RecyclerView.Adapter mainAdapter = new IndexAdapter(getApplication(), recyclerView);
             countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{

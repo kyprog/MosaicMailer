@@ -12,12 +12,12 @@ import androidx.appcompat.widget.Toolbar;
 
 public class SettingAddActivity extends AppCompatActivity {
     String settingType = "";
-    MosaicMailerDatabaseHelper helper = null;
+    DatabaseHelper helper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_add);//xmlを読み込む
+        setContentView(R.layout.setting_add_activity);//xmlを読み込む
 
         settingType = getIntent().getStringExtra("SettingType");
 
@@ -43,7 +43,7 @@ public class SettingAddActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.textView9)).setText("怪しいURLのドメイン名");
         }
 
-        helper = new MosaicMailerDatabaseHelper(this);
+        helper = new DatabaseHelper(this);
 
     }
 

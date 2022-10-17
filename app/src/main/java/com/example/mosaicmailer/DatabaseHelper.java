@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MosaicMailerDatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
     static final private String DBNAME = "MosaicMailerDB";
     static final private int VERSION = 1;
     Context context;
 
-    MosaicMailerDatabaseHelper(Context context){
+    DatabaseHelper(Context context){
         super(context,DBNAME,null,VERSION);
         this.context=context;
     }

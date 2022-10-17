@@ -67,7 +67,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_viewholder, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.index_item_recycler_viewholder, parent, false);
         //ViewHolderを生成
         final SearchAdapter.MainViewHolder holder = new SearchAdapter.MainViewHolder(view);
         return holder;
@@ -119,7 +119,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
-                Intent intent = new Intent(activity, MailBrowseActivity.class);
+                Intent intent = new Intent(activity, BrowseActivity.class);
                 // Activity以外からActivityを呼び出すためのフラグを設定
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //開く位置のセット

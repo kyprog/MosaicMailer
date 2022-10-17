@@ -12,15 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
-public class URLSuspiciousQuestionDialog  extends DialogFragment {
-    MailBrowseActivity activity = null;
+public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
+    BrowseActivity activity = null;
     MailProcessing mp;
     String URLdomain;
     int quiestionsIndex = -1;
@@ -36,8 +33,8 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof MailBrowseActivity) {
-            this.activity = (MailBrowseActivity) activity;
+        if (activity instanceof BrowseActivity) {
+            this.activity = (BrowseActivity) activity;
             mp = (MailProcessing) this.activity.getApplication();
         }
     }
@@ -45,7 +42,7 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //レイアウトの呼び出し
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
-                .inflate(R.layout.url_suspect_dialog, null);
+                .inflate(R.layout.browse_question_url_suspect_dialog, null);
 
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView2);
@@ -96,7 +93,7 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
                 if(judgeFlag){
                     activity.setChecked(mp.linkInfoIndex);
                     if(activity.checkedAll()){
-                        DialogFragment dialogFragment = new FinalQuestionDialog();
+                        DialogFragment dialogFragment = new BrowseQuestionFinalDialog();
                         dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
                     }
                     dismiss();
@@ -134,7 +131,7 @@ public class URLSuspiciousQuestionDialog  extends DialogFragment {
                 if(judgeFlag){
                     activity.setChecked(mp.linkInfoIndex);
                     if(activity.checkedAll()){
-                        DialogFragment dialogFragment = new FinalQuestionDialog();
+                        DialogFragment dialogFragment = new BrowseQuestionFinalDialog();
                         dialogFragment.show( getFragmentManager(), "FinalQuestionDialog");
                     }
                     dismiss();

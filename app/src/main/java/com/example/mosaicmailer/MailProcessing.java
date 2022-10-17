@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -24,7 +23,6 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.search.AndTerm;
-import javax.mail.search.BodyTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
@@ -369,9 +367,9 @@ public class MailProcessing extends Application {
     }
 
     public void searchAlert() {//注意喚起メールを探す
-        MosaicMailerDatabaseHelper helper = null;
+        DatabaseHelper helper = null;
         //注意喚起メール条件情報をDBから探す．
-        helper = new MosaicMailerDatabaseHelper(this);
+        helper = new DatabaseHelper(this);
         String[] cols = {"_id", "mailaddress", "keyword"};
         try {
             SQLiteDatabase db = helper.getReadableDatabase();

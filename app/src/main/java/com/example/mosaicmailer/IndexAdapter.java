@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.os.HandlerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +27,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainViewHolder> {
+public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHolder> {
 
     Context activity;
     private List<Message> mailDataList = new ArrayList<Message>();
@@ -36,7 +35,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
 
-    MailListAdapter(Context context, RecyclerView recyclerView) {
+    IndexAdapter(Context context, RecyclerView recyclerView) {
         activity=context;
         tmprecyclerView = recyclerView;
         mp = (MailProcessing)activity;
@@ -98,7 +97,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_viewholder, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.index_item_recycler_viewholder, parent, false);
         //ViewHolderを生成
         final MainViewHolder holder = new MainViewHolder(view);
         return holder;
@@ -191,7 +190,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                         boolean isAlert = mp.isAlertMessege(ps);
                         HandlerCompat.createAsync(getMainLooper()).post(() ->{
                             if(mp.existAlert && isAlert){
-                                Intent intent = new Intent(activity, MailBrowseActivity.class);
+                                Intent intent = new Intent(activity, BrowseActivity.class);
                                 // Activity以外からActivityを呼び出すためのフラグを設定
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 //開く位置のセット
@@ -206,7 +205,7 @@ public class MailListAdapter extends RecyclerView.Adapter<MailListAdapter.MainVi
                                 mp.changeShowSearchHeadUpAlertFlag(true);
 
                             }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
-                                Intent intent = new Intent(activity, MailBrowseActivity.class);
+                                Intent intent = new Intent(activity, BrowseActivity.class);
                                 // Activity以外からActivityを呼び出すためのフラグを設定
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 //開く位置のセット

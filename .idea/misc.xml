@@ -31,6 +31,8 @@
         <entry key="app/src/main/res/layout/activity_setting_nfo.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/design_layout_snackbar.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/final_question_dialog.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/index_item_recycler_viewholder.xml" value="0.3129528985507246" />
+        <entry key="app/src/main/res/layout/index_navigation_menu.xml" value="0.3129528985507246" />
         <entry key="app/src/main/res/layout/item_recycler_viewholder.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.29375" />
         <entry key="app/src/main/res/layout/sender_dialog.xml" value="0.25" />

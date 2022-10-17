@@ -7,26 +7,24 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
     MailProcessing mp;
-    MosaicMailerDatabaseHelper helper = null;
+    DatabaseHelper helper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);//xmlを読み込む
+        setContentView(R.layout.login_activity);//xmlを読み込む
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
 
         //アカウント情報をDBから探す．
-        helper = new MosaicMailerDatabaseHelper(this);
+        helper = new DatabaseHelper(this);
         String[] cols = {"_id", "mailaddress", "password"};
         try {
             SQLiteDatabase db = helper.getReadableDatabase();
@@ -65,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             mp.connect(mailaddress,password);
             mp.getMailListAll();
             //mp.setTestString("MVMVMVM");
-            Intent intent = new Intent(getApplication(), MailListActivity.class);
+            Intent intent = new Intent(getApplication(), IndexActivity.class);
             startActivity(intent);
         });
     }
@@ -77,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             mp.connect(mailaddress,password);
             mp.getMailListAll();
             //mp.setTestString("MVMVMVM");
-            Intent intent = new Intent(getApplication(), MailListActivity.class);
+            Intent intent = new Intent(getApplication(), IndexActivity.class);
             startActivity(intent);
         });
     }

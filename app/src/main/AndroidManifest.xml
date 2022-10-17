@@ -25,10 +25,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MailListActivity" >
+            android:name=".IndexActivity" >
         </activity>
         <activity
-            android:name=".MailBrowseActivity" >
+            android:name=".BrowseActivity" >
         </activity>
         <activity
             android:name=".SettingActivity" >

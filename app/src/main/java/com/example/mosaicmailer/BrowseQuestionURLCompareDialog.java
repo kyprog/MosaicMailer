@@ -13,15 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
-public class URLCompareQuestionDialog extends DialogFragment {
-    MailBrowseActivity activity = null;
+public class BrowseQuestionURLCompareDialog extends DialogFragment {
+    BrowseActivity activity = null;
     MailProcessing mp;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof MailBrowseActivity) {
-            this.activity = (MailBrowseActivity) activity;
+        if (activity instanceof BrowseActivity) {
+            this.activity = (BrowseActivity) activity;
             mp = (MailProcessing) this.activity.getApplication();
         }
     }
@@ -31,7 +31,7 @@ public class URLCompareQuestionDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //レイアウトの呼び出し
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
-                .inflate(R.layout.sender_dialog, null);
+                .inflate(R.layout.browse_question_common_dialog, null);
 
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView13);
@@ -49,7 +49,7 @@ public class URLCompareQuestionDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // ボタンを押した時の処理
-                DialogFragment dialogFragment = new URLSuspiciousQuestionDialog();
+                DialogFragment dialogFragment = new BrowseQuestionURLSuspiciousDialog();
                 dialogFragment.show( getFragmentManager(), "URLSuspiciousQuestionDialog");
                 dismiss();
             }
