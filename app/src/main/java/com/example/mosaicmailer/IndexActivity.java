@@ -18,15 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+
+import javax.mail.Message;
 
 public class IndexActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     MailProcessing mp;
     String testStr=null;
     RecyclerView recyclerView;
-
+    LinearLayoutManager layoutManager;
+    IndexAdapter mainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +68,40 @@ public class IndexActivity extends AppCompatActivity
 
         // RecyclerViewにlayoutManagerをセットする。
         // このlayoutManagerの種類によって「1列のリスト」なのか「２列のリスト」とかが選べる。
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.searchOldestMailPosition();//(今，取得しているメッセージの中で)一番下の未読メールを取得する．
             mp.searchAlert();//注意喚起メールが来ていないか調べる．
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 // Adapter生成してRecyclerViewにセット
-                RecyclerView.Adapter mainAdapter = new IndexAdapter(getApplication(), recyclerView);
+                mainAdapter = new IndexAdapter(getApplication(), recyclerView);
                 recyclerView.setAdapter(mainAdapter);
             });
+            countDownLatch.countDown();
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while(true) {
+                System.out.println("while(true)");
+                mp.reloadMessageList("MailList");
+                HandlerCompat.createAsync(getMainLooper()).post(() -> {
+                    mainAdapter.reload(mp.MessageList);
+
+                });
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
     }
@@ -85,11 +112,12 @@ public class IndexActivity extends AppCompatActivity
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.reloadMessageList("MailList");
-            RecyclerView.Adapter mainAdapter = new IndexAdapter(getApplication(), recyclerView);
+            //mainAdapter = new IndexAdapter(getApplication(), recyclerView);
             countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
-                recyclerView.setAdapter(mainAdapter);
+                //recyclerView.setAdapter(mainAdapter);
+                mainAdapter.reload(mp.MessageList);
             });
         });
         try {

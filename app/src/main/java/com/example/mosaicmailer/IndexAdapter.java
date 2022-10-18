@@ -3,6 +3,7 @@ package com.example.mosaicmailer;
 
 import static android.os.Looper.getMainLooper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -43,6 +44,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
 
     }
 
+
     @NonNull
     public void initMailData(){
         int window=50;
@@ -66,6 +68,11 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         }
         lenMailDataList = mailDataList.size();
         notifyItemRangeInserted(addPoint, window);
+    }
+
+    public void reload(List<Message> messageList) {
+        mailDataList = messageList;
+        notifyDataSetChanged();
     }
 
     /**
