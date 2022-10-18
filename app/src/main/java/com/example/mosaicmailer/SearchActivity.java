@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onRestart();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
-            //mp.reloadMessageList("Search");
+            mp.reloadMessageList("Search");
             RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
             countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映

@@ -76,6 +76,7 @@ public class IndexActivity extends AppCompatActivity
                 recyclerView.setAdapter(mainAdapter);
             });
         });
+
     }
 
     @Override
@@ -83,7 +84,7 @@ public class IndexActivity extends AppCompatActivity
         super.onRestart();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
-            //mp.reloadMessageList("MailList");
+            mp.reloadMessageList("MailList");
             RecyclerView.Adapter mainAdapter = new IndexAdapter(getApplication(), recyclerView);
             countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映
