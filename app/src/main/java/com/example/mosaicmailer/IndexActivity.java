@@ -88,6 +88,9 @@ public class IndexActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        //応急処置
+        if(mp.oldestMailPosition<5){mp.changeSearchHeadUpFlag(true);}
+
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
                 System.out.println("while(true)");
