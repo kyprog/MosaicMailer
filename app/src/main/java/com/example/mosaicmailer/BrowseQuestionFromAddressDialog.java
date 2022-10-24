@@ -83,7 +83,7 @@ public class BrowseQuestionFromAddressDialog extends DialogFragment {
                     HandlerCompat.createAsync(getMainLooper()).post(() ->{
                         if(exist){//本当は来ている
                             TextView question = layout.findViewById(R.id.textView11);
-                            question.setText("その組み合わせからのメールは来ていますが？");
+                            question.setText("その組み合わせからのメールは来ています．");
                         }
                         else{//本当に来ていない
                             activity.checkedMailAddress = true;

@@ -196,6 +196,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             String url = hittestresult.getExtra();
             int linkInfoIndex = 0;
             for(LinkInfo linkTmp : linkInfoList){
+                System.out.println(url);
+                System.out.println(linkTmp.href);
                 if(url.equals(linkTmp.href)){
                     url = url.substring(0, url.length()-linkTmp.countSharp);
                     mp.setMailURL(linkTmp.linkText);

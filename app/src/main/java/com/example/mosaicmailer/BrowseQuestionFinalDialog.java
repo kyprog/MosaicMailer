@@ -32,7 +32,7 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
         layout.findViewById(R.id.PhishingButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ボタンを押した時の処理
+                // フィッシングメールであるボタンを押した時の処理
                 activity.removeMosaic();
                 mp.CheckAlert.dismiss();
                 mp.ReportAlert(activity.getWindow().getDecorView());

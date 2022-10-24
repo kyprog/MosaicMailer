@@ -24,10 +24,10 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
     boolean judgeFlag = false;
     TextView judgeText;
     String[] quiestions = {
-            "一般的でないTLDが使われているか",
-            "全角の文字が使用されているか",
+            "ドメイン名に全角の文字が使用されていますか",
+            "ドメイン名にIPアドレスが使用されていますか"
+            /*"一般的でないTLDが使われていますか",*/
             /*"サブドメインに公式ドメインが使われているかどうか",*/
-            "IPアドレスが使用されているか"
     };
 
     @Override
@@ -68,25 +68,25 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
             public void onClick(View v) {
                 // 怪しいボタンを押した時の処理
                 switch(quiestionsIndex){
-                    case 0://一般的でないTLDが使われているか
-                        if(!judgeCommonlyTLD(URLdomain)){
-                            judgeFlag = true;
-                        }else{
-                            judgeText.setText("一般的なTLDです．もう一度確認してください");
-                        }
-                        break;
-                    case 1://全角の文字が使用されているか
+                    case 0://全角の文字が使用されているか
                         if(judgeContain2ByteC(URLdomain)){
                             judgeFlag = true;
                         }else{
                             judgeText.setText("全角の文字は使用されていません．もう一度確認してください");
                         }
                         break;
-                    case 2://IPアドレスが使用されているか
+                    case 1://IPアドレスが使用されているか
                         if(judgeIP(URLdomain)){
                             judgeFlag = true;
                         }else{
                             judgeText.setText("IPアドレスは使用されていません．もう一度確認してください");
+                        }
+                        break;
+                    case 2://一般的でないTLDが使われているか
+                        if(!judgeCommonlyTLD(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("一般的なTLDです．もう一度確認してください");
                         }
                         break;
                 }
@@ -106,25 +106,25 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
             public void onClick(View v) {
                 // 怪しくないボタンを押した時の処理
                 switch(quiestionsIndex){
-                    case 0://一般的でないTLDが使われているか
-                        if(judgeCommonlyTLD(URLdomain)){
-                            judgeFlag = true;
-                        }else{
-                            judgeText.setText("一般的でないTLDです．もう一度確認してください");
-                        }
-                        break;
-                    case 1://全角の文字が使用されているか
+                    case 0://全角の文字が使用されているか
                         if(!judgeContain2ByteC(URLdomain)){
                             judgeFlag = true;
                         }else{
                             judgeText.setText("全角の文字が使用されています．もう一度確認してください");
                         }
                         break;
-                    case 2://IPアドレスが使用されているか
+                    case 1://IPアドレスが使用されているか
                         if(!judgeIP(URLdomain)){
                             judgeFlag = true;
                         }else{
                             judgeText.setText("IPアドレスが使用されています．もう一度確認してください");
+                        }
+                        break;
+                    case 2://一般的でないTLDが使われているか
+                        if(judgeCommonlyTLD(URLdomain)){
+                            judgeFlag = true;
+                        }else{
+                            judgeText.setText("一般的でないTLDです．もう一度確認してください");
                         }
                         break;
                 }

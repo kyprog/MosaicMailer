@@ -43,15 +43,33 @@ public class BrowseQuestionURLCompareDialog extends DialogFragment {
 
         //メールに表示されているURLと質問文の表示
         TextView question = layout.findViewById(R.id.textView5);
-        question.setText("\nメールに表示されているURLとリンク先のURLは同じですか？");
+        question.setText("メールに表示されているURLとリンク先のURLは同じですか？");
 
         layout.findViewById(R.id.YesButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ボタンを押した時の処理
-                DialogFragment dialogFragment = new BrowseQuestionURLSuspiciousDialog();
-                dialogFragment.show( getFragmentManager(), "URLSuspiciousQuestionDialog");
-                dismiss();
+                // Yesボタンを押した時の処理
+                if(mp.realURL.equals(mp.mailURL)){
+                    DialogFragment dialogFragment = new BrowseQuestionURLSuspiciousDialog();
+                    dialogFragment.show( getFragmentManager(), "URLSuspiciousQuestionDialog");
+                    dismiss();
+                }else{
+                    ((TextView)layout.findViewById(R.id.textView11)).setText("違います");
+                }
+            }
+        });
+
+        layout.findViewById(R.id.NoButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Noボタンを押した時の処理
+                if(mp.realURL.equals(mp.mailURL)){
+                    ((TextView)layout.findViewById(R.id.textView11)).setText("同じです");
+                }else{
+                    DialogFragment dialogFragment = new BrowseQuestionURLSuspiciousDialog();
+                    dialogFragment.show( getFragmentManager(), "URLSuspiciousQuestionDialog");
+                    dismiss();
+                }
             }
         });
 
