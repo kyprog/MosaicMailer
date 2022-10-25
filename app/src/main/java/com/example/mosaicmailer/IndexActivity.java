@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -170,5 +171,10 @@ public class IndexActivity extends AppCompatActivity
                 break;
         }
         return false;
+    }
+
+    public void createMail(View view) {
+        Intent intent = new Intent(getApplication(), CreateActivity.class);
+        startActivity(intent);
     }
 }

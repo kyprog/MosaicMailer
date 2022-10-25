@@ -3,25 +3,33 @@ package com.example.mosaicmailer;
 import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Patterns;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.search.AndTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.FromStringTerm;
@@ -34,6 +42,10 @@ public class MailProcessing extends Application {
     Session session=null;
     Store store = null;
     Folder inbox = null;
+
+    //アカウント情報
+    String accountInfo = null;
+    String passwordInfo = null;
 
     //MessageList関連
     List<Message> MessageList = new ArrayList<Message>();
@@ -116,6 +128,9 @@ public class MailProcessing extends Application {
 
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
+            accountInfo = username;
+            passwordInfo = password;
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -445,4 +460,63 @@ public class MailProcessing extends Application {
         return true;
     }
 
+    public void sendMail(String to, String cc, String bcc, String subject,List<MimeBodyPart> allPartList, String charset, String encoding) {
+
+        String host = "smtp.office365.com";
+        String port = "587";
+        String starttls = "true";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", starttls);
+
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+
+        props.put("mail.debug", "true");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(accountInfo, passwordInfo);
+                    }
+                });
+
+        try {
+            //partの結合
+            final MimeMultipart multipart = new MimeMultipart();
+            for(MimeBodyPart part : allPartList){
+                multipart.addBodyPart(part);
+            }
+
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From:(※名前の奴ないとうまいこと行かないっぽい？)
+            message.setFrom(new InternetAddress(accountInfo, "mosaicmailer"));
+            // Set ReplyTo:
+            message.setReplyTo(new Address[]{new InternetAddress(accountInfo)});
+            // Set To:
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            // Set Cc:
+            if(Patterns.EMAIL_ADDRESS.matcher(cc).matches()){
+                message.setRecipient(Message.RecipientType.CC, new InternetAddress(cc));
+            }
+            // Set Bcc:
+            if(Patterns.EMAIL_ADDRESS.matcher(bcc).matches()){
+                message.setRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+            }
+
+            message.setSubject(subject, charset);
+            message.setContent(multipart);
+
+            message.setHeader("Content-Transfer-Encoding", encoding);
+
+            Transport.send(message);
+
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
