@@ -420,33 +420,37 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //URL取得
                 Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
                 Matcher StdUrlMtch = StdUrlPtrn.matcher(group);
-                StdUrlMtch.find(0);
-                anchor.href = StdUrlMtch.group();
+                //System.out.println(group);
 
-                //URLがユニークかどうかのフラグ
-                boolean uniqueHref = false;
-                //追加する#の数
-                int hashLen = 0;
+                if(StdUrlMtch.find(0)){
+                    anchor.href = StdUrlMtch.group();
 
-                while (!uniqueHref){
-                    uniqueHref = true;
-                    for(LinkInfo linkTmp : linkInfoList){
-                        if(anchor.href.equals(linkTmp.href)){
-                            anchor.href = anchor.href + "#";
-                            hashLen++;
-                            uniqueHref = false;
-                            break;
+                    //URLがユニークかどうかのフラグ
+                    boolean uniqueHref = false;
+                    //追加する#の数
+                    int hashLen = 0;
+
+                    while (!uniqueHref){
+                        uniqueHref = true;
+                        for(LinkInfo linkTmp : linkInfoList){
+                            if(anchor.href.equals(linkTmp.href)){
+                                anchor.href = anchor.href + "#";
+                                hashLen++;
+                                uniqueHref = false;
+                                break;
+                            }
                         }
                     }
+
+                    //#の追加
+                    mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
+                    diff += hashLen;
+                    anchor.countSharp = hashLen;
+
+                    //linkInfoListに追加
+                    linkInfoList.add(anchor);
                 }
 
-                //#の追加
-                mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
-                diff += hashLen;
-                anchor.countSharp = hashLen;
-
-                //linkInfoListに追加
-                linkInfoList.add(anchor);
 
             }
             else if(group.startsWith("<img") || group.startsWith("<br")){
