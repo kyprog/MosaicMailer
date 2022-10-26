@@ -97,10 +97,11 @@ public class SearchActivity extends AppCompatActivity {
             mp.reloadMessageList("Search");
             RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
             countDownLatch.countDown();
+            boolean all_seen_flag = mp.allSeenInSearchResultList();
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 searchRecyclerView.setAdapter(mainAdapter);
-                if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
+                if(all_seen_flag){//注意喚起メールの情報をもとに検索して，全て未読の場合
                     mp.allSeenSnackbar(searchRecyclerView);
                     mp.searchAlertMode = false;
                 }

@@ -504,7 +504,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
         MosaicMode = false;
-        mp.dropAlert(mp.openMessageListPosition);
+        if(ListType.equals("MailList")){
+            mp.dropAlert(mp.openMessageListPosition);
+        }
     }
 
 
