@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -40,7 +41,12 @@ public class BrowseQuestionFromNameDialog extends DialogFragment {
 
         //差出人名の表示
         TextView senderName = layout.findViewById(R.id.textView13);
-        senderName.setText("差出人名："+mp.senderName);
+
+        if(mp.senderName == null || mp.senderName.equals("")){
+            senderName.setText("差出人名："+mp.senderMailAddress);
+        }else{
+            senderName.setText("差出人名："+mp.senderName);
+        }
 
         //差出人のメールアドレス表示
         TextView senderMailAddress = layout.findViewById(R.id.textView14);

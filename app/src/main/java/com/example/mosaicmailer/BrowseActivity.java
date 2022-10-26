@@ -115,7 +115,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
                     ((TextView) findViewById(R.id.title)).setText(subject);
-                    ((TextView) findViewById(R.id.sender)).setText(sender);
+                    if(sender == null || sender.equals("")){
+                        ((TextView) findViewById(R.id.sender)).setText(mp.senderMailAddress);
+                    }else{
+                        ((TextView) findViewById(R.id.sender)).setText(sender);
+                    }
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
                     if(MosaicMode){
                         body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);

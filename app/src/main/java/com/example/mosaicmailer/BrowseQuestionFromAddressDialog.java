@@ -40,7 +40,11 @@ public class BrowseQuestionFromAddressDialog extends DialogFragment {
 
         //差出人名の表示
         TextView senderName = layout.findViewById(R.id.textView13);
-        senderName.setText("差出人名："+mp.senderName);
+        if(mp.senderName == null || mp.senderName.equals("")){
+            senderName.setText("差出人名："+mp.senderMailAddress);
+        }else{
+            senderName.setText("差出人名："+mp.senderName);
+        }
 
         //差出人のメールアドレス表示
         TextView senderMailAddress = layout.findViewById(R.id.textView14);
