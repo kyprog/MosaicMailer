@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -44,18 +45,26 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
                 .inflate(R.layout.browse_question_url_suspect_dialog, null);
 
+        //URLのドメインを取得
+        URLdomain=extractDomain();
+
+        //realURLのドメインを赤くする処理
+        StringBuilder RealURLsb = new StringBuilder();
+        RealURLsb.append(mp.realURL);
+        int domainStartIndex = RealURLsb.toString().indexOf(URLdomain);
+        int redTagLen = "<font color=\"Red\">".length();
+        RealURLsb.insert(domainStartIndex, "<font color=\"Red\">");
+        RealURLsb.insert(domainStartIndex + redTagLen + URLdomain.length(), "</font>");
+
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView2);
-        realURL.setText("リンク先のURL\n"+mp.realURL);
+        realURL.setText(Html.fromHtml("リンク先のURL<br>"+RealURLsb.toString()));
 
         //質問文1の表示
         Random rand = new Random();
         quiestionsIndex = rand.nextInt(quiestions.length);
         TextView question1 = layout.findViewById(R.id.textView4);
         question1.setText(quiestions[quiestionsIndex]);
-
-        //URLのドメインを取得
-        URLdomain=extractDomain();
 
         judgeText = layout.findViewById(R.id.textView12);
 
