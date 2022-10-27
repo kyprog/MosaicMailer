@@ -197,22 +197,24 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         if(v == body){
             //長押しした箇所の情報を取得
             WebView.HitTestResult hittestresult = body.getHitTestResult();
-            String url = hittestresult.getExtra();
-            int linkInfoIndex = 0;
-            for(LinkInfo linkTmp : linkInfoList){
-                System.out.println(url);
-                System.out.println(linkTmp.href);
-                if(url.equals(linkTmp.href)){
-                    url = url.substring(0, url.length()-linkTmp.countSharp);
-                    mp.setMailURL(linkTmp.linkText);
-                    mp.setRealURL(url);
-                    //System.out.println(linkTmp.linkText);
-                    mp.setLinkInfoIndex(linkInfoIndex);
-                    DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
-                    compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
-                   break;
+            if( hittestresult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE){
+                String url = hittestresult.getExtra();
+                int linkInfoIndex = 0;
+                for(LinkInfo linkTmp : linkInfoList){
+                    System.out.println(url);
+                    System.out.println(linkTmp.href);
+                    if(url.equals(linkTmp.href)){
+                        url = url.substring(0, url.length()-linkTmp.countSharp);
+                        mp.setMailURL(linkTmp.linkText);
+                        mp.setRealURL(url);
+                        //System.out.println(linkTmp.linkText);
+                        mp.setLinkInfoIndex(linkInfoIndex);
+                        DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
+                        compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
+                        break;
+                    }
+                    linkInfoIndex++;
                 }
-                linkInfoIndex++;
             }
         }
         return false;
