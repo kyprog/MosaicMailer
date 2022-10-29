@@ -35,6 +35,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 public class CreateActivity  extends AppCompatActivity {
@@ -130,10 +131,18 @@ public class CreateActivity  extends AppCompatActivity {
                             String Bcc = bcc.getText().toString();
                             String Subject = subject.getText().toString();
 
+                            List<MimeBodyPart> allPartList = mainAdapter.getAttachmentList();
+
+                            //text/html
+                            MimeBodyPart htmlPart = new MimeBodyPart();
+                            htmlPart.setText( body.getText().toString(), charset,"html");
+                            allPartList.add(0, htmlPart);
+
+                            //text/html
                             MimeBodyPart textPart = new MimeBodyPart();
                             textPart.setText( body.getText().toString(), charset);
-                            List<MimeBodyPart> allPartList = mainAdapter.getAttachmentList();
                             allPartList.add(0, textPart);
+
                             mp.sendMail(To,Cc,Bcc,Subject,allPartList,charset,encoding);
 
                         } catch (MessagingException e) {

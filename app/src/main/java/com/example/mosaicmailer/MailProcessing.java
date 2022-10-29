@@ -486,7 +486,7 @@ public class MailProcessing extends Application {
 
         try {
             //partの結合
-            final MimeMultipart multipart = new MimeMultipart();
+            final MimeMultipart multipart = new MimeMultipart("alternative");
             for(MimeBodyPart part : allPartList){
                 multipart.addBodyPart(part);
             }
