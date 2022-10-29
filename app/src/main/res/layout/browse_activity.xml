@@ -45,7 +45,6 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:onClick="QuestionDialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
@@ -55,6 +54,7 @@
             android:layout_width="96dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="QuestionDialog"
             app:srcCompat="@android:mipmap/sym_def_app_icon" />
 
         <LinearLayout

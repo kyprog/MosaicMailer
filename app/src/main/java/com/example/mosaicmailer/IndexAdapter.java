@@ -131,14 +131,24 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                             }else{
                                 holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
                             }
-                            holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
+                            String subject = mailData.getSubject();
+                            if(subject == null){
+                                holder.title.setText(Html.fromHtml("<B>件名なし</B>"));
+                            }else{
+                                holder.title.setText(Html.fromHtml("<B>" + subject + "</B>"));
+                            }
                         }else {
                             if(addrFrom.getPersonal()==null){
                                 holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
                             }else{
                                 holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
                             }
-                            holder.title.setText(Html.fromHtml(mailData.getSubject()));
+                            String subject = mailData.getSubject();
+                            if(subject == null){
+                                holder.title.setText(Html.fromHtml("件名なし"));
+                            }else{
+                                holder.title.setText(Html.fromHtml(subject));
+                            }
                         }
                     }else {
                         if(unread){
@@ -164,14 +174,24 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                         }else{
                             holder.sender.setText(Html.fromHtml("<font color=\"blue\"><B>" + addrFrom.getPersonal() + "</B></font>"));
                         }
-                        holder.title.setText(Html.fromHtml("<B>" + mailData.getSubject() + "</B>"));
+                        String subject = mailData.getSubject();
+                        if(subject == null){
+                            holder.title.setText(Html.fromHtml("<B>件名なし</B>"));
+                        }else{
+                            holder.title.setText(Html.fromHtml("<B>" + subject + "</B>"));
+                        }
                     }else {
                         if(addrFrom.getPersonal()==null){
                             holder.sender.setText(Html.fromHtml(addrFrom.getAddress()));
                         }else{
                             holder.sender.setText(Html.fromHtml(addrFrom.getPersonal()));
                         }
-                        holder.title.setText(Html.fromHtml(mailData.getSubject()));
+                        String subject = mailData.getSubject();
+                        if(subject == null){
+                            holder.title.setText(Html.fromHtml("件名なし"));
+                        }else{
+                            holder.title.setText(Html.fromHtml(subject));
+                        }
                     }
                 }
             } catch (MessagingException e) {
