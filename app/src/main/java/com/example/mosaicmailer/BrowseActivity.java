@@ -244,8 +244,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
-                originalHTML = html;
-                return insertMosaicToHTML(html);//モザイク処理
+                if(html == null){
+                    originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
+                    html = xformHTML(originalPlanText);//html形式に直す
+                    originalHTML = html;
+                    return insertMosaicToHTML(html);//モザイク処理
+                }else{
+                    originalHTML = html;
+                    return insertMosaicToHTML(html);//モザイク処理
+                }
+
             } else if (mailContent instanceof InputStream) {
                 //よくわからん
             }
@@ -466,6 +474,27 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             }
         }
         return mosaicHtml.toString();
+    }
+
+    private String extractPlaininMlt(Multipart mltPart) {
+        try {
+            int count = mltPart.getCount();
+            String plain;
+            for(int i=0; i<count; i++){
+
+                BodyPart bodypart = mltPart.getBodyPart(i);
+                String bodyContentType = bodypart.getContentType();
+
+                if(bodyContentType.contains("multipart")){
+                    Multipart multiContent = (Multipart) bodypart.getContent();
+                    plain = extractPlaininMlt(multiContent);
+                    if(plain != null){return plain;}
+                } else if(bodyContentType.contains("text/plain")){
+                    return bodypart.getContent().toString();
+                }
+            }
+        } catch (MessagingException | IOException e) {e.printStackTrace();}
+        return null;
     }
 
     public String extractHTMLinMlt(Multipart mltPart) {
