@@ -170,6 +170,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 mp.phishingFlag = false;
                 finish();
                 return true;
+            case R.id.reply:
+                reply();
+                return true;
+            case R.id.forward:
+                forward();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -226,7 +232,25 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "reply");
         intent.putExtra("replyTextMessage", originalPlanText);
-        mp.setReplyMessage(msg);
+        mp.setCurrentMessage(msg);
+        startActivity(intent);
+    }
+
+    //ツールバーからの返信
+    public void reply(){
+        Intent intent = new Intent(getApplication(), CreateActivity.class);
+        intent.putExtra("createType", "reply");
+        intent.putExtra("replyTextMessage", originalPlanText);
+        mp.setCurrentMessage(msg);
+        startActivity(intent);
+    }
+
+    //ツールバーからの転送
+    public void forward(){
+        Intent intent = new Intent(getApplication(), CreateActivity.class);
+        intent.putExtra("createType", "forward");
+        intent.putExtra("replyTextMessage", originalPlanText);
+        mp.setCurrentMessage(msg);
         startActivity(intent);
     }
 

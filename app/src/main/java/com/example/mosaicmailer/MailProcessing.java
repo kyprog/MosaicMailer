@@ -44,8 +44,8 @@ public class MailProcessing extends Application {
     Store store = null;
     Folder inbox = null;
 
-    //返信用メッセージ
-    Message replyMessage;
+    //返信・転送用メッセージ
+    Message currentMessage;
 
     //アカウント情報
     String accountInfo = null;
@@ -524,55 +524,55 @@ public class MailProcessing extends Application {
         }
     }
 
-    public void setReplyMessage(Message msg) {
-        replyMessage = msg;
+    public void setCurrentMessage(Message msg) {
+        currentMessage = msg;
     }
 
-    public String getReplyTo() {
+    public String getCurrentTo() {
         String replyTo = "";
         try {
-            replyTo = InternetAddress.toString(replyMessage.getReplyTo());
+            replyTo = InternetAddress.toString(currentMessage.getReplyTo());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return replyTo;
     }
 
-    public String getReplyCc() {
+    public String getCurrentCc() {
         String replyCc = "";
         try {
-            replyCc = InternetAddress.toString(replyMessage.getRecipients(Message.RecipientType.CC));
+            replyCc = InternetAddress.toString(currentMessage.getRecipients(Message.RecipientType.CC));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return replyCc;
     }
 
-    public String getReplyBcc() {
+    public String getCurrentBcc() {
         String replyBcc = "";
         try {
-            replyBcc = InternetAddress.toString(replyMessage.getRecipients(Message.RecipientType.BCC));
+            replyBcc = InternetAddress.toString(currentMessage.getRecipients(Message.RecipientType.BCC));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return replyBcc;
     }
 
-    public String getReplySubject() {
-        String replySubject = "Re:";
+    public String getCurrentSubject() {
+        String replySubject = "";
         try {
-            replySubject += replyMessage.getSubject();
+            replySubject += currentMessage.getSubject();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return replySubject;
     }
 
-    public String getReplySentDate() {
+    public String getCurrentSentDate() {
         String replySentDate = "";
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd E HH:mm:ss");
         try {
-            replySentDate = df.format(replyMessage.getSentDate());
+            replySentDate = df.format(currentMessage.getSentDate());
         } catch (MessagingException e) {
             e.printStackTrace();
         }

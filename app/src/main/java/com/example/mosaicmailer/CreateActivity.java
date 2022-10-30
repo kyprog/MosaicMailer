@@ -12,31 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.os.HandlerCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 public class CreateActivity  extends AppCompatActivity {
@@ -95,12 +87,18 @@ public class CreateActivity  extends AppCompatActivity {
         //データを受け取る
         createType = getIntent().getStringExtra("createType");
         if(createType.equals("reply")){
-            to.setText(mp.getReplyTo());
-            cc.setText(mp.getReplyCc());
-            bcc.setText(mp.getReplyBcc());
-            subject.setText(mp.getReplySubject());
-
-            body.append("\n\nOn " + mp.getReplySentDate() + ",<" + mp.getReplyTo() + "> wrote:\n>");
+            to.setText(mp.getCurrentTo());
+            cc.setText(mp.getCurrentCc());
+            bcc.setText(mp.getCurrentBcc());
+            subject.setText("Re:" + mp.getCurrentSubject());
+            body.append("\n\nOn " + mp.getCurrentSentDate() + ",<" + mp.getCurrentTo() + "> wrote:\n>");
+            replyTextMessage = getIntent().getStringExtra("replyTextMessage");
+            replyTextMessage = replyTextMessage.replace("\n", "\n>");
+            body.append(replyTextMessage);
+        }
+        else if(createType.equals("forward")){
+            subject.setText("Fwd:" + mp.getCurrentSubject());
+            body.append("\n\nOn " + mp.getCurrentSentDate() + ",<" + mp.getCurrentTo() + "> wrote:\n>");
             replyTextMessage = getIntent().getStringExtra("replyTextMessage");
             replyTextMessage = replyTextMessage.replace("\n", "\n>");
             body.append(replyTextMessage);

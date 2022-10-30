@@ -7,4 +7,18 @@
         android:icon="@drawable/ic_baseline_delete_36"
         android:title="delete"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/reply"
+        android:icon="@drawable/ic_baseline_reply_white_36"
+        android:title="reply"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/forward"
+        android:icon="@drawable/ic_baseline_forward_to_inbox_36"
+        android:title="forward"
+        app:showAsAction="always" />
+
+
 </menu>
