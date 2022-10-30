@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,6 +43,9 @@ public class MailProcessing extends Application {
     Session session=null;
     Store store = null;
     Folder inbox = null;
+
+    //返信用メッセージ
+    Message replyMessage;
 
     //アカウント情報
     String accountInfo = null;
@@ -518,5 +522,60 @@ public class MailProcessing extends Application {
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setReplyMessage(Message msg) {
+        replyMessage = msg;
+    }
+
+    public String getReplyTo() {
+        String replyTo = "";
+        try {
+            replyTo = InternetAddress.toString(replyMessage.getReplyTo());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return replyTo;
+    }
+
+    public String getReplyCc() {
+        String replyCc = "";
+        try {
+            replyCc = InternetAddress.toString(replyMessage.getRecipients(Message.RecipientType.CC));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return replyCc;
+    }
+
+    public String getReplyBcc() {
+        String replyBcc = "";
+        try {
+            replyBcc = InternetAddress.toString(replyMessage.getRecipients(Message.RecipientType.BCC));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return replyBcc;
+    }
+
+    public String getReplySubject() {
+        String replySubject = "Re:";
+        try {
+            replySubject += replyMessage.getSubject();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return replySubject;
+    }
+
+    public String getReplySentDate() {
+        String replySentDate = "";
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd E HH:mm:ss");
+        try {
+            replySentDate = df.format(replyMessage.getSentDate());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return replySentDate;
     }
 }

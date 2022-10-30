@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
@@ -32,6 +35,8 @@ public class IndexActivity extends AppCompatActivity
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     IndexAdapter mainAdapter;
+    boolean updateFlag = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +97,21 @@ public class IndexActivity extends AppCompatActivity
         //応急処置
         if(mp.oldestMailPosition<5){mp.changeSearchHeadUpFlag(true);}
 
+        updateFlag = true;
+
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
-                System.out.println("while(true)");
-                mp.reloadMessageList("MailList");
-                HandlerCompat.createAsync(getMainLooper()).post(() -> {
-                    mainAdapter.reload(mp.MessageList);
+                if(updateFlag){
+                    System.out.println("true:update:");
+                    mp.reloadMessageList("MailList");
+                    HandlerCompat.createAsync(getMainLooper()).post(() -> {
+                        mainAdapter.reload(mp.MessageList);
 
-                });
+                    });
+                }else{
+                    System.out.println("false:not update:");
+                }
+
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
@@ -108,6 +120,18 @@ public class IndexActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateFlag = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        updateFlag = false;
     }
 
     @Override
@@ -175,6 +199,7 @@ public class IndexActivity extends AppCompatActivity
 
     public void createMail(View view) {
         Intent intent = new Intent(getApplication(), CreateActivity.class);
+        intent.putExtra("createType", "normal");
         startActivity(intent);
     }
 }

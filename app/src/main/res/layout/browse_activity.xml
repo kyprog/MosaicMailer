@@ -90,6 +90,7 @@
             android:layout_weight="1"
             android:backgroundTint="#FFFFFF"
             android:text="Button"
+            android:onClick="reply"
             app:icon="@drawable/ic_baseline_reply_24"
             app:iconTint="#000000" />
 

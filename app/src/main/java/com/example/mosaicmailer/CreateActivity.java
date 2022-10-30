@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
@@ -46,6 +47,8 @@ public class CreateActivity  extends AppCompatActivity {
     CreateAdapter mainAdapter;
     MailProcessing mp;
     TextView to,cc,bcc,subject,body;
+    String createType;
+    String replyTextMessage="";
 
 
     @Override
@@ -88,6 +91,21 @@ public class CreateActivity  extends AppCompatActivity {
             ActivityCompat.requestPermissions(CreateActivity.this, permissions, 1000);
             return;
         }
+
+        //データを受け取る
+        createType = getIntent().getStringExtra("createType");
+        if(createType.equals("reply")){
+            to.setText(mp.getReplyTo());
+            cc.setText(mp.getReplyCc());
+            bcc.setText(mp.getReplyBcc());
+            subject.setText(mp.getReplySubject());
+
+            body.append("\n\nOn " + mp.getReplySentDate() + ",<" + mp.getReplyTo() + "> wrote:\n>");
+            replyTextMessage = getIntent().getStringExtra("replyTextMessage");
+            replyTextMessage = replyTextMessage.replace("\n", "\n>");
+            body.append(replyTextMessage);
+        }
+
 
     }
 
@@ -135,12 +153,12 @@ public class CreateActivity  extends AppCompatActivity {
 
                             //text/html
                             MimeBodyPart htmlPart = new MimeBodyPart();
-                            htmlPart.setText( body.getText().toString(), charset,"html");
+                            htmlPart.setText( body.getText().toString().replaceAll("\n", "<br>"), charset,"html");
                             allPartList.add(0, htmlPart);
 
-                            //text/html
+                            //text/plain
                             MimeBodyPart textPart = new MimeBodyPart();
-                            textPart.setText( body.getText().toString(), charset);
+                            textPart.setText( body.getText().toString(), charset, "text");
                             allPartList.add(0, textPart);
 
                             mp.sendMail(To,Cc,Bcc,Subject,allPartList,charset,encoding);

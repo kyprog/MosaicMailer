@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.DialogFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -220,6 +221,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         return false;
     }
 
+    //返信
+    public void reply(View view){
+        Intent intent = new Intent(getApplication(), CreateActivity.class);
+        intent.putExtra("createType", "reply");
+        intent.putExtra("replyTextMessage", originalPlanText);
+        mp.setReplyMessage(msg);
+        startActivity(intent);
+    }
+
     //メールアドレス確認ポップアップの表示
     public void QuestionDialog(View view) {
         DialogFragment name_dialog = new BrowseQuestionFromNameDialog();
@@ -243,9 +253,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             } else if (mailContent instanceof Multipart) {
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
+                originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
                 if(html == null){
-                    originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
                     html = xformHTML(originalPlanText);//html形式に直す
                     originalHTML = html;
                     return insertMosaicToHTML(html);//モザイク処理

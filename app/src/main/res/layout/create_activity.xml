@@ -128,7 +128,7 @@
         android:gravity="top|left"
         android:hint="本文"
         android:inputType="textMultiLine"
-        android:textSize="24sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
