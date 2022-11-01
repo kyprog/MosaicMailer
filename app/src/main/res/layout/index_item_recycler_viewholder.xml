@@ -10,11 +10,11 @@
 
     <ImageView
         android:id="@+id/sender_image"
-        android:layout_width="98dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@android:mipmap/sym_def_app_icon"
-        android:contentDescription="sender_icon" />
+        android:layout_weight="0"
+        android:contentDescription="sender_icon"
+        app:srcCompat="@android:mipmap/sym_def_app_icon" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,5 +37,12 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        app:srcCompat="@drawable/ic_baseline_star_outline_36" />
 
 </LinearLayout>

@@ -81,14 +81,15 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
      * リスト内のビューはビューホルダーオブジェクトの中身(インスタンス)が表示される。
      */
     static class MainViewHolder extends RecyclerView.ViewHolder {
-        ImageView image;
+        ImageView senderImage,star;
         TextView sender,title;
         LinearLayout linearLayout;
         RecyclerView mrecyclerView;
 
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.sender_image);
+            senderImage = itemView.findViewById(R.id.sender_image);
+            star = itemView.findViewById(R.id.star);
             sender = itemView.findViewById(R.id.sender_name);
             title = itemView.findViewById(R.id.title);
             linearLayout = itemView.findViewById(R.id.mail_list);
@@ -121,6 +122,10 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             try {
                 Message mailData = this.mailDataList.get(position);
                 boolean unread = !mailData.getFlags().contains(Flags.Flag.SEEN);
+                boolean flagged = mailData.getFlags().contains(Flags.Flag.FLAGGED);
+                if(flagged){
+                    holder.star.setImageResource(R.drawable.ic_baseline_star_36);
+                }
                 final InternetAddress addrFrom = (InternetAddress) mailData.getFrom()[0];
 
                 if(mp.searchAlertMode){
@@ -244,6 +249,22 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                         });
                     });
                 }
+            }
+        });
+        holder.star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int ps = holder.getLayoutPosition();
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    boolean flagged = mp.FlaggedinMessageList(ps);
+                    if(flagged){
+                        holder.star.setImageResource(R.drawable.ic_baseline_star_outline_36);
+                        mp.setFlaggedinMessageList(ps, false);
+                    }else{
+                        holder.star.setImageResource(R.drawable.ic_baseline_star_36);
+                        mp.setFlaggedinMessageList(ps, true);
+                    }
+                });
             }
         });
         holder.mrecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -70,7 +70,7 @@ public class IndexActivity extends AppCompatActivity
 
         // RecyclerViewのレイアウトサイズを変更しない設定をONにする
         // パフォーマンス向上のための設定。
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
 
         // RecyclerViewにlayoutManagerをセットする。
         // このlayoutManagerの種類によって「1列のリスト」なのか「２列のリスト」とかが選べる。
