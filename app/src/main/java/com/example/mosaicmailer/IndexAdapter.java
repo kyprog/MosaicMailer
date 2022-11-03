@@ -120,11 +120,14 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                Message mailData = this.mailDataList.get(position);
+                Message mailData = mailDataList.get(position);
                 boolean unread = !mailData.getFlags().contains(Flags.Flag.SEEN);
                 boolean flagged = mailData.getFlags().contains(Flags.Flag.FLAGGED);
+                //System.out.println("position="+position+"/flagged="+flagged);
                 if(flagged){
                     holder.star.setImageResource(R.drawable.ic_baseline_star_36);
+                }else{
+                    holder.star.setImageResource(R.drawable.ic_baseline_star_outline_36);
                 }
                 final InternetAddress addrFrom = (InternetAddress) mailData.getFrom()[0];
 

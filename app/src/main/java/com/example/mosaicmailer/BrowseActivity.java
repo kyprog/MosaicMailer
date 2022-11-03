@@ -42,6 +42,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     WebView body;
     String originalHTML;
     String originalPlanText;
+    ArrayList<BodyPart> ImgPartList = new ArrayList<>();
+
     static BrowseActivity instance = new BrowseActivity();
 
     class LinkInfo{
@@ -231,6 +233,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void reply(View view){
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "reply");
+        System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
         intent.putExtra("replyTextMessage", originalPlanText);
         mp.setCurrentMessage(msg);
         startActivity(intent);
@@ -278,15 +281,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
                 originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
+                System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
+                extractImginMlt(multiContent);//imageを抽出し，ImgPartListに追加
                 if(html == null){
                     html = xformHTML(originalPlanText);//html形式に直す
-                    originalHTML = html;
-                    return insertMosaicToHTML(html);//モザイク処理
-                }else{
-                    originalHTML = html;
-                    return insertMosaicToHTML(html);//モザイク処理
                 }
+                //html = setImageInHTML(html);
+                originalHTML = html;
+                return insertMosaicToHTML(html);//モザイク処理
 
             } else if (mailContent instanceof InputStream) {
                 //よくわからん
@@ -365,6 +368,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 .replace("=", "&equals;");
         return escapeStr;
     }
+
+    //private String setImageInHTML(String html) {
+    //}
 
     public String insertMosaicToHTML(String html) {
 
@@ -497,7 +503,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
 
             }
-            else if(group.startsWith("<img") || group.startsWith("<br")){
+            else if(group.startsWith("<img")){
+                continue;
+            }
+            else if(group.startsWith("<br")){
                 continue;
             }
             else if(bodyFlag && !aFlag){
@@ -519,6 +528,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 BodyPart bodypart = mltPart.getBodyPart(i);
                 String bodyContentType = bodypart.getContentType();
 
+                //System.out.println("====bodyContentType=" + bodyContentType + "(BrowseActivity)====");
                 if(bodyContentType.contains("multipart")){
                     Multipart multiContent = (Multipart) bodypart.getContent();
                     plain = extractPlaininMlt(multiContent);
@@ -550,6 +560,23 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             }
         } catch (MessagingException | IOException e) {e.printStackTrace();}
         return null;
+    }
+    public void extractImginMlt(Multipart mltPart) {
+        try {
+            int count = mltPart.getCount();
+            for(int i=0; i<count; i++){
+
+                BodyPart bodypart = mltPart.getBodyPart(i);
+                String bodyContentType = bodypart.getContentType();
+
+                if(bodyContentType.contains("multipart")){
+                    Multipart multiContent = (Multipart) bodypart.getContent();
+                    extractHTMLinMlt(multiContent);
+                } else if(bodyContentType.contains("image")){
+                    ImgPartList.add(bodypart);
+                }
+            }
+        } catch (MessagingException | IOException e) {e.printStackTrace();}
     }
 
     public void setChecked(int index){

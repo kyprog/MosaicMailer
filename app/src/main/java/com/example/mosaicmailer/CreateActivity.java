@@ -93,6 +93,8 @@ public class CreateActivity  extends AppCompatActivity {
             subject.setText("Re:" + mp.getCurrentSubject());
             body.append("\n\nOn " + mp.getCurrentSentDate() + ",<" + mp.getCurrentTo() + "> wrote:\n>");
             replyTextMessage = getIntent().getStringExtra("replyTextMessage");
+            //System.out.println("CreateActivity:replyTextMessage=" + replyTextMessage);
+            if(replyTextMessage==null){replyTextMessage="テキストメッセージを取得できませんでした";}
             replyTextMessage = replyTextMessage.replace("\n", "\n>");
             body.append(replyTextMessage);
         }
@@ -100,6 +102,7 @@ public class CreateActivity  extends AppCompatActivity {
             subject.setText("Fwd:" + mp.getCurrentSubject());
             body.append("\n\nOn " + mp.getCurrentSentDate() + ",<" + mp.getCurrentTo() + "> wrote:\n>");
             replyTextMessage = getIntent().getStringExtra("replyTextMessage");
+            if(replyTextMessage==null){replyTextMessage="テキストメッセージを取得できませんでした";}
             replyTextMessage = replyTextMessage.replace("\n", "\n>");
             body.append(replyTextMessage);
         }
