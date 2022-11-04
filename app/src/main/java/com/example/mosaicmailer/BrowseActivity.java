@@ -75,9 +75,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //ナビゲーション表示
-        mp.showCheckAlert(getWindow().getDecorView());
-
         //webViewの準備
         body = findViewById(R.id.body);
         //body.getSettings().setLoadWithOverviewMode(true);
@@ -126,6 +123,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
                     if(MosaicMode){
                         body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
+                        //ナビゲーション表示
+                        mp.showCheckAlert(getWindow().getDecorView());
                     }else{
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
