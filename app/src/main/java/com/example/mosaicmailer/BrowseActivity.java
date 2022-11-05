@@ -13,8 +13,10 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -129,8 +131,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
 
-                    /*System.out.println(mosaicMailStr);
-                    for(LinkInfo l : linkInfoList){
+                    //System.out.println(mosaicMailStr);
+                    /*for(LinkInfo l : linkInfoList){
                         System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
                     }*/
                     //body.setMovementMethod(new ScrollingMovementMethod());
@@ -286,7 +288,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 if(html == null){
                     html = xformHTML(originalPlanText);//html形式に直す
                 }
-                //html = setImageInHTML(html);
+                html = setImageInHTML(html);
                 originalHTML = html;
                 return insertMosaicToHTML(html);//モザイク処理
 
@@ -368,8 +370,52 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         return escapeStr;
     }
 
-    //private String setImageInHTML(String html) {
-    //}
+    private String setImageInHTML(String html) {
+
+        StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append(html);
+
+        //imageタグを正規表現で探す準備
+        String imageTagRegex = "src\\s*=\\s*([\"'])(.*?)\\1";
+        Pattern imageTagPtrn = Pattern.compile(imageTagRegex, Pattern.CASE_INSENSITIVE);
+        Matcher imageTagMtch = imageTagPtrn.matcher(html);
+
+        int diff = 0;
+        while (imageTagMtch.find()){
+            String src = imageTagMtch.group(2);
+            if(src.startsWith("cid:")){
+                src = src.substring(4);
+                imageTagMtch.start();
+                for(BodyPart img : ImgPartList){
+                    try {
+                        if(img.getHeader("Content-ID")[0].contains(src)){
+                            String[] fileName = img.getFileName().split("\\.");
+                            //System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
+
+                            //画像のバイト列取得
+                            ByteArrayOutputStream byOutStr = new ByteArrayOutputStream();
+                            img.writeTo(byOutStr);
+                            String img_content = byOutStr.toString("utf-8");
+                            int content_start = img_content.indexOf("Content-Transfer-Encoding")+"Content-Transfer-Encoding".length();
+                            content_start = img_content.indexOf("base64",content_start)+"base64".length();
+                            img_content = img_content.substring(content_start);
+                            img_content = img_content.replaceAll("\r\n|\r|\n","");
+                            String imgData = "data:image/" + fileName[fileName.length-1] + ";"
+                                    + img.getHeader("Content-transfer-encoding")[0] + "," + img_content;
+                            htmlBuilder.delete(imageTagMtch.start(2) + diff, imageTagMtch.end(2) + diff);
+                            htmlBuilder.insert(imageTagMtch.start(2) + diff, imgData);
+                            diff = imageTagMtch.start(2) - imageTagMtch.end(2);
+                            diff += imgData.length();
+                            break;
+                        }
+                    } catch (MessagingException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return htmlBuilder.toString();
+    }
 
     public String insertMosaicToHTML(String html) {
 
@@ -503,6 +549,44 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
             }
             else if(group.startsWith("<img")){
+                /*
+                String imageTagRegex = "src\\s*=\\s*([\"'])(.*?)\\1";
+                Pattern imageTagPtrn = Pattern.compile(imageTagRegex, Pattern.CASE_INSENSITIVE);
+                Matcher imageTagMtch = imageTagPtrn.matcher(mosaicHtml.substring(tagInfoList.get(i).start + diff, tagInfoList.get(i).end + diff));
+                if(imageTagMtch.find()){
+                    String src = imageTagMtch.group(2);
+                    if(src.startsWith("cid:")){
+                        src = src.substring(4);
+                        imageTagMtch.start();
+                        for(BodyPart img : ImgPartList){
+                            try {
+                                if(img.getHeader("Content-ID")[0].contains(src)){
+                                    String[] fileName = img.getFileName().split("\\.");
+                                    System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
+
+                                    //画像のバイト列取得
+                                    ByteArrayOutputStream byOutStr = new ByteArrayOutputStream();
+                                    img.writeTo(byOutStr);
+                                    String img_content = byOutStr.toString("utf-8");
+                                    int content_start = img_content.indexOf("Content-Transfer-Encoding")+"Content-Transfer-Encoding".length();
+                                    content_start = img_content.indexOf("base64",content_start)+"base64".length();
+                                    img_content = img_content.substring(content_start);
+                                    img_content = img_content.replaceAll("\r\n|\r|\n","");
+                                    String imgData = "data:image/" + fileName[fileName.length-1] + ";"
+                                            + img.getHeader("Content-transfer-encoding")[0] + "," + img_content;
+                                    mosaicHtml.delete(tagInfoList.get(i).start + diff +imageTagMtch.start(2), tagInfoList.get(i).start + diff +imageTagMtch.end(2));
+                                    mosaicHtml.insert(tagInfoList.get(i).start + diff +imageTagMtch.start(2), imgData);
+                                    diff += imageTagMtch.start(2) - imageTagMtch.end(2);
+                                    diff += imgData.length();
+                                    break;
+                                }
+                            } catch (MessagingException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                */
                 continue;
             }
             else if(group.startsWith("<br")){
@@ -570,7 +654,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 if(bodyContentType.contains("multipart")){
                     Multipart multiContent = (Multipart) bodypart.getContent();
-                    extractHTMLinMlt(multiContent);
+                    extractImginMlt(multiContent);
                 } else if(bodyContentType.contains("image")){
                     ImgPartList.add(bodypart);
                 }
