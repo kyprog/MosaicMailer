@@ -498,7 +498,7 @@ public class MailProcessing extends Application {
             MimeMessage message = new MimeMessage(session);
 
             // Set From:(※名前の奴ないとうまいこと行かないっぽい？)
-            message.setFrom(new InternetAddress(accountInfo, "mosaicmailer"));
+            message.setFrom(new InternetAddress(accountInfo, accountInfo));
             // Set ReplyTo:
             message.setReplyTo(new Address[]{new InternetAddress(accountInfo)});
             // Set To:

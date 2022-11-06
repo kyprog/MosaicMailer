@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 helper = new DatabaseHelper(this);
                 SQLiteDatabase db = helper.getWritableDatabase();
+                db.delete("accountsInfo", null, null);
                 ContentValues cv = new ContentValues();
                 cv.put("mailaddress", mailaddress);
                 cv.put("password", password);
