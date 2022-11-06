@@ -139,42 +139,70 @@ public class CreateActivity  extends AppCompatActivity {
                 return true;
 
             case R.id.send:
-                if(Patterns.EMAIL_ADDRESS.matcher(to.getText().toString()).matches()){
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        try {
-                            final String charset = "UTF-8";
-                            final String encoding = "base64";
-
-                            String To = to.getText().toString();
-                            String Cc = cc.getText().toString();
-                            String Bcc = bcc.getText().toString();
-                            String Subject = subject.getText().toString();
-
-                            List<MimeBodyPart> allPartList = mainAdapter.getAttachmentList();
-
-                            //text/html
-                            MimeBodyPart htmlPart = new MimeBodyPart();
-                            htmlPart.setText( body.getText().toString().replaceAll("\n", "<br>"), charset,"html");
-                            allPartList.add(0, htmlPart);
-
-                            //text/plain
-                            MimeBodyPart textPart = new MimeBodyPart();
-                            textPart.setText( body.getText().toString(), charset, "text");
-                            allPartList.add(0, textPart);
-
-                            mp.sendMail(To,Cc,Bcc,Subject,allPartList,charset,encoding);
-
-                        } catch (MessagingException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    finish();
-                }else{
-                    Snackbar emailSnackbar = Snackbar.make(body, "メールアドレスを入力してください", Snackbar.LENGTH_SHORT);
-                    emailSnackbar.show();
+                String[] tos = to.getText().toString().replaceAll("\\s", "").split(",");
+                for(String toTmp : tos){
+                    if(!Patterns.EMAIL_ADDRESS.matcher(toTmp).matches()){
+                        Snackbar emailSnackbar = Snackbar.make(body, "Toのメールアドレスを正しく入力してください", Snackbar.LENGTH_SHORT);
+                        emailSnackbar.show();
+                        return true;
+                    }
                 }
-                return true;
+                String ccStr = cc.getText().toString().replaceAll("\\s", "");
+                String[] ccs = ccStr.split(",");
+                if(!ccStr.equals("")){
+                    for(String ccTmp : ccs){
+                        if(!Patterns.EMAIL_ADDRESS.matcher(ccTmp).matches()){
+                            Snackbar emailSnackbar = Snackbar.make(body, "Ccのメールアドレスを正しく入力してください", Snackbar.LENGTH_SHORT);
+                            emailSnackbar.show();
+                            return true;
+                        }
+                    }
+                }else{
+                    ccs = null;
+                }
+                String bccStr = bcc.getText().toString().replaceAll("\\s", "");
+                String[] bccs = bccStr.split(",");
+                if(!bccStr.equals("")) {
+                    for (String bccTmp : bccs) {
+                        if (!Patterns.EMAIL_ADDRESS.matcher(bccTmp).matches()) {
+                            Snackbar emailSnackbar = Snackbar.make(body, "Bccのメールアドレスを正しく入力してください", Snackbar.LENGTH_SHORT);
+                            emailSnackbar.show();
+                            return true;
+                        }
+                    }
+                }else{
+                    bccs = null;
+                }
+                //System.out.println("---" + to.getText().toString().replaceAll("\\s", "") + "---(CreateActivity)");
+                String[] finalCcs = ccs;
+                String[] finalBccs = bccs;
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    try {
+                        final String charset = "UTF-8";
+                        final String encoding = "base64";
 
+                        String Subject = subject.getText().toString();
+
+                        List<MimeBodyPart> allPartList = mainAdapter.getAttachmentList();
+
+                        //text/html
+                        MimeBodyPart htmlPart = new MimeBodyPart();
+                        htmlPart.setText( body.getText().toString().replaceAll("\n", "<br>"), charset,"html");
+                        allPartList.add(0, htmlPart);
+
+                        //text/plain
+                        MimeBodyPart textPart = new MimeBodyPart();
+                        textPart.setText( body.getText().toString(), charset, "text");
+                        allPartList.add(0, textPart);
+
+                        mp.sendMail(tos, finalCcs, finalBccs,Subject,allPartList,charset,encoding);
+
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                });
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -464,7 +464,7 @@ public class MailProcessing extends Application {
         return true;
     }
 
-    public void sendMail(String to, String cc, String bcc, String subject,List<MimeBodyPart> allPartList, String charset, String encoding) {
+    public void sendMail(String[] tos, String[] ccs, String[] bccs, String subject, List<MimeBodyPart> allPartList, String charset, String encoding) {
 
         String host = "smtp.office365.com";
         String port = "587";
@@ -502,14 +502,34 @@ public class MailProcessing extends Application {
             // Set ReplyTo:
             message.setReplyTo(new Address[]{new InternetAddress(accountInfo)});
             // Set To:
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            // Set Cc:
-            if(Patterns.EMAIL_ADDRESS.matcher(cc).matches()){
-                message.setRecipient(Message.RecipientType.CC, new InternetAddress(cc));
+            InternetAddress[] toArray =new InternetAddress[tos.length];
+            int n = 0;
+            for(String to : tos){
+                toArray[n]=((new InternetAddress(to)));
+                n= n+1;
             }
+            message.setRecipients(Message.RecipientType.TO, toArray);
+
+            // Set Cc:
+            if(ccs != null){
+                InternetAddress[] ccArray =new InternetAddress[ccs.length];
+                n = 0;
+                for(String cc : ccs){
+                    ccArray[n]=((new InternetAddress(cc)));
+                    n= n+1;
+                }
+                message.setRecipients(Message.RecipientType.CC, ccArray);
+            }
+
             // Set Bcc:
-            if(Patterns.EMAIL_ADDRESS.matcher(bcc).matches()){
-                message.setRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+            if(bccs != null){
+                InternetAddress[] bccArray =new InternetAddress[bccs.length];
+                n = 0;
+                for(String bcc : bccs){
+                    bccArray[n]=((new InternetAddress(bcc)));
+                    n= n+1;
+                }
+                message.setRecipients(Message.RecipientType.BCC, bccArray);
             }
 
             message.setSubject(subject, charset);
