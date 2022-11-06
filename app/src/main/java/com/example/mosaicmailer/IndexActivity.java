@@ -7,10 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -182,10 +185,17 @@ public class IndexActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.setting:
                 // ...処理を書きます
-                Intent intent = new Intent(getApplication(),SettingActivity.class);
+                intent = new Intent(getApplication(),SettingActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.login:
+                // ...処理を書きます
+                intent = new Intent(getApplication(),LoginActivity.class);
+                intent.putExtra("loginType", "Login");
                 startActivity(intent);
                 break;
             default:
