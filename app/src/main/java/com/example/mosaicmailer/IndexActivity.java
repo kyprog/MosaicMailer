@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -66,6 +67,9 @@ public class IndexActivity extends AppCompatActivity
 
         // NavigationView Listener
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView mailAddress = (TextView) headerView.findViewById(R.id.mailAddress);
+        mailAddress.setText(mp.accountInfo);
         navigationView.setNavigationItemSelectedListener(this);
 
         //recyclerView
@@ -140,6 +144,10 @@ public class IndexActivity extends AppCompatActivity
     @Override
     protected void onRestart(){
         super.onRestart();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView mailAddress = (TextView) headerView.findViewById(R.id.mailAddress);
+        mailAddress.setText(mp.accountInfo);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.reloadMessageList("MailList");
