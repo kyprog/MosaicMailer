@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -32,6 +33,14 @@ public class BrowseQuestionURLCompareDialog extends DialogFragment {
         //レイアウトの呼び出し
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(activity)
                 .inflate(R.layout.browse_question_common_dialog, null);
+
+        if( !Patterns.WEB_URL.matcher(mp.mailURL).matches() ){
+            DialogFragment dialogFragment = new BrowseQuestionURLSuspiciousDialog();
+            dialogFragment.show( getFragmentManager(), "URLSuspiciousQuestionDialog");
+            dismiss();
+        }
+
+
 
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView13);
