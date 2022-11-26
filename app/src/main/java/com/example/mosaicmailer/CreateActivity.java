@@ -48,7 +48,7 @@ public class CreateActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_activity);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
-
+        
         //view
         to = findViewById(R.id.editTo);
         cc = findViewById(R.id.editCc);

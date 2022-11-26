@@ -2,6 +2,7 @@ package com.example.mosaicmailer;
 
 import android.accounts.AccountManager;
 import android.app.Application;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -12,12 +13,20 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -101,6 +110,9 @@ public class MailProcessing extends Application {
 
     //削除関連
     boolean phishingFlag = false;
+
+    //ログ関連
+    final String logFileName="MosaicLog.log";
 
 
     @Override
@@ -626,5 +638,57 @@ public class MailProcessing extends Application {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void createLog() {
+        OutputStreamWriter outputStreamWriter = null;
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        try {
+            outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
+            outputStreamWriter.write("time,state,screen,event\r\n");
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeLog(String state, String screen, String event) {
+        OutputStreamWriter outputStreamWriter = null;
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        try {
+            outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
+            outputStreamWriter.write(df.format(date) + "," + state + "," + screen + "," + event + "\r\n");
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String readLog() {
+        String result = "";
+        InputStream inputStream = null;
+        try {
+            inputStream = openFileInput(logFileName);
+
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                String tempString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((tempString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(tempString+"\r\n");
+                }
+                inputStream.close();
+                result = stringBuilder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

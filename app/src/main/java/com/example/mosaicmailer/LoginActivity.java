@@ -32,6 +32,12 @@ public class LoginActivity extends AppCompatActivity {
         //ログインタイプ
         loginType = getIntent().getStringExtra("loginType");
 
+        //ログ・ファイルの作成
+        mp.createLog();
+
+        //ログの書き出し
+        mp.writeLog("normal","login","onCreate");
+
         if(loginType==null){
             //アカウント情報をDBから探す．
             helper = new DatabaseHelper(this);

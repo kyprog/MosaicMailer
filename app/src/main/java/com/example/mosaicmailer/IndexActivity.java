@@ -48,6 +48,7 @@ public class IndexActivity extends AppCompatActivity
         setContentView(R.layout.index_navigation_menu);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
         //testStr = mp.getTestString();
+        mp.writeLog("normal","index","onCreate");
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);

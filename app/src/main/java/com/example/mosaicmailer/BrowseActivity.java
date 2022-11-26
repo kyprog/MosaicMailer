@@ -70,6 +70,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         setContentView(R.layout.browse_activity);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
 
+        //ログの書き出し
+        mp.writeLog("normal","browse","onCreate");
+
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
