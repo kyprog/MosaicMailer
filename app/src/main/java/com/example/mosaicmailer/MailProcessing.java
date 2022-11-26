@@ -1,8 +1,10 @@
 package com.example.mosaicmailer;
 
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 
@@ -11,12 +13,15 @@ import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -37,6 +42,10 @@ import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
+
+//import com.microsoft.aad.msal4j.IAuthenticationResult;
+//import com.microsoft.aad.msal4j.PublicClientApplication;
+//import com.microsoft.aad.msal4j.UserNamePasswordParameters;
 
 public class MailProcessing extends Application {
     //操作
@@ -125,11 +134,11 @@ public class MailProcessing extends Application {
             props.put("mail.store.protocol", "imap");
             props.put("mail.imap.ssl.protocols", "TLSv1.2");
 
-            session = Session.getInstance(props, null);
+            session = Session.getInstance(props);
 
             store = session.getStore("imap");
             store.connect("outlook.office365.com", 993, username, password);
-
+            
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
             accountInfo = username;
