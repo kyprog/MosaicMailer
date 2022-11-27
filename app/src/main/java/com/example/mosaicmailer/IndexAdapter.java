@@ -220,6 +220,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 System.out.println(ps);
+                if(!mp.SearchHeadUpFlag && tmprecyclerView.getLayoutManager().getChildCount()>=mp.oldestMailPosition){
+                    mp.changeSearchHeadUpFlag(true);
+                }
                 if( !(mp.searchAlertMode&&(ps!=mp.openMessageListPosition)) ){
                     Executors.newSingleThreadExecutor().execute(() -> {
                         boolean isAlert = mp.isAlertMessege(ps);

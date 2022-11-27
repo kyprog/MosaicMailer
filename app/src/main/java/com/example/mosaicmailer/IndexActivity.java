@@ -102,9 +102,6 @@ public class IndexActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        //応急処置
-        if(mp.oldestMailPosition<5){mp.changeSearchHeadUpFlag(true);}
-
         updateFlag = true;
 
         Executors.newSingleThreadExecutor().execute(() -> {
