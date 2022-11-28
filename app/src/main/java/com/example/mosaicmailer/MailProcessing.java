@@ -272,7 +272,7 @@ public class MailProcessing extends Application {
                 flags = message.getFlags();
                 if (!flags.contains(Flags.Flag.SEEN)){
                     oldestMailPosition=oldestTmp;
-                    System.out.println(oldestMailPosition);
+                    //System.out.println(oldestMailPosition);
                 }
             } catch (MessagingException e) {
                 e.printStackTrace();

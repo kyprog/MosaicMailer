@@ -118,7 +118,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             @Override
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
-                System.out.println(ps);
+                //System.out.println(ps);
                 Intent intent = new Intent(activity, BrowseActivity.class);
                 // Activity以外からActivityを呼び出すためのフラグを設定
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

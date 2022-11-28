@@ -3,7 +3,6 @@ package com.example.mosaicmailer;
 
 import static android.os.Looper.getMainLooper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.os.HandlerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -35,12 +35,15 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
     int lenMailDataList = 0;
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
+    LinearLayoutManager mLinearLayoutManager;
 
-    IndexAdapter(Context context, RecyclerView recyclerView) {
+
+    IndexAdapter(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
         activity=context;
         tmprecyclerView = recyclerView;
         mp = (MailProcessing)activity;
         initMailData();
+        mLinearLayoutManager = layoutManager;
 
     }
 
@@ -219,8 +222,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             @Override
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
-                System.out.println(ps);
-                if(!mp.SearchHeadUpFlag && tmprecyclerView.getLayoutManager().getChildCount()>=mp.oldestMailPosition){
+                //System.out.println(ps);
+                if(!mp.SearchHeadUpFlag && mLinearLayoutManager.getChildCount()>=mp.oldestMailPosition){
+                    //System.out.println("child"+mLinearLayoutManager.getChildCount());
                     mp.changeSearchHeadUpFlag(true);
                 }
                 if( !(mp.searchAlertMode&&(ps!=mp.openMessageListPosition)) ){
@@ -275,9 +279,16 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         });
         holder.mrecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                //System.out.println("dy:"+dy);
+                //System.out.println("dy:"+dy);
+                System.out.println("topPosition" + mLinearLayoutManager.findFirstVisibleItemPosition() +
+                        "/" + "bottomPosition" + mLinearLayoutManager.findLastVisibleItemPosition());
+            }
+            @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
-                System.out.println(ps);
+                //System.out.println(ps);
                 if( ps+1>=mp.oldestMailPosition && !mp.SearchHeadUpFlag){
                     if( mp.showSearchHeadUpAlertFlag ){
                         mp.SearchHeadUpAlert.dismiss();

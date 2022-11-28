@@ -214,8 +214,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 String url = hittestresult.getExtra();
                 int linkInfoIndex = 0;
                 for(LinkInfo linkTmp : linkInfoList){
-                    System.out.println(url);
-                    System.out.println(linkTmp.href);
+                    //System.out.println(url);
+                    //System.out.println(linkTmp.href);
                     if(url.equals(linkTmp.href)){
                         url = url.substring(0, url.length()-linkTmp.countSharp);
                         mp.setMailURL(linkTmp.linkText);
@@ -237,7 +237,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void reply(View view){
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "reply");
-        System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
+        //System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
         intent.putExtra("replyTextMessage", originalPlanText);
         mp.setCurrentMessage(msg);
         startActivity(intent);
@@ -285,7 +285,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
                 originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
-                System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
+                //System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
                 extractImginMlt(multiContent);//imageを抽出し，ImgPartListに追加
                 if(html == null){

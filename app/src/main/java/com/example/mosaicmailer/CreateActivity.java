@@ -239,9 +239,9 @@ public class CreateActivity  extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } else if ("file".equalsIgnoreCase( uri.getScheme() )) { // File
-                System.out.println("this uri is file://~");
+                //System.out.println("this uri is file://~");
             } else{
-                System.out.println("else uri type");
+                //System.out.println("else uri type");
             }
         }
     }

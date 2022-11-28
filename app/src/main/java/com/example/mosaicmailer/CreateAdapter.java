@@ -92,7 +92,7 @@ public class CreateAdapter extends RecyclerView.Adapter<CreateAdapter.MainViewHo
         holder.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(pos);
+                //System.out.println(pos);
                 deleteAttachment(pos);
             }
         });

@@ -91,7 +91,7 @@ public class IndexActivity extends AppCompatActivity
             mp.searchAlert();//注意喚起メールが来ていないか調べる．
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 // Adapter生成してRecyclerViewにセット
-                mainAdapter = new IndexAdapter(getApplication(), recyclerView);
+                mainAdapter = new IndexAdapter(getApplication(), recyclerView, layoutManager);
                 recyclerView.setAdapter(mainAdapter);
             });
             countDownLatch.countDown();
@@ -107,14 +107,14 @@ public class IndexActivity extends AppCompatActivity
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
                 if(updateFlag){
-                    System.out.println("true:update:");
+                    //System.out.println("true:update:");
                     mp.reloadMessageList("MailList");
                     HandlerCompat.createAsync(getMainLooper()).post(() -> {
                         mainAdapter.reload(mp.MessageList);
 
                     });
                 }else{
-                    System.out.println("false:not update:");
+                    //System.out.println("false:not update:");
                 }
 
                 try {

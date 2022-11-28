@@ -164,7 +164,7 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
         }
 
         domain = domain.split(":")[0];
-        System.out.println(domain);
+        //System.out.println(domain);
 
         return domain;
     }
