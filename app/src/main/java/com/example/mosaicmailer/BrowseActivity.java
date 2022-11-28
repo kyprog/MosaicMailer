@@ -6,14 +6,18 @@ import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import org.apache.commons.io.IOUtils;
+import com.google.android.material.snackbar.Snackbar;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -82,6 +86,26 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
         //webViewの準備
         body = findViewById(R.id.body);
+        body.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if(MosaicMode){
+                    //System.out.println("[MosaicModeOn]tap "+url);
+                    Snackbar linkTapAlert = Snackbar.make(body, "リンクを押す前に，URLを確認してください",Snackbar.LENGTH_SHORT);
+                    linkTapAlert.setBackgroundTint(getResources().getColor(R.color.red));
+                    linkTapAlert.setTextColor(getResources().getColor(R.color.black));
+                    linkTapAlert.show();
+                    view.stopLoading();
+                    return false;
+                }else{
+                    // trueを返すことで、WebView内で開かないようにさせる
+                    // 今回はデフォルトのウェブブラウザでリンク先を開く
+                    //System.out.println("tap "+url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
+            }
+        });
         //body.getSettings().setLoadWithOverviewMode(true);
         //body.getSettings().setUseWideViewPort(true);
         body.getSettings().setBuiltInZoomControls(true);
