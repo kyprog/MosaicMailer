@@ -103,7 +103,7 @@ public class IndexActivity extends AppCompatActivity
         }
 
         updateFlag = true;
-        mp.showSearchHeadUpAlert(getWindow().getDecorView());
+        mp.showSearchHeadUpAlert(findViewById(R.id.list_recycler_view));
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
                 //応急処置
