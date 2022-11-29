@@ -103,12 +103,22 @@ public class IndexActivity extends AppCompatActivity
         }
 
         updateFlag = true;
-
         mp.showSearchHeadUpAlert(getWindow().getDecorView());
-        //応急処置
-        if(10>=mp.oldestMailPosition){
-            mp.SearchHeadUpAlert.dismiss();
-        }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while(true) {
+                //応急処置
+                if(layoutManager.findLastVisibleItemPosition()>=mp.oldestMailPosition){
+                    mp.SearchHeadUpAlert.dismiss();
+                    //System.out.println("-----");
+                    break;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
