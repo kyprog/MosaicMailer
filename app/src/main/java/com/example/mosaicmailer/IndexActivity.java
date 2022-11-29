@@ -109,6 +109,7 @@ public class IndexActivity extends AppCompatActivity
                 //応急処置
                 if(layoutManager.findLastVisibleItemPosition()>=mp.oldestMailPosition){
                     mp.SearchHeadUpAlert.dismiss();
+                    mp.changeSearchHeadUpFlag(true);
                     //System.out.println("-----");
                     break;
                 }
