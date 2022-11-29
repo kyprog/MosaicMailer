@@ -104,6 +104,12 @@ public class IndexActivity extends AppCompatActivity
 
         updateFlag = true;
 
+        mp.showSearchHeadUpAlert(getWindow().getDecorView());
+        //応急処置
+        if(10>=mp.oldestMailPosition){
+            mp.SearchHeadUpAlert.dismiss();
+        }
+
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
                 if(updateFlag){

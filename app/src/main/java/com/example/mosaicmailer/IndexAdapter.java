@@ -42,8 +42,8 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         activity=context;
         tmprecyclerView = recyclerView;
         mp = (MailProcessing)activity;
-        initMailData();
         mLinearLayoutManager = layoutManager;
+        initMailData();
 
     }
 
@@ -116,7 +116,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
 
     /**
      * ViewHolderとRecyclerViewをバインドする
-     * 一行のViewに対して共通でやりたい処理をここで書く。今回はテキストのセットしかしてないけど。
+     * 一行のViewに対して共通でやりたい処理をここで書く。
      */
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
