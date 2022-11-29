@@ -289,7 +289,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
                 //System.out.println(ps);
-                if( ps+1>=mp.oldestMailPosition && !mp.SearchHeadUpFlag){
+                if(!mp.SearchHeadUpFlag && ps+1>=mp.oldestMailPosition){
                     if( mp.showSearchHeadUpAlertFlag ){
                         mp.SearchHeadUpAlert.dismiss();
                         mp.changeShowSearchHeadUpAlertFlag(false);
