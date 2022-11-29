@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -59,6 +60,9 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView2);
         realURL.setText(Html.fromHtml("リンク先のURL<br>"+RealURLsb.toString()));
+        realURL.setMovementMethod(new ScrollingMovementMethod());
+        realURL.setHeight(400);
+        realURL.setScrollbarFadingEnabled(false);
 
         //質問文1の表示
         Random rand = new Random();

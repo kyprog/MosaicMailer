@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,10 +46,16 @@ public class BrowseQuestionURLCompareDialog extends DialogFragment {
         //実際のURL
         TextView realURL = layout.findViewById(R.id.textView13);
         realURL.setText("リンク先のURL\n"+mp.realURL);
+        realURL.setMovementMethod(new ScrollingMovementMethod());
+        realURL.setHeight(400);
+        realURL.setScrollbarFadingEnabled(false);
 
         //メールに表示されているURL
         TextView mailURL = layout.findViewById(R.id.textView14);
         mailURL.setText("メールに表示されているURL\n"+mp.mailURL);
+        mailURL.setMovementMethod(new ScrollingMovementMethod());
+        mailURL.setHeight(400);
+        realURL.setScrollbarFadingEnabled(false);
 
         //メールに表示されているURLと質問文の表示
         TextView question = layout.findViewById(R.id.textView5);
