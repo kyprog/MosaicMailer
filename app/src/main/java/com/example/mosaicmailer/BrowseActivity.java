@@ -90,7 +90,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if(MosaicMode){
                     //System.out.println("[MosaicModeOn]tap "+url);
-                    Snackbar linkTapAlert = Snackbar.make(body, "リンクを押す前に，URLを確認してください",Snackbar.LENGTH_SHORT);
+                    Snackbar linkTapAlert = Snackbar.make(findViewById(R.id.bottomLinearLayout), "リンクを押す前に，URLを確認してください",Snackbar.LENGTH_SHORT);
                     linkTapAlert.setBackgroundTint(getResources().getColor(R.color.red));
                     linkTapAlert.setTextColor(getResources().getColor(R.color.black));
                     linkTapAlert.show();
