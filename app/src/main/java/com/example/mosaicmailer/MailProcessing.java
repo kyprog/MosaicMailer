@@ -10,7 +10,9 @@ import android.util.Patterns;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -240,7 +242,8 @@ public class MailProcessing extends Application {
     }
 
     public void showCheckAlert(View v){
-        CheckAlert = Snackbar.make(v.findViewById(R.id.body), "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
+        //CheckAlert = Snackbar.make(v.findViewById(R.id.body), "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
+        CheckAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout),"フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
         CheckAlert.setBackgroundTint(getResources().getColor(R.color.red));
         CheckAlert.setTextColor(getResources().getColor(R.color.black));
         CheckAlert.show();
@@ -248,7 +251,7 @@ public class MailProcessing extends Application {
     }
 
     public void ReportAlert(View v) {
-        ReportAlert = Snackbar.make(v.findViewById(R.id.myCoordinatorLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
+        ReportAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
         ReportAlert.setBackgroundTint(getResources().getColor(R.color.red));
         ReportAlert.setTextColor(getResources().getColor(R.color.black));
         ReportAlert.setAction("しました",  view -> DeleteAlert(v));
@@ -256,7 +259,7 @@ public class MailProcessing extends Application {
     }
 
     public void DeleteAlert(View v) {
-        DeleteAlert = Snackbar.make(v.findViewById(R.id.body), "このフィッシングメールを削除してください", Snackbar.LENGTH_INDEFINITE);
+        DeleteAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "このフィッシングメールを削除してください", Snackbar.LENGTH_INDEFINITE);
         DeleteAlert.setBackgroundTint(getResources().getColor(R.color.red));
         DeleteAlert.setTextColor(getResources().getColor(R.color.black));
         DeleteAlert.show();
