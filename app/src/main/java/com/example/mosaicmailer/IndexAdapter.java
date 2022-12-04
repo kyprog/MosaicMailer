@@ -36,6 +36,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
     LinearLayoutManager mLinearLayoutManager;
+    final String WINDOW = "mail_index_window";
 
 
     IndexAdapter(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
@@ -134,7 +135,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                 }
                 final InternetAddress addrFrom = (InternetAddress) mailData.getFrom()[0];
 
-                if(mp.searchAlertMode){
+                if(mp.searchPhishingMode){
                     if(mp.openMessageListPosition == position){
                         if(unread){
                             if(addrFrom.getPersonal()==null){
@@ -227,11 +228,20 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     //System.out.println("child"+mLinearLayoutManager.getChildCount());
                     mp.changeSearchHeadUpFlag(true);
                 }
-                if( !(mp.searchAlertMode&&(ps!=mp.openMessageListPosition)) ){
+                if( !(mp.searchPhishingMode &&(ps!=mp.openMessageListPosition)) ){
                     Executors.newSingleThreadExecutor().execute(() -> {
                         boolean isAlert = mp.isAlertMessege(ps);
                         HandlerCompat.createAsync(getMainLooper()).post(() ->{
                             if(mp.existAlert && isAlert){
+                                try {
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
+                                    //注意喚起メールがタップされたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap alertMail");
+                                } catch (MessagingException e) {
+                                    e.printStackTrace();
+                                }
+
                                 Intent intent = new Intent(activity, BrowseActivity.class);
                                 // Activity以外からActivityを呼び出すためのフラグを設定
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -242,11 +252,22 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 activity.startActivity(intent);
 
                             }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
-
+                                try {
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can't open]");
+                                } catch (MessagingException e) {
+                                    e.printStackTrace();
+                                }
                                 mp.showSearchHeadUpAlert(v);
                                 mp.changeShowSearchHeadUpAlertFlag(true);
 
                             }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
+                                try {
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
+                                } catch (MessagingException e) {
+                                    e.printStackTrace();
+                                }
                                 Intent intent = new Intent(activity, BrowseActivity.class);
                                 // Activity以外からActivityを呼び出すためのフラグを設定
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -295,6 +316,13 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                         mp.changeShowSearchHeadUpAlertFlag(false);
                     }
                     mp.changeSearchHeadUpFlag(true);
+                    //一番下の未読メールまでスクロールしたことを表すログの書き出し
+                    mp.writeLog(WINDOW,"scroll to the bottom unread mail position");
+                    if(!mp.existAlert){
+                        //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                        mp.phaseSearchAlertMail = false;
+                        mp.writeLog(WINDOW,"end searchAlert");
+                    }
                 }
 
                 if(ps==lenMailDataList-1){

@@ -4,16 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -25,12 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
-
-import javax.mail.Message;
 
 public class IndexActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +31,7 @@ public class IndexActivity extends AppCompatActivity
     LinearLayoutManager layoutManager;
     IndexAdapter mainAdapter;
     boolean updateFlag = true;
+    final String WINDOW = "mail_index_window";
 
 
     @Override
@@ -47,8 +39,9 @@ public class IndexActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.index_navigation_menu);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
-        //testStr = mp.getTestString();
-        mp.writeLog("normal","index","onCreate");
+
+        //開いた画面のログの書き出し
+        mp.writeLog(WINDOW,"open " + WINDOW);
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -85,10 +78,22 @@ public class IndexActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        //注意喚起メールを探すフェーズが始まったことを表すログの書き出し
+        mp.phaseSearchAlertMail = true;
+        mp.writeLog(WINDOW,"start searchAlert");
+
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.searchOldestMailPosition();//(今，取得しているメッセージの中で)一番下の未読メールを取得する．
+            mp.writeLog(WINDOW,"bottom unread mail position["+mp.oldestMailPosition+"]");//一番下の未読メールの位置を表すログの書き出し
             mp.searchAlert();//注意喚起メールが来ていないか調べる．
+            if(mp.existAlert){
+                //注意喚起メールが来ているかどうか表すログの書き出し
+                mp.writeLog(WINDOW,"alertMail come");
+            }else{
+                //注意喚起メールが来ているかどうか表すログの書き出し
+                mp.writeLog(WINDOW,"alertMail don't come");
+            }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 // Adapter生成してRecyclerViewにセット
                 mainAdapter = new IndexAdapter(getApplication(), recyclerView, layoutManager);
@@ -179,7 +184,7 @@ public class IndexActivity extends AppCompatActivity
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(mp.searchAlertMode){
+        if(mp.searchPhishingMode){
             mp.SearchPhishingAlertInList(this.getWindow().getDecorView());
         }
     }

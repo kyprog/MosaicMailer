@@ -152,6 +152,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     }
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
                     if(MosaicMode){
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
+                        mp.phaseConfirmMail = true;
+                        mp.writeLog(WINDOW,"start confirmation mailAddress&URL");
+
                         body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
                         //ナビゲーション表示
                         mp.showCheckAlert(getWindow().getDecorView());
@@ -224,6 +228,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                mp.phaseConfirmMail = false;
+                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
                 if(!mp.phishingFlag){finish();}
             });
         });
@@ -242,6 +250,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                mp.phaseConfirmMail = false;
+                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
                 if(!mp.phishingFlag){finish();}
             });
         });
@@ -724,6 +736,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
         MosaicMode = false;
+        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+        mp.phaseConfirmMail = false;
+        mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
         if(ListType.equals("MailList")){
             mp.dropAlert(mp.openMessageListPosition);
         }

@@ -1,38 +1,29 @@
 package com.example.mosaicmailer;
 
-import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.util.Patterns;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -107,14 +98,25 @@ public class MailProcessing extends Application {
     String sourceAlertMail = "";
 
     //探索関連
-    boolean searchAlertMode = false; //フィッシングメールを探すフェーズかどうかのフラグ
-    String AlertMailSource = ""; //フィッシングメールを探すフェーズかどうかのフラグ
+    boolean searchPhishingMode = false; //フィッシングメールを探すフェーズかどうかのフラグ
+    String AlertMailSource = ""; //注意喚起メールの内容
 
     //削除関連
     boolean phishingFlag = false;
 
-    //ログ関連
+    //ログ関連----------------------------------
     final String logFileName="MosaicLog.log";
+    ////機能
+    boolean habit_function = true;
+    boolean message_function = true;
+    ////フェーズ
+    boolean phaseSearchAlertMail = false;
+    boolean phaseConfirmMail = false;
+    boolean phaseReportAndRemove = false;
+    boolean phaseSearchPhishing = false;
+    ////起動
+    boolean boot = false;
+    //-----------------------------------------
 
 
     @Override
@@ -128,6 +130,7 @@ public class MailProcessing extends Application {
     public void onTerminate() {
         /** This Method Called when this Application finished. */
         super.onTerminate();
+        writeLog("tmp","shutdown MosaicMailer");
         try {
             inbox.close(false);
             store.close();
@@ -469,6 +472,9 @@ public class MailProcessing extends Application {
                     AlertList.remove(i);
                     if(AlertList.size()==0){
                         existAlert = false;
+                        //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                        phaseSearchAlertMail = false;
+                        writeLog("tmp","end searchAlert");
                     }
                 }
             }
@@ -645,28 +651,47 @@ public class MailProcessing extends Application {
 
     public void createLog() {
         OutputStreamWriter outputStreamWriter = null;
-        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        final Date date = new Date(System.currentTimeMillis());
         try {
             outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
-            outputStreamWriter.write("time,state,screen,event\r\n");
+            outputStreamWriter.write("time," +
+                    "window," +
+                    "habit_function," +
+                    "message_function," +
+                    "search_alertMail_phase," +
+                    "confirmation_mailAddress&URL_phase," +
+                    "reporting&removing_phase," +
+                    "search_phishingMail_phase," +
+                    "event\r\n");
             outputStreamWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void writeLog(String state, String screen, String event) {
+    public void writeLog(String window, String event) {
         OutputStreamWriter outputStreamWriter = null;
-        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        final Date date = new Date(System.currentTimeMillis());
+        String time = timeStr();
         try {
             outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
-            outputStreamWriter.write(df.format(date) + "," + state + "," + screen + "," + event + "\r\n");
+            outputStreamWriter.write(time + "," +
+                    window + "," +
+                    habit_function + "," +
+                    message_function + "," +
+                    phaseSearchAlertMail + "," +
+                    phaseConfirmMail + "," +
+                    phaseReportAndRemove + "," +
+                    phaseSearchPhishing + "," +
+                    event + "\r\n");
             outputStreamWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String timeStr() {
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
     }
 
     public String readLog() {

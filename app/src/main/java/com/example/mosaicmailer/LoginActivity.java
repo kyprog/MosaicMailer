@@ -2,7 +2,6 @@ package com.example.mosaicmailer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseHelper helper = null;
     ProgressBar progressBar;
     String loginType=null;
+    final String WINDOW = "login_window";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +28,29 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);//xmlを読み込む
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
+
+        if(!mp.boot){
+            //起動ログの書き出し
+            mp.writeLog(WINDOW,"boot MosaicMailer");
+            mp.boot=true;
+        }
+
+        //開いた画面のログの書き出し
+        mp.writeLog(WINDOW,"open " + WINDOW);
+
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
         //ログインタイプ
         loginType = getIntent().getStringExtra("loginType");
 
-        //ログ・ファイルの作成
-        mp.createLog();
+        File file = this.getFileStreamPath(mp.logFileName);
+        if(!file.exists()){
+            //ログ・ファイルの作成
+            mp.createLog();
+        }
 
         //ログの書き出し
-        mp.writeLog("normal","login","onCreate");
+        mp.writeLog(WINDOW,"onCreate");
 
         if(loginType==null){
             //アカウント情報をDBから探す．

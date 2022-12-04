@@ -24,7 +24,7 @@ public class SearchActivity extends AppCompatActivity {
         mp = (MailProcessing)this.getApplication();
 
         //ログの書き出し
-        mp.writeLog("normal","search","onCreate");
+        mp.writeLog("search","onCreate");
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -61,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
                     HandlerCompat.createAsync(getMainLooper()).post(() ->{
                         // Adapter生成してRecyclerViewにセット
                         RecyclerView.Adapter mainAdapter = null;
-                        if(mp.searchAlertMode){
+                        if(mp.searchPhishingMode){
                             if(searchedAlertKeyword){
                                 if(mp.noKeywordAlertFlag){
                                     mp.noKeywordAlert.dismiss();
@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
                                 searchRecyclerView.setAdapter(mainAdapter);
                                 if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
                                     mp.allSeenSnackbar(searchRecyclerView);
-                                    mp.searchAlertMode = false;
+                                    mp.searchPhishingMode = false;
                                 }
                             }else{
                                 mp.noKeywordAlert(searchRecyclerView);
@@ -106,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
                 searchRecyclerView.setAdapter(mainAdapter);
                 if(all_seen_flag){//注意喚起メールの情報をもとに検索して，全て未読の場合
                     mp.allSeenSnackbar(searchRecyclerView);
-                    mp.searchAlertMode = false;
+                    mp.searchPhishingMode = false;
                 }
             });
         });
