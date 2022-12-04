@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -50,6 +49,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     String originalPlanText;
     ArrayList<BodyPart> ImgPartList = new ArrayList<>();
 
+    final String WINDOW = "mail_browse_window";
+
     static BrowseActivity instance = new BrowseActivity();
 
     class LinkInfo{
@@ -75,7 +76,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         mp = (MailProcessing) this.getApplication();
 
         //ログの書き出し
-        mp.writeLog("normal","browse","onCreate");
+        mp.writeLog("browse","onCreate");
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -227,6 +228,23 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             });
         });
         return super.onSupportNavigateUp();
+    }
+
+    //端末の戻るボタンで戻る
+    @Override
+    public void onBackPressed() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            if(MosaicMode){
+                try {
+                    msg.setFlag(Flags.Flag.SEEN, false);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                if(!mp.phishingFlag){finish();}
+            });
+        });
     }
 
     @Override

@@ -47,7 +47,7 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
                 // フィッシングメールではないボタンを押した時の処理
                 if(mp.existAlert){//注意喚起メールの時
                     mp.SearchPhishingAlertInBrowse(activity.getWindow().getDecorView());
-                    mp.searchAlertMode = true;
+                    mp.searchPhishingMode = true;
                     mp.AlertMailSource = activity.originalHTML; //注意喚起メールの内容をmailprocessingにわたす
                 }
                 activity.removeMosaic();
