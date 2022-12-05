@@ -55,6 +55,7 @@ public class SettingAddActivity extends AppCompatActivity {
             SQLiteDatabase db = helper.getWritableDatabase();
             ContentValues cv = new ContentValues();
             if(settingType.equals("headUp")){
+                db.delete("HeadsUpInfo", null, null);
                 cv.put("mailaddress", aboveText);
                 cv.put("keyword", belowText);
                 db.insert("HeadsUpInfo", null, cv);
