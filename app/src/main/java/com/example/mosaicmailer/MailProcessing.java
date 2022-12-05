@@ -2,10 +2,8 @@ package com.example.mosaicmailer;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -109,8 +107,8 @@ public class MailProcessing extends Application {
     //ログ関連----------------------------------
     final String logFileName="MosaicLog.log";
     ////機能on/off
-    boolean habit_function = true;
-    boolean message_function = true;
+    boolean habitFunction = true;
+    boolean messageFunction = true;
     ////フェーズ
     boolean phaseSearchAlertMail = false;
     boolean phaseConfirmMail = false;
@@ -657,8 +655,8 @@ public class MailProcessing extends Application {
             outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
             outputStreamWriter.write("time," +
                     "window," +
-                    "habit_function," +
-                    "message_function," +
+                    "habitFunction," +
+                    "messageFunction," +
                     "search_alertMail_phase," +
                     "confirmation_mailAddress&URL_phase," +
                     "reporting&removing_phase," +
@@ -677,8 +675,8 @@ public class MailProcessing extends Application {
             outputStreamWriter = new OutputStreamWriter(openFileOutput(logFileName, Context.MODE_APPEND));
             outputStreamWriter.write(time + "," +
                     window + "," +
-                    habit_function + "," +
-                    message_function + "," +
+                    habitFunction + "," +
+                    messageFunction + "," +
                     phaseSearchAlertMail + "," +
                     phaseConfirmMail + "," +
                     phaseReportAndRemove + "," +

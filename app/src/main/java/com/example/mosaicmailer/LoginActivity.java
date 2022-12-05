@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -28,6 +30,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);//xmlを読み込む
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
+
+        //機能on/off設定
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        mp.habitFunction = pref.getBoolean("habitFunction", true);
+        mp.messageFunction = pref.getBoolean("messageFunction", true);
+        //System.out.println("===habit="+mp.habitFunction+"/message="+mp.messageFunction+"===");
 
         if(!mp.boot){
             //起動ログの書き出し

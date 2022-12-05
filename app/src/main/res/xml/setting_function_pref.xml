@@ -3,10 +3,10 @@
 
     <SwitchPreference
         android:defaultValue="true"
-        android:key="habit_function"
+        android:key="habitFunction"
         android:title="習慣化機能" />
     <SwitchPreference
         android:defaultValue="true"
-        android:key="message_function"
+        android:key="messageFunction"
         android:title="メッセージ機能" />
 </PreferenceScreen>
