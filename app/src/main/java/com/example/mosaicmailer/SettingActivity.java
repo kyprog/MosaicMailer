@@ -93,4 +93,9 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra("SettingType", "black");
         startActivity(intent);
     }
+
+    public void functionOnClick(View v) {
+        Intent intent = new Intent(getApplication(), SettingFunctionActivity.class);
+        startActivity(intent);
+    }
 }

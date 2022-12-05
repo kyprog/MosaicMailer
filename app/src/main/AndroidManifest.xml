@@ -48,6 +48,10 @@
             android:launchMode="singleTop">
         </activity>
         <activity
+            android:name=".SettingFunctionActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".SearchActivity"
             android:launchMode="singleTop">
         </activity>

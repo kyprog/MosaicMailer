@@ -370,7 +370,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
         //エスケープ処理(URLは避ける)
         int endIndex = 0;
-        int starIndex =0;
+        int starIndex = 0;
         while (StdUrlMtch.find()){
             starIndex = StdUrlMtch.start();
             editHtml.append(escapeStr(plainText.substring( endIndex, starIndex )));
