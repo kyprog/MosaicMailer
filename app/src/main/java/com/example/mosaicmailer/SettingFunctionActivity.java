@@ -1,16 +1,14 @@
 package com.example.mosaicmailer;
 
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-public class SettingFunctionActivity extends AppCompatActivity {
+public class SettingFunctionActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setting_function_activity);//xmlを読み込む
+        addPreferencesFromResource(R.xml.setting_function_pref);
 
     }
 }

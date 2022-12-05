@@ -2,8 +2,10 @@ package com.example.mosaicmailer;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -106,7 +108,7 @@ public class MailProcessing extends Application {
 
     //ログ関連----------------------------------
     final String logFileName="MosaicLog.log";
-    ////機能
+    ////機能on/off
     boolean habit_function = true;
     boolean message_function = true;
     ////フェーズ

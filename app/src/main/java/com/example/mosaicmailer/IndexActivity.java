@@ -5,11 +5,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
@@ -42,6 +45,12 @@ public class IndexActivity extends AppCompatActivity
 
         //開いた画面のログの書き出し
         mp.writeLog(WINDOW,"open " + WINDOW);
+
+        //機能on/off設定
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        mp.habit_function = pref.getBoolean("habit_function", true);
+        mp.message_function = pref.getBoolean("message_function", true);
+        //System.out.println("===habit="+mp.habit_function+"/message="+mp.message_function+"===");
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -153,6 +162,14 @@ public class IndexActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         updateFlag = true;
+
+        /*
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String msg = "";
+        msg += "習慣化機能：" + pref.getBoolean("habit_function", true);
+        msg += "\nメッセージ機能：" + pref.getBoolean("message_function", true);
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        */
     }
 
     @Override
