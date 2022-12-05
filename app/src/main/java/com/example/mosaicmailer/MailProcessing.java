@@ -73,6 +73,7 @@ public class MailProcessing extends Application {
     String presentSearchWord="";
 
     //ダイアログ関連
+    boolean scrollBottomUnreadFlag = false;//一番下の未読メールまでスクロールしたかを表すフラグ
     boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
     boolean showSearchHeadUpAlertFlag=false;//SearchHeadUpAlertアラートが出現しているかどうか
     boolean noKeywordAlertFlag = false;

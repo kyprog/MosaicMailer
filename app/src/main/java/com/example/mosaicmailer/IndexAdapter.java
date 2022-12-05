@@ -228,11 +228,71 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     //System.out.println("child"+mLinearLayoutManager.getChildCount());
                     mp.changeSearchHeadUpFlag(true);
                 }
-                if( !(mp.searchPhishingMode &&(ps!=mp.openMessageListPosition)) ){
+                if(mp.habitFunction){//習慣化機能on
+                    if( !(mp.searchPhishingMode &&(ps!=mp.openMessageListPosition)) ){//!(フィッシングメール探すフェーズで，押したメールが注意喚起メールでないとき)
+                        Executors.newSingleThreadExecutor().execute(() -> {
+                            boolean isAlert = mp.isAlertMessege(ps);
+                            HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                                if(mp.existAlert && isAlert){//注意喚起メールをタップした時
+                                    try {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
+                                        //注意喚起メールがタップされたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap alertMail");
+                                    } catch (MessagingException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Intent intent = new Intent(activity, BrowseActivity.class);
+                                    // Activity以外からActivityを呼び出すためのフラグを設定
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    //開く位置のセット
+                                    mp.setOpenMessageListPosition(ps);
+                                    // 引き渡す値
+                                    intent.putExtra("ListType", "MailList");
+                                    activity.startActivity(intent);
+
+                                }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
+                                    try {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    } catch (MessagingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mp.showSearchHeadUpAlert(v);
+                                    mp.changeShowSearchHeadUpAlertFlag(true);
+
+                                }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
+                                    try {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
+                                    } catch (MessagingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(activity, BrowseActivity.class);
+                                    // Activity以外からActivityを呼び出すためのフラグを設定
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    //開く位置のセット
+                                    mp.setOpenMessageListPosition(ps);
+                                    // 引き渡す値
+                                    intent.putExtra("ListType", "MailList");
+                                    activity.startActivity(intent);
+                                }
+                            });
+                        });
+                    }else{
+                        try {
+                            //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                            mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can't open]");
+                        } catch (MessagingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }else{//習慣化機能off
                     Executors.newSingleThreadExecutor().execute(() -> {
                         boolean isAlert = mp.isAlertMessege(ps);
                         HandlerCompat.createAsync(getMainLooper()).post(() ->{
-                            if(mp.existAlert && isAlert){
+                            if(mp.existAlert && isAlert){//注意喚起メールをタップした時
                                 try {
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
@@ -241,26 +301,15 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
-
-                                Intent intent = new Intent(activity, BrowseActivity.class);
-                                // Activity以外からActivityを呼び出すためのフラグを設定
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                //開く位置のセット
-                                mp.setOpenMessageListPosition(ps);
-                                // 引き渡す値
-                                intent.putExtra("ListType", "MailList");
-                                activity.startActivity(intent);
-
                             }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
                                 try {
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
                                 mp.showSearchHeadUpAlert(v);
                                 mp.changeShowSearchHeadUpAlertFlag(true);
-
                             }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
                                 try {
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
@@ -268,15 +317,16 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
-                                Intent intent = new Intent(activity, BrowseActivity.class);
-                                // Activity以外からActivityを呼び出すためのフラグを設定
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                //開く位置のセット
-                                mp.setOpenMessageListPosition(ps);
-                                // 引き渡す値
-                                intent.putExtra("ListType", "MailList");
-                                activity.startActivity(intent);
                             }
+
+                            Intent intent = new Intent(activity, BrowseActivity.class);
+                            // Activity以外からActivityを呼び出すためのフラグを設定
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            //開く位置のセット
+                            mp.setOpenMessageListPosition(ps);
+                            // 引き渡す値
+                            intent.putExtra("ListType", "MailList");
+                            activity.startActivity(intent);
                         });
                     });
                 }
