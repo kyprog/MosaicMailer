@@ -207,7 +207,7 @@ public class MailProcessing extends Application {
     }
 
     public void showSearchHeadUpAlert(View v){
-        if(!messageFunction){
+        if(messageFunction){
             SearchHeadUpAlert = Snackbar.make(v, "一番下の未読メールまでスクロールして注意喚起メールを探してください", Snackbar.LENGTH_INDEFINITE);
             SearchHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
             SearchHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
@@ -216,7 +216,7 @@ public class MailProcessing extends Application {
     }
 
     public void SearchPhishingAlertInBrowse(View v){
-        if(!messageFunction) {
+        if(messageFunction) {
             SearchPhishingAlertInBrowse = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
             SearchPhishingAlertInBrowse.setBackgroundTint(getResources().getColor(R.color.red));
             SearchPhishingAlertInBrowse.setTextColor(getResources().getColor(R.color.black));
@@ -226,7 +226,7 @@ public class MailProcessing extends Application {
     }
 
     public void SearchPhishingAlertInList(View v){
-        if(!messageFunction) {
+        if(messageFunction) {
             SearchPhishingAlertInList = Snackbar.make(v.findViewById(R.id.list_recycler_view), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
             SearchPhishingAlertInList.setBackgroundTint(getResources().getColor(R.color.red));
             SearchPhishingAlertInList.setTextColor(getResources().getColor(R.color.black));
@@ -236,7 +236,7 @@ public class MailProcessing extends Application {
     }
 
     public void noKeywordAlert(View v) {
-        if(!messageFunction) {
+        if(messageFunction) {
             noKeywordAlert = Snackbar.make(v, "注意喚起メールに記載された単語で検索してください", Snackbar.LENGTH_INDEFINITE);
             noKeywordAlert.setBackgroundTint(getResources().getColor(R.color.red));
             noKeywordAlert.setTextColor(getResources().getColor(R.color.black));
@@ -246,7 +246,7 @@ public class MailProcessing extends Application {
     }
 
     public void allSeenSnackbar(View v) {
-        if(!messageFunction) {
+        if(messageFunction) {
             allSeenSnackbar = Snackbar.make(v, "全てのメールを確認しました", Snackbar.LENGTH_INDEFINITE);
             allSeenSnackbar.setBackgroundTint(getResources().getColor(R.color.red));
             allSeenSnackbar.setTextColor(getResources().getColor(R.color.black));
@@ -255,7 +255,7 @@ public class MailProcessing extends Application {
     }
 
     public void showCheckAlert(View v){
-        if(!messageFunction) {
+        if(messageFunction) {
             //CheckAlert = Snackbar.make(v.findViewById(R.id.body), "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
             CheckAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "フィッシングメールかもしれません\nメールアドレスとURLを確認してください", Snackbar.LENGTH_INDEFINITE);
             CheckAlert.setBackgroundTint(getResources().getColor(R.color.red));
@@ -266,7 +266,7 @@ public class MailProcessing extends Application {
     }
 
     public void showLinkTapAlert(View v){
-        if(!messageFunction) {
+        if(messageFunction) {
             Snackbar linkTapAlert = Snackbar.make(v, "リンクを押す前に，URLを確認してください", Snackbar.LENGTH_LONG);
             linkTapAlert.setBackgroundTint(getResources().getColor(R.color.red));
             linkTapAlert.setTextColor(getResources().getColor(R.color.black));
@@ -276,7 +276,7 @@ public class MailProcessing extends Application {
     }
 
     public void ReportAlert(View v) {
-        if(!messageFunction) {
+        if(messageFunction) {
             ReportAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
             ReportAlert.setBackgroundTint(getResources().getColor(R.color.red));
             ReportAlert.setTextColor(getResources().getColor(R.color.black));
@@ -286,7 +286,7 @@ public class MailProcessing extends Application {
     }
 
     public void DeleteAlert(View v) {
-        if(!messageFunction) {
+        if(messageFunction) {
             DeleteAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "このフィッシングメールを削除してください", Snackbar.LENGTH_INDEFINITE);
             DeleteAlert.setBackgroundTint(getResources().getColor(R.color.red));
             DeleteAlert.setTextColor(getResources().getColor(R.color.black));
