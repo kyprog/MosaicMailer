@@ -34,7 +34,9 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
             public void onClick(View v) {
                 // フィッシングメールであるボタンを押した時の処理
                 activity.removeMosaic();
-                mp.CheckAlert.dismiss();
+                if(mp.messageFunction){
+                    mp.CheckAlert.dismiss();
+                }
                 mp.ReportAlert(activity.getWindow().getDecorView());
                 mp.phishingFlag = true;
                 dismiss();
@@ -51,7 +53,9 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
                     mp.AlertMailSource = activity.originalHTML; //注意喚起メールの内容をmailprocessingにわたす
                 }
                 activity.removeMosaic();
-                mp.CheckAlert.dismiss();
+                if(mp.messageFunction) {
+                    mp.CheckAlert.dismiss();
+                }
                 dismiss();
             }
         });
