@@ -259,7 +259,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                     } catch (MessagingException e) {
                                         e.printStackTrace();
                                     }
-                                    mp.showSearchHeadUpAlert(v);
+                                    if(mp.messageFunction){
+                                        mp.showSearchHeadUpAlert(v);
+                                    }
                                     mp.changeShowSearchHeadUpAlertFlag(true);
 
                                 }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
@@ -308,7 +310,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
-                                mp.showSearchHeadUpAlert(v);
+                                if(mp.messageFunction){
+                                    mp.showSearchHeadUpAlert(v);
+                                }
                                 mp.changeShowSearchHeadUpAlertFlag(true);
                             }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
                                 try {
@@ -362,7 +366,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                 //System.out.println(ps);
                 if(!mp.SearchHeadUpFlag && ps+1>=mp.oldestMailPosition){
                     if( mp.showSearchHeadUpAlertFlag ){
-                        mp.SearchHeadUpAlert.dismiss();
+                        if(mp.messageFunction){
+                            mp.SearchHeadUpAlert.dismiss();
+                        }
                         mp.changeShowSearchHeadUpAlertFlag(false);
                     }
                     mp.changeSearchHeadUpFlag(true);

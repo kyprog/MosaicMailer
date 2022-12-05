@@ -91,10 +91,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if(MosaicMode){
                     //System.out.println("[MosaicModeOn]tap "+url);
-                    Snackbar linkTapAlert = Snackbar.make(findViewById(R.id.bottomLinearLayout), "リンクを押す前に，URLを確認してください",Snackbar.LENGTH_SHORT);
-                    linkTapAlert.setBackgroundTint(getResources().getColor(R.color.red));
-                    linkTapAlert.setTextColor(getResources().getColor(R.color.black));
-                    linkTapAlert.show();
+                    mp.showLinkTapAlert(findViewById(R.id.bottomLinearLayout));
                     view.stopLoading();
                     return false;
                 }else{
@@ -151,15 +148,19 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         ((TextView) findViewById(R.id.sender)).setText(sender);
                     }
                     ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
-                    if(MosaicMode){
-                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
-                        mp.phaseConfirmMail = true;
-                        mp.writeLog(WINDOW,"start confirmation mailAddress&URL");
+                    if(mp.habitFunction){//習慣化機能on
+                        if(MosaicMode){
+                            //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
+                            mp.phaseConfirmMail = true;
+                            mp.writeLog(WINDOW,"start confirmation mailAddress&URL");
 
-                        body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
-                        //ナビゲーション表示
-                        mp.showCheckAlert(getWindow().getDecorView());
-                    }else{
+                            body.loadDataWithBaseURL(null, mosaicMailStr, "text/html", "utf-8", null);
+                            //ナビゲーション表示
+                            mp.showCheckAlert(getWindow().getDecorView());
+                        }else{
+                            body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
+                        }
+                    }else{//習慣化機能off
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
 

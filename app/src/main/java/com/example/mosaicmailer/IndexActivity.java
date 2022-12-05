@@ -111,12 +111,16 @@ public class IndexActivity extends AppCompatActivity
         }
 
         updateFlag = true;
-        mp.showSearchHeadUpAlert(findViewById(R.id.list_recycler_view));
+        if(mp.messageFunction){
+            mp.showSearchHeadUpAlert(findViewById(R.id.list_recycler_view));
+        }
         Executors.newSingleThreadExecutor().execute(() -> {
             while(true) {
                 //応急処置
                 if(layoutManager.findLastVisibleItemPosition()>=mp.oldestMailPosition){
-                    mp.SearchHeadUpAlert.dismiss();
+                    if(mp.messageFunction){
+                        mp.SearchHeadUpAlert.dismiss();
+                    }
                     mp.changeSearchHeadUpFlag(true);
                     //System.out.println("-----");
                     break;
