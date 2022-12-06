@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import java.io.OutputStream;
 
 public class SettingActivity extends AppCompatActivity {
+    final String WINDOW = "mail_setting_window";
     MailProcessing mp;
     String log="";
 
@@ -22,6 +23,9 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_activity);//xmlを読み込む
         mp = (MailProcessing)this.getApplication();
+
+        //開いた画面のログの書き出し
+        mp.writeLog(WINDOW,"open " + WINDOW);
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);

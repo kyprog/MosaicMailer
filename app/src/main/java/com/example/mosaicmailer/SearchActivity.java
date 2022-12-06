@@ -24,8 +24,8 @@ public class SearchActivity extends AppCompatActivity {
         /* getApplication()で自己アプリケーションクラスのインスタンスを拾う */
         mp = (MailProcessing)this.getApplication();
 
-        //ログの書き出し
-        //mp.writeLog("search","onCreate");
+        //開いた画面のログの書き出し
+        mp.writeLog(WINDOW,"open " + WINDOW);
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);

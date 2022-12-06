@@ -34,6 +34,7 @@ import javax.mail.util.ByteArrayDataSource;
 public class CreateActivity  extends AppCompatActivity {
 
     private final static int CHOSE_FILE_CODE = 1002;// 識別用のコード
+    final String WINDOW = "mail_create_window";
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     CreateAdapter mainAdapter;
@@ -48,6 +49,9 @@ public class CreateActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_activity);//xmlを読み込む
         mp = (MailProcessing) this.getApplication();
+
+        //開いた画面のログの書き出し
+        mp.writeLog(WINDOW,"open " + WINDOW);
         
         //view
         to = findViewById(R.id.editTo);
