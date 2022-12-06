@@ -37,6 +37,10 @@ public class LoginActivity extends AppCompatActivity {
         mp.messageFunction = pref.getBoolean("messageFunction", true);
         //System.out.println("===habit="+mp.habitFunction+"/message="+mp.messageFunction+"===");
 
+        //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
+        mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
+        mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
+
         if(!mp.boot){
             //起動ログの書き出し
             mp.writeLog(WINDOW,"boot MosaicMailer");

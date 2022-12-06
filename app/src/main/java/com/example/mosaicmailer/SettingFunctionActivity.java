@@ -14,6 +14,7 @@ import javax.mail.MessagingException;
 
 public class SettingFunctionActivity extends PreferenceActivity {
 
+    final String WINDOW = "setting_function_window";
     MailProcessing mp;
 
     @Override
@@ -31,6 +32,10 @@ public class SettingFunctionActivity extends PreferenceActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         mp.habitFunction = pref.getBoolean("habitFunction", true);
         mp.messageFunction = pref.getBoolean("messageFunction", true);
+
+        //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
+        mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
+        mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
         finish();
     }
 }
