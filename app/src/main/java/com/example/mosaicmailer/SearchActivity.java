@@ -84,6 +84,8 @@ public class SearchActivity extends AppCompatActivity {
                                 mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
                                 searchRecyclerView.setAdapter(mainAdapter);
                                 if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て既読の場合
+                                    //すべての未読メールを確認したことを表すログの書き出し
+                                    mp.writeLog(WINDOW,"checked all unread mail in search result");
                                     mp.allSeenSnackbar(searchRecyclerView);
                                     mp.searchPhishingMode = false;
                                 }
@@ -129,6 +131,8 @@ public class SearchActivity extends AppCompatActivity {
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 searchRecyclerView.setAdapter(mainAdapter);
                 if(all_seen_flag){//注意喚起メールの情報をもとに検索して，全て既読の場合
+                    //すべての未読メールを確認したことを表すログの書き出し
+                    mp.writeLog(WINDOW,"checked all unread mail in search result");
                     mp.allSeenSnackbar(searchRecyclerView);
                     mp.searchPhishingMode = false;
                 }
