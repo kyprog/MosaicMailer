@@ -94,6 +94,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         body = findViewById(R.id.body);
         body.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //URLをタップしたことを表すログを書き出す
+                mp.writeLog(WINDOW,"tap URL");
                 if(MosaicMode){
                     //System.out.println("[MosaicModeOn]tap "+url);
                     mp.showLinkTapAlert(findViewById(R.id.bottomLinearLayout));
