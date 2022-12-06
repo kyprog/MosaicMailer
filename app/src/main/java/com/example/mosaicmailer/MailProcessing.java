@@ -527,6 +527,18 @@ public class MailProcessing extends Application {
         return true;
     }
 
+    public int countUnreadInSearchResultList(){
+        int count=0;
+        for(Message msg : SearchResultList){
+            try{
+                if( !msg.getFlags().contains(Flags.Flag.SEEN) ){count++;}
+            }catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        return count;
+    }
+
     public void sendMail(String[] tos, String[] ccs, String[] bccs, String subject, List<MimeBodyPart> allPartList, String charset, String encoding) {
 
         String host = "smtp.office365.com";

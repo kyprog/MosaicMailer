@@ -63,6 +63,11 @@ public class SearchActivity extends AppCompatActivity {
                     //javamailで検索し，該当するメッセージ一覧を取得する
                     mp.searchMessages(s);
 
+                    //検索結果の未読メール数
+                    int countUnread = mp.countUnreadInSearchResultList();
+                    //検索結果の未読メールの数を表示するログを書き出す
+                    mp.writeLog(WINDOW,"number of unread mail in search result is "+countUnread);
+
                     //処理結果をhandler経由でUIに反映
                     HandlerCompat.createAsync(getMainLooper()).post(() ->{
                         // Adapter生成してRecyclerViewにセット
@@ -112,11 +117,18 @@ public class SearchActivity extends AppCompatActivity {
             mp.reloadMessageList("Search");
             RecyclerView.Adapter mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
             countDownLatch.countDown();
+
+            //検索結果の未読メール数
+            int countUnread = mp.countUnreadInSearchResultList();
+            //検索結果の未読メールの数を表示するログを書き出す
+            mp.writeLog(WINDOW,"number of unread mail in search result is "+countUnread);
+
             boolean all_seen_flag = mp.allSeenInSearchResultList();
+
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 searchRecyclerView.setAdapter(mainAdapter);
-                if(all_seen_flag){//注意喚起メールの情報をもとに検索して，全て未読の場合
+                if(all_seen_flag){//注意喚起メールの情報をもとに検索して，全て既読の場合
                     mp.allSeenSnackbar(searchRecyclerView);
                     mp.searchPhishingMode = false;
                 }
