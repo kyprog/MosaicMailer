@@ -15,8 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -28,6 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Message;
@@ -143,6 +142,13 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 String sender = addrFrom.getPersonal();
                 mp.setSenderName(sender);
 
+                //メールの受信者の取得
+                final Address[] toArray = msg.getRecipients(Message.RecipientType.TO);
+                StringBuilder toAddress = new StringBuilder();
+                for(Address toTmp : toArray){
+                    toAddress.append(toTmp.toString());
+                }
+
                 //差出人のメールアドレス取得
                 mp.setSenderMailAddress(addrFrom.getAddress());
 
@@ -163,7 +169,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     }else{
                         ((TextView) findViewById(R.id.sender)).setText(sender);
                     }
-                    ((TextView) findViewById(R.id.receiver)).setText("To: 自分");
+                    ((TextView) findViewById(R.id.receiver)).setText("To:"+toAddress.toString());
                     if(mp.habitFunction){//習慣化機能on
                         if(MosaicMode){
                             //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
