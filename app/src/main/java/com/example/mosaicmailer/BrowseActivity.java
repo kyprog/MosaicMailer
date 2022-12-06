@@ -249,7 +249,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 mp.phaseConfirmMail = false;
                 mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
 
-                if(!mp.phishingFlag){finish();}
+                if(!mp.phishingFlag){
+                    //戻るボタンを押したことを表すログを書き出す
+                    mp.writeLog(WINDOW,"back from browse mail");
+                    finish();
+                }
             });
         });
         return super.onSupportNavigateUp();
@@ -271,7 +275,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 mp.phaseConfirmMail = false;
                 mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
 
-                if(!mp.phishingFlag){finish();}
+                if(!mp.phishingFlag){
+                    //戻るボタンを押したことを表すログを書き出す
+                    mp.writeLog(WINDOW,"back from browse mail");
+                    finish();
+                }
             });
         });
     }
