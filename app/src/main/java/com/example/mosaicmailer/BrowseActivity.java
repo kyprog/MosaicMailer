@@ -230,9 +230,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     mp.writeLog(WINDOW,"end reporting & removing");
                 }
 
-                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出す
-                mp.phaseConfirmMail = false;
-                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                if(mp.phaseConfirmMail == true){
+                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出す
+                    mp.phaseConfirmMail = false;
+                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                }
 
                 finish();
                 return true;
@@ -269,9 +271,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW,"end reporting & removing");
                     }
 
-                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                    mp.phaseConfirmMail = false;
-                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                    if(mp.phaseConfirmMail == true) {
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                        mp.phaseConfirmMail = false;
+                        mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+                    }
 
                     finish();
                 }
@@ -285,9 +289,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW,"end reporting & removing");
                     }
 
-                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                    mp.phaseConfirmMail = false;
-                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                    if(mp.phaseConfirmMail == true) {
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                        mp.phaseConfirmMail = false;
+                        mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+                    }
 
                     finish();
                 }
@@ -318,9 +324,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW,"end reporting & removing");
                     }
 
-                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                    mp.phaseConfirmMail = false;
-                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                    if(mp.phaseConfirmMail == true) {
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                        mp.phaseConfirmMail = false;
+                        mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+                    }
 
                     finish();
                 }
@@ -334,9 +342,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW,"end reporting & removing");
                     }
 
-                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                    mp.phaseConfirmMail = false;
-                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+                    if(mp.phaseConfirmMail == true) {
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                        mp.phaseConfirmMail = false;
+                        mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+                    }
 
                     finish();
                 }
@@ -845,9 +855,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void removeMosaic() {
         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
         MosaicMode = false;
-        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-        mp.phaseConfirmMail = false;
-        mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
+        if(mp.phaseConfirmMail == true) {
+            //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+            mp.phaseConfirmMail = false;
+            mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+        }
         if(ListType.equals("MailList")){
             mp.dropAlert(mp.openMessageListPosition);
         }
