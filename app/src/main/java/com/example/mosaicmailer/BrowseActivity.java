@@ -210,6 +210,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             case R.id.delete:
                 CountDownLatch countDownLatch = new CountDownLatch(1);
                 Executors.newSingleThreadExecutor().execute(() -> {
+                    //学習者が削除したことを表すログを書き出す
+                    mp.writeLog(WINDOW,"delete mail");
+                    
                     mp.deleteMessage(msg);
                     mp.reloadMessageList(ListType);
                     countDownLatch.countDown();
