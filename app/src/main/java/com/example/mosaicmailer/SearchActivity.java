@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 public class SearchActivity extends AppCompatActivity {
     MailProcessing mp;
     RecyclerView searchRecyclerView;
+    final String WINDOW = "mail_search_window";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,10 @@ public class SearchActivity extends AppCompatActivity {
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String s) {
+
+                //検索した単語を表すログを書き出す
+                mp.writeLog(WINDOW,"search word is \""+s+"\"");
+
                 //注意喚起メールに含まれるキーワードかの判定
                 boolean searchedAlertKeyword = mp.AlertMailSource.contains(s);
                 Executors.newSingleThreadExecutor().execute(() -> {
