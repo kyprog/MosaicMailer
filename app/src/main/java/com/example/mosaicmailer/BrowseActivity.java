@@ -766,6 +766,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         for(LinkInfo linkTmp : linkInfoList){
             if(!linkTmp.check){return false;}
         }
+        //すべてのメールアドレスとURLを確認したことを表すログを書き出す
+        mp.writeLog(WINDOW,"confirm all mailAddress & URL");
         return true;
     }
 
