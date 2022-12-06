@@ -395,10 +395,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                             //確認済みのURLの確認画面を開いたことを表すログを書き出す
                             mp.writeLog(WINDOW,"open checked confirmation URL window");
                         }
-
-                        DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
-                        compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
-                        break;
+                        if(MosaicMode == true){
+                            DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
+                            compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
+                            break;
+                        }else{
+                            DialogFragment url_dialog = new BrowseNormalURLDialog();
+                            url_dialog.show(getSupportFragmentManager(), "url_normal_dialog");
+                            break;
+                        }
                     }
                     linkInfoIndex++;
                 }
@@ -438,8 +443,13 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         //メールアドレスの確認画面を開いたことを表すログを書き出す
         mp.writeLog(WINDOW,"open confirmation mailAddress window");
 
-        DialogFragment name_dialog = new BrowseQuestionFromNameDialog();
-        name_dialog.show(getSupportFragmentManager(), "name_question_dialog");
+        if(MosaicMode == true){
+            DialogFragment name_dialog = new BrowseQuestionFromNameDialog();
+            name_dialog.show(getSupportFragmentManager(), "name_question_dialog");
+        }else{
+            DialogFragment mailAddress_dialog = new BrowseNormalAddressDialog();
+            mailAddress_dialog.show(getSupportFragmentManager(), "address_normal_dialog");
+        }
     }
 
     // インスタンス取得メソッド
