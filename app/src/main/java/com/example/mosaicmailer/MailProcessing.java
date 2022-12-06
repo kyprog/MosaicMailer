@@ -62,6 +62,9 @@ public class MailProcessing extends Application {
     String accountInfo = null;
     String passwordInfo = null;
 
+    //今開いているメールが注意喚起メールかどうかのフラグ
+    boolean isAlertMail = false;
+
     //MessageList関連
     List<Message> MessageList = new ArrayList<Message>();
     int openMessageListPosition=-1;

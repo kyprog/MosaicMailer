@@ -228,10 +228,13 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     //System.out.println("child"+mLinearLayoutManager.getChildCount());
                     mp.changeSearchHeadUpFlag(true);
                 }
+                mp.isAlertMail = false;
+
                 if(mp.habitFunction){//習慣化機能on
                     if( !(mp.searchPhishingMode &&(ps!=mp.openMessageListPosition)) ){//!(フィッシングメール探すフェーズで，押したメールが注意喚起メールでないとき)
                         Executors.newSingleThreadExecutor().execute(() -> {
                             boolean isAlert = mp.isAlertMessege(ps);
+                            mp.isAlertMail = isAlert;
                             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                                 if(mp.existAlert && isAlert){//注意喚起メールをタップした時
                                     try {
