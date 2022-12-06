@@ -2,4 +2,71 @@
     <string name="app_name">MosaicMailer</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+
+    <string name="value_1">1</string>
+    <string name="value_2">2</string>
+    <string name="value_3">3</string>
+    <string name="value_4">4</string>
+    <string name="value_5">5</string>
+    <string name="value_6">6</string>
+    <string name="value_7">7</string>
+    <string name="value_8">8</string>
+    <string name="value_9">9</string>
+    <string name="value_10">10</string>
+    <string name="value_11">11</string>
+    <string name="value_12">12</string>
+    <string name="value_13">13</string>
+    <string name="value_14">14</string>
+    <string name="value_15">15</string>
+    <string name="value_16">16</string>
+    <string name="value_17">17</string>
+    <string name="value_18">18</string>
+    <string name="value_19">19</string>
+    <string name="value_20">20</string>
+
+    <string-array name="sample_list">
+        <item>@string/value_1</item>
+        <item>@string/value_2</item>
+        <item>@string/value_3</item>
+        <item>@string/value_4</item>
+        <item>@string/value_5</item>
+        <item>@string/value_6</item>
+        <item>@string/value_7</item>
+        <item>@string/value_8</item>
+        <item>@string/value_9</item>
+        <item>@string/value_10</item>
+        <item>@string/value_11</item>
+        <item>@string/value_12</item>
+        <item>@string/value_13</item>
+        <item>@string/value_14</item>
+        <item>@string/value_15</item>
+        <item>@string/value_16</item>
+        <item>@string/value_17</item>
+        <item>@string/value_18</item>
+        <item>@string/value_19</item>
+        <item>@string/value_20</item>
+    </string-array>
+
+    <string-array name="sample_list_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
 </resources>

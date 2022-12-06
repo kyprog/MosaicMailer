@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         mp.habitFunction = pref.getBoolean("habitFunction", true);
         mp.messageFunction = pref.getBoolean("messageFunction", true);
+        mp.numberInViewable = Integer.parseInt( pref.getString("numberInViewable","10") )-1;
         //System.out.println("===habit="+mp.habitFunction+"/message="+mp.messageFunction+"===");
 
         //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し

@@ -224,10 +224,6 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 //System.out.println(ps);
-                if(!mp.SearchHeadUpFlag && mLinearLayoutManager.getChildCount()>=mp.oldestMailPosition){
-                    //System.out.println("child"+mLinearLayoutManager.getChildCount());
-                    mp.changeSearchHeadUpFlag(true);
-                }
                 mp.isAlertMail = false;
 
                 if(mp.habitFunction){//習慣化機能on
@@ -255,7 +251,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                     intent.putExtra("ListType", "MailList");
                                     activity.startActivity(intent);
 
-                                }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
+                                }else if(!mp.showSearchedHeadUpAlertFlag && !mp.SearchedHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
                                     try {
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can't open]");
@@ -265,9 +261,9 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                     if(mp.messageFunction){
                                         mp.showSearchHeadUpAlert(v);
                                     }
-                                    mp.changeShowSearchHeadUpAlertFlag(true);
+                                    mp.changeShowSearchedHeadUpAlertFlag(true);
 
-                                }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
+                                }else if(!mp.existAlert && mp.SearchedHeadUpFlag){//探した状態で
                                     try {
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
@@ -306,7 +302,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
-                            }else if(!mp.showSearchHeadUpAlertFlag && !mp.SearchHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
+                            }else if(!mp.showSearchedHeadUpAlertFlag && !mp.SearchedHeadUpFlag) {//探してない状態で，注意喚起メールアラートが出ていない状態で，一番下の未読メールまでスクロールせず，メールを開こうとしたとき
                                 try {
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
@@ -316,8 +312,8 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 if(mp.messageFunction){
                                     mp.showSearchHeadUpAlert(v);
                                 }
-                                mp.changeShowSearchHeadUpAlertFlag(true);
-                            }else if(!mp.existAlert && mp.SearchHeadUpFlag){//探した状態で
+                                mp.changeShowSearchedHeadUpAlertFlag(true);
+                            }else if(!mp.existAlert && mp.SearchedHeadUpFlag){//探した状態で
                                 try {
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
@@ -367,14 +363,14 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
                 //System.out.println(ps);
-                if(!mp.SearchHeadUpFlag && ps+1>=mp.oldestMailPosition){
-                    if( mp.showSearchHeadUpAlertFlag ){
+                if(!mp.SearchedHeadUpFlag && ps+1>=mp.oldestMailPosition){
+                    if( mp.showSearchedHeadUpAlertFlag){
                         if(mp.messageFunction){
                             mp.SearchHeadUpAlert.dismiss();
                         }
-                        mp.changeShowSearchHeadUpAlertFlag(false);
+                        mp.changeShowSearchedHeadUpAlertFlag(false);
+                        mp.changeSearchedHeadUpFlag(true);
                     }
-                    mp.changeSearchHeadUpFlag(true);
                     //一番下の未読メールまでスクロールしたことを表すログの書き出し
                     mp.writeLog(WINDOW,"scroll to the bottom unread mail position");
                     if(!mp.existAlert){

@@ -77,8 +77,8 @@ public class MailProcessing extends Application {
 
     //ダイアログ関連
     boolean scrollBottomUnreadFlag = false;//一番下の未読メールまでスクロールしたかを表すフラグ
-    boolean SearchHeadUpFlag=false;//注意喚起メールを探したかどうかのフラグ
-    boolean showSearchHeadUpAlertFlag=false;//SearchHeadUpAlertアラートが出現しているかどうか
+    boolean SearchedHeadUpFlag =false;//注意喚起メールを探したかどうかのフラグ
+    boolean showSearchedHeadUpAlertFlag =false;//SearchHeadUpAlertアラートが出現しているかどうか
     boolean noKeywordAlertFlag = false;
     Snackbar SearchHeadUpAlert = null;
     Snackbar CheckAlert = null;
@@ -108,6 +108,9 @@ public class MailProcessing extends Application {
     //削除関連
     boolean phishingFlag = false;
 
+    //画面に表示されるメールの数
+    int numberInViewable = 10-1;
+
     //ログ関連----------------------------------
     final String logFileName="MosaicLog.log";
     ////機能on/off
@@ -127,7 +130,7 @@ public class MailProcessing extends Application {
     public void onCreate() {
         /** Called when the Application-class is first created. */
         super.onCreate();
-        showSearchHeadUpAlertFlag=false;
+        showSearchedHeadUpAlertFlag =false;
     }
 
     @Override
@@ -201,12 +204,12 @@ public class MailProcessing extends Application {
         this.openSearchResultListPosition = position;
     }
 
-    public void changeSearchHeadUpFlag(boolean status) {
-        SearchHeadUpFlag = status;
+    public void changeSearchedHeadUpFlag(boolean status) {
+        SearchedHeadUpFlag = status;
     }
 
-    public void changeShowSearchHeadUpAlertFlag(boolean status) {
-        showSearchHeadUpAlertFlag = status;
+    public void changeShowSearchedHeadUpAlertFlag(boolean status) {
+        showSearchedHeadUpAlertFlag = status;
     }
 
     public void showSearchHeadUpAlert(View v){

@@ -9,4 +9,10 @@
         android:defaultValue="true"
         android:key="messageFunction"
         android:title="メッセージ機能" />
+    <ListPreference
+        android:defaultValue="10"
+        android:entries="@array/sample_list"
+        android:entryValues="@array/sample_list_values"
+        android:key="numberInViewable"
+        android:title="画面内に表示されるメール数の入力" />
 </PreferenceScreen>

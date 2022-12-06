@@ -32,6 +32,8 @@ public class SettingFunctionActivity extends PreferenceActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         mp.habitFunction = pref.getBoolean("habitFunction", true);
         mp.messageFunction = pref.getBoolean("messageFunction", true);
+        mp.numberInViewable = Integer.parseInt( pref.getString("numberInViewable","10") )-1;
+        //System.out.println("numberInViewable is "+mp.numberInViewable);
 
         //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
         mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
