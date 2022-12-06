@@ -30,6 +30,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
     int lenSearchResultList = 0;
     static RecyclerView tmprecyclerView;
     MailProcessing mp;
+    final String WINDOW = "mail_search_window";
 
     SearchAdapter(Context context, RecyclerView recyclerView) {
         activity=context;
@@ -119,6 +120,20 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 //System.out.println(ps);
+
+                try {
+                    boolean unreadtmp = !mp.SearchResultList.get(ps).getFlags().contains(Flags.Flag.SEEN);
+                    if(unreadtmp == true){
+                        //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                        mp.writeLog(WINDOW,"tap mail \"" + mp.SearchResultList.get(ps).getSubject() + "\" [unread]");
+                    }else{
+                        //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                        mp.writeLog(WINDOW,"tap mail \"" + mp.SearchResultList.get(ps).getSubject() + "\" [read]");
+                    }
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent = new Intent(activity, BrowseActivity.class);
                 // Activity以外からActivityを呼び出すためのフラグを設定
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
