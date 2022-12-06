@@ -38,6 +38,8 @@ import javax.mail.internet.InternetAddress;
 public class BrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
+    int countCheckedLink = 0;//チェックしたリンク数
+    int countAllLink = 0;//リンクの総数
     boolean MosaicMode = true;
     boolean seen = false;
     boolean checkedMailAddress = false;
@@ -77,6 +79,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
         //ログの書き出し
         mp.writeLog("browse","onCreate");
+
+        //確認したリンクのカウントのリセット
+        countCheckedLink = 0;
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -138,6 +143,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //メールの本文中のテキストをモザイク化しセッティング
                 String mosaicMailStr = Mosaic();
+
+                //メール内のリンク一覧数の取得
+                countAllLink = linkInfoList.size();
 
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
@@ -722,6 +730,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
     public void setChecked(int index){
         LinkInfo tmp = linkInfoList.get(index);
+        if(tmp.check == false){
+            countCheckedLink++;
+            //確認したURL数とメール内のURL総数を表すログを書き出す
+            mp.writeLog(WINDOW,"confirm URL: "+countCheckedLink+"/"+countAllLink);
+        }else{
+            //確認したURL数とメール内のURL総数を表すログを書き出す
+            mp.writeLog(WINDOW,"confirm URL: "+countCheckedLink+"/"+countAllLink);
+            //確認済みのURLの確認画面を開き最後まで確認したことを表すログを書き出す
+            mp.writeLog(WINDOW,"confirm checked  URL window");
+        }
         tmp.check = true;
         linkInfoList.set(index,tmp);
     }
