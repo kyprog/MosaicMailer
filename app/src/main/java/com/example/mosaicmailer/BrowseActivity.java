@@ -223,6 +223,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     e.printStackTrace();
                 }
                 mp.phishingFlag = false;
+
+                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出す
+                mp.phaseConfirmMail = false;
+                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
                 finish();
                 return true;
             case R.id.reply:
