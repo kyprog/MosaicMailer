@@ -224,6 +224,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
                 mp.phishingFlag = false;
 
+                //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                mp.phaseReportAndRemove = false;
+                mp.writeLog(WINDOW,"end reporting & removing");
+
                 //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出す
                 mp.phaseConfirmMail = false;
                 mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
