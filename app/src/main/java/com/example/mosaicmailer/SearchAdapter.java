@@ -45,7 +45,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
      * リスト内のビューはビューホルダーオブジェクトの中身(インスタンス)が表示される。
      */
     static class MainViewHolder extends RecyclerView.ViewHolder {
-        ImageView image;
+        ImageView image,star;
         TextView sender,title;
         LinearLayout linearLayout;
         RecyclerView mrecyclerView;
@@ -53,6 +53,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.sender_image);
+            star = itemView.findViewById(R.id.star);
             sender = itemView.findViewById(R.id.sender_name);
             title = itemView.findViewById(R.id.title);
             linearLayout = itemView.findViewById(R.id.mail_list);
@@ -85,6 +86,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             try {
                 Message SearchResult = this.SearchResultList.get(position);
                 boolean unread = !SearchResult.getFlags().contains(Flags.Flag.SEEN);
+                boolean flagged = SearchResult.getFlags().contains(Flags.Flag.FLAGGED);
+                if(flagged){
+                    holder.star.setImageResource(R.drawable.ic_baseline_star_36);
+                }else{
+                    holder.star.setImageResource(R.drawable.ic_baseline_star_outline_36);
+                }
                 final InternetAddress addrFrom = (InternetAddress) SearchResult.getFrom()[0];
 
                 if(unread){
@@ -142,6 +149,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
                 // 引き渡す値
                 intent.putExtra("ListType", "Search");
                 activity.startActivity(intent);
+            }
+        });
+
+        holder.star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int ps = holder.getLayoutPosition();
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    boolean flagged = mp.FlaggedinMessageList(ps);
+                    if(flagged){
+                        holder.star.setImageResource(R.drawable.ic_baseline_star_outline_36);
+                        mp.setFlaggedinMessageList(ps, false);
+                    }else{
+                        holder.star.setImageResource(R.drawable.ic_baseline_star_36);
+                        mp.setFlaggedinMessageList(ps, true);
+                    }
+                });
             }
         });
     }
