@@ -83,6 +83,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         //確認したリンクのカウントのリセット
         countCheckedLink = 0;
 
+        //戻れない問題の対策コード
+        mp.phishingFlag = false;
+
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
