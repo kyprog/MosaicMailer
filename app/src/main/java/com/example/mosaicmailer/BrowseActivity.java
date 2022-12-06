@@ -147,6 +147,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //メール内のリンク一覧数の取得
                 countAllLink = linkInfoList.size();
 
+                //開いたメールのURL総数を表すログを書き出す
+                mp.writeLog(WINDOW,"all URL number of this mail is " + countAllLink);
+
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
                     ((TextView) findViewById(R.id.title)).setText(subject);
