@@ -88,6 +88,12 @@ public class SearchActivity extends AppCompatActivity {
                                     mp.writeLog(WINDOW,"checked all unread mail in search result");
                                     mp.allSeenSnackbar(searchRecyclerView);
                                     mp.searchPhishingMode = false;
+
+                                    if(mp.phaseSearchPhishing == true){
+                                        //注意喚起メールの情報をもとにフィッシングメールを探すフェーズが終わったことを表すログの書き出し
+                                        mp.phaseSearchPhishing = false;
+                                        mp.writeLog(WINDOW,"end searching for phishing mails");
+                                    }
                                 }
                             }else{
                                 //検索した単語が注意喚起メールに含まれる単語かを表すログを書き出す
@@ -135,6 +141,12 @@ public class SearchActivity extends AppCompatActivity {
                     mp.writeLog(WINDOW,"checked all unread mail in search result");
                     mp.allSeenSnackbar(searchRecyclerView);
                     mp.searchPhishingMode = false;
+
+                    if(mp.phaseSearchPhishing == true){
+                        //注意喚起メールの情報をもとにフィッシングメールを探すフェーズが終わったことを表すログの書き出し
+                        mp.phaseSearchPhishing = false;
+                        mp.writeLog(WINDOW,"end searching for phishing mails");
+                    }
                 }
             });
         });
