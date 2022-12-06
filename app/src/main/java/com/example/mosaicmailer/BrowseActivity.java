@@ -224,9 +224,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
                 mp.phishingFlag = false;
 
-                //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
-                mp.phaseReportAndRemove = false;
-                mp.writeLog(WINDOW,"end reporting & removing");
+                if(mp.phaseReportAndRemove == true){
+                    //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                    mp.phaseReportAndRemove = false;
+                    mp.writeLog(WINDOW,"end reporting & removing");
+                }
 
                 //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出す
                 mp.phaseConfirmMail = false;
@@ -257,13 +259,36 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
-                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                mp.phaseConfirmMail = false;
-                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
-
-                if(!mp.phishingFlag){
+                if(mp.habitFunction == false){
                     //戻るボタンを押したことを表すログを書き出す
                     mp.writeLog(WINDOW,"back from browse mail");
+
+                    if(mp.phaseReportAndRemove == true){
+                        //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                        mp.phaseReportAndRemove = false;
+                        mp.writeLog(WINDOW,"end reporting & removing");
+                    }
+
+                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                    mp.phaseConfirmMail = false;
+                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
+                    finish();
+                }
+                else if(!mp.phishingFlag){
+                    //戻るボタンを押したことを表すログを書き出す
+                    mp.writeLog(WINDOW,"back from browse mail");
+
+                    if(mp.phaseReportAndRemove == true){
+                        //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                        mp.phaseReportAndRemove = false;
+                        mp.writeLog(WINDOW,"end reporting & removing");
+                    }
+
+                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                    mp.phaseConfirmMail = false;
+                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
                     finish();
                 }
             });
@@ -283,13 +308,36 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 }
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
-                //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
-                mp.phaseConfirmMail = false;
-                mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
-
-                if(!mp.phishingFlag){
+                if(mp.habitFunction == false){
                     //戻るボタンを押したことを表すログを書き出す
                     mp.writeLog(WINDOW,"back from browse mail");
+
+                    if(mp.phaseReportAndRemove == true){
+                        //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                        mp.phaseReportAndRemove = false;
+                        mp.writeLog(WINDOW,"end reporting & removing");
+                    }
+
+                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                    mp.phaseConfirmMail = false;
+                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
+                    finish();
+                }
+                else if(!mp.phishingFlag){
+                    //戻るボタンを押したことを表すログを書き出す
+                    mp.writeLog(WINDOW,"back from browse mail");
+
+                    if(mp.phaseReportAndRemove == true){
+                        //フィッシングメールと判断したメールを報告し削除するフェーズが終わったことを表すログを書き出す
+                        mp.phaseReportAndRemove = false;
+                        mp.writeLog(WINDOW,"end reporting & removing");
+                    }
+
+                    //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
+                    mp.phaseConfirmMail = false;
+                    mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
+
                     finish();
                 }
             });
