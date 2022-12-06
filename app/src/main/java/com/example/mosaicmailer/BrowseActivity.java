@@ -78,7 +78,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         mp = (MailProcessing) this.getApplication();
 
         //ログの書き出し
-        mp.writeLog("browse","onCreate");
+        //mp.writeLog("browse","onCreate");
 
         //確認したリンクのカウントのリセット
         countCheckedLink = 0;
@@ -212,7 +212,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 Executors.newSingleThreadExecutor().execute(() -> {
                     //学習者が削除したことを表すログを書き出す
                     mp.writeLog(WINDOW,"delete mail");
-                    
+
                     mp.deleteMessage(msg);
                     mp.reloadMessageList(ListType);
                     countDownLatch.countDown();

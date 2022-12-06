@@ -24,7 +24,7 @@ public class SearchActivity extends AppCompatActivity {
         mp = (MailProcessing)this.getApplication();
 
         //ログの書き出し
-        mp.writeLog("search","onCreate");
+        //mp.writeLog("search","onCreate");
 
         //ツールバー
         Toolbar toolbar = findViewById(R.id.toolbar);
