@@ -58,6 +58,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 //注意喚起メールに含まれるキーワードかの判定
                 boolean searchedAlertKeyword = mp.AlertMailSource.contains(s);
+
                 Executors.newSingleThreadExecutor().execute(() -> {
                     //javamailで検索し，該当するメッセージ一覧を取得する
                     mp.searchMessages(s);
@@ -68,17 +69,23 @@ public class SearchActivity extends AppCompatActivity {
                         RecyclerView.Adapter mainAdapter = null;
                         if(mp.searchPhishingMode){
                             if(searchedAlertKeyword){
+                                //検索した単語が注意喚起メールに含まれる単語かを表すログを書き出す
+                                mp.writeLog(WINDOW,"searched \""+s+"\" is included in AlertMail");
+
                                 if(mp.noKeywordAlertFlag){
                                     mp.noKeywordAlert.dismiss();
                                     mp.noKeywordAlertFlag = false;
                                 }
                                 mainAdapter = new SearchAdapter(getApplication(), searchRecyclerView);
                                 searchRecyclerView.setAdapter(mainAdapter);
-                                if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て未読の場合
+                                if(mp.allSeenInSearchResultList()){//注意喚起メールの情報をもとに検索して，全て既読の場合
                                     mp.allSeenSnackbar(searchRecyclerView);
                                     mp.searchPhishingMode = false;
                                 }
                             }else{
+                                //検索した単語が注意喚起メールに含まれる単語かを表すログを書き出す
+                                mp.writeLog(WINDOW,"searched \""+s+"\" is not included in AlertMail");
+
                                 mp.noKeywordAlert(searchRecyclerView);
                             }
                         }else{
