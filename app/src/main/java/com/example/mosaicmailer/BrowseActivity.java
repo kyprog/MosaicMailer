@@ -331,6 +331,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
     //メールアドレス確認ポップアップの表示
     public void QuestionDialog(View view) {
+        //メールアドレスの確認画面を開いたことを表すログを書き出す
+        mp.writeLog(WINDOW,"open confirmation mailAddress window");
+
         DialogFragment name_dialog = new BrowseQuestionFromNameDialog();
         name_dialog.show(getSupportFragmentManager(), "name_question_dialog");
     }
