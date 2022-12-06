@@ -55,8 +55,8 @@ public class MailProcessing extends Application {
     Store store = null;
     Folder inbox = null;
 
-    //返信・転送用メッセージ
-    Message currentMessage;
+    //現在開いているメッセージ
+    Message currentMessage=null;
 
     //アカウント情報
     String accountInfo = null;

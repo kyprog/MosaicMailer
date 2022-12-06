@@ -130,9 +130,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     msg = mp.SearchResultList.get(mp.openSearchResultListPosition);
                 }
 
+                //現在のメールをセットする
+                mp.setCurrentMessage(msg);
+
                 //このメールが既読か未読か調べる
                 seen = msg.getFlags().contains(Flags.Flag.SEEN);
-                if(seen){MosaicMode = false;}else{MosaicMode = true;}
+                if(seen){
+                    MosaicMode = false;
+                }else{
+                    MosaicMode = true;
+                }
 
                 //メールの件名を取得
                 String subject =  msg.getSubject();
@@ -160,6 +167,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //開いたメールのURL総数を表すログを書き出す
                 mp.writeLog(WINDOW,"all URL number of this mail is " + countAllLink);
+
+                //未読にする(モザイク状態のメールを開いた状態でメーラを終わると，未読になる不具合対策)
+                msg.setFlag(Flags.Flag.SEEN, false);
 
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
@@ -403,7 +413,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         intent.putExtra("createType", "reply");
         //System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
         intent.putExtra("replyTextMessage", originalPlanText);
-        mp.setCurrentMessage(msg);
         startActivity(intent);
     }
 
@@ -412,7 +421,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "reply");
         intent.putExtra("replyTextMessage", originalPlanText);
-        mp.setCurrentMessage(msg);
         startActivity(intent);
     }
 
