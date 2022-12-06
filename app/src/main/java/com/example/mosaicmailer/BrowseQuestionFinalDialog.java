@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 public class BrowseQuestionFinalDialog extends DialogFragment {
     BrowseActivity activity = null;
     MailProcessing mp;
+    final String WINDOW = "mail_browse_window";
 
     @Override
     public void onAttach(Activity activity) {
@@ -37,6 +38,8 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
                 if(mp.messageFunction){
                     mp.CheckAlert.dismiss();
                 }
+                //フィッシングメールと判断したことを表すログを書き出す
+                mp.writeLog(WINDOW,"judge this mail as phishing");
                 mp.ReportAlert(activity.getWindow().getDecorView());
                 mp.phishingFlag = true;
                 dismiss();
