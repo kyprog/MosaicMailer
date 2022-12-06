@@ -294,6 +294,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         //URLの確認画面を開いたことを表すログを書き出す
                         mp.writeLog(WINDOW,"open confirmation URL window");
 
+                        if(linkTmp.check == true){
+                            //確認済みのURLの確認画面を開いたことを表すログを書き出す
+                            mp.writeLog(WINDOW,"open checked confirmation URL window");
+                        }
+
                         DialogFragment compare_dialog = new BrowseQuestionURLCompareDialog();
                         compare_dialog.show(getSupportFragmentManager(), "url_compare_question_dialog");
                         break;
