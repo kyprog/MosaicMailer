@@ -40,6 +40,10 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
                 }
                 //フィッシングメールと判断したことを表すログを書き出す
                 mp.writeLog(WINDOW,"judge this mail as phishing");
+
+                //フィッシングメールと判断したメールを報告し削除するフェーズが始まったことを表すログを書き出す
+                mp.writeLog(WINDOW,"start reporting & removing");
+
                 mp.ReportAlert(activity.getWindow().getDecorView());
                 mp.phishingFlag = true;
                 dismiss();
