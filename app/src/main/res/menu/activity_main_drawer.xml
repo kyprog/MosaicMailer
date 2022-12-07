@@ -22,9 +22,9 @@
             android:icon="@drawable/ic_baseline_not_interested_24"
             android:title="迷惑メール" />
         <item
-            android:id="@+id/trash"
+            android:id="@+id/mosaicTrash"
             android:icon="@drawable/ic_baseline_delete_24"
-            android:title="ゴミ箱" />
+            android:title="モザイクメーラ用ゴミ箱" />
         <item
             android:id="@+id/setting"
             android:icon="@drawable/ic_baseline_settings_24"

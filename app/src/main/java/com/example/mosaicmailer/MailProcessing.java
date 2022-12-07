@@ -56,6 +56,7 @@ public class MailProcessing extends Application {
     Session session=null;
     Store store = null;
     Folder inbox = null;
+    Folder mosaicTrash = null;
 
     //現在開いているメッセージ
     Message currentMessage=null;
@@ -79,6 +80,7 @@ public class MailProcessing extends Application {
 
     //MosaicTrashList関連
     List<Message> MosaicTrashList;
+    int touchedMosaicTrashListPosition=-1;
 
     //ダイアログ関連
     boolean scrollBottomUnreadFlag = false;//一番下の未読メールまでスクロールしたかを表すフラグ
@@ -114,7 +116,7 @@ public class MailProcessing extends Application {
     boolean phishingFlag = false;
 
     //画面に表示されるメールの数
-    int numberInViewable = 10-1;
+    int numberInViewable = 10;
 
     //ログ関連----------------------------------
     final String logFileName="MosaicLog.log";
@@ -170,6 +172,13 @@ public class MailProcessing extends Application {
             
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
+            mosaicTrash = store.getFolder("MosaicTrash");
+            if (!mosaicTrash.exists()) {
+                if (mosaicTrash.create(Folder.HOLDS_MESSAGES)) {
+                    mosaicTrash.setSubscribed(true);
+                }
+            }
+            mosaicTrash.open(Folder.READ_WRITE);
             accountInfo = username;
             passwordInfo = password;
 
@@ -182,6 +191,16 @@ public class MailProcessing extends Application {
     public void getMailListAll(){
         try {
             MessageList = sortByDate(Arrays.asList(inbox.getMessages()));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        //新しい順になるように逆順に並び替える
+        //Collections.reverse(MessageList);
+    }
+
+    public void getMosaicTrashAll(){
+        try {
+            MosaicTrashList = sortByDate(Arrays.asList(mosaicTrash.getMessages()));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -394,17 +413,8 @@ public class MailProcessing extends Application {
 
     public void deleteMessage(Message msg) {
         try {
-            Folder deleteFolder = store.getFolder("MosaicTrash");
-            //deleted = store.getFolder("削除済みアイテム");
-            if (!deleteFolder.exists()) {
-                if (deleteFolder.create(Folder.HOLDS_MESSAGES)) {
-                    deleteFolder.setSubscribed(true);
-                    //System.out.println("Folder was created successfully");
-                }
-            }
-            inbox.copyMessages(new Message[]{msg}, deleteFolder);
+            inbox.copyMessages(new Message[]{msg}, mosaicTrash);
             msg.setFlag(Flags.Flag.DELETED, true);
-            //deleteFolder.appendMessages(new Message[]{msg});
             inbox.close(true);
             inbox.open(Folder.READ_WRITE);
         } catch (MessagingException e) {
@@ -417,6 +427,8 @@ public class MailProcessing extends Application {
             getMailListAll();
         }else if(ListType.equals("Search")){
             searchMessages(presentSearchWord);
+        }else if(ListType.equals("MosaicTrash")){
+            getMosaicTrashAll();
         }
     }
 
@@ -736,6 +748,17 @@ public class MailProcessing extends Application {
         return flagged;
     }
 
+    public boolean FlaggedinMosaicTrashList(int ps) {
+        Message msg = MosaicTrashList.get(ps);
+        boolean flagged = false;
+        try {
+            flagged = msg.getFlags().contains(Flags.Flag.FLAGGED);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return flagged;
+    }
+
     public void setFlaggedinMessageList(int ps, boolean state) {
         Message msg = MessageList.get(ps);
         try {
@@ -747,6 +770,15 @@ public class MailProcessing extends Application {
 
     public void setFlaggedinSearchResultList(int ps, boolean state) {
         Message msg = SearchResultList.get(ps);
+        try {
+            msg.setFlag(Flags.Flag.FLAGGED, state);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFlaggedinMosaicTrashList(int ps, boolean state) {
+        Message msg = MosaicTrashList.get(ps);
         try {
             msg.setFlag(Flags.Flag.FLAGGED, state);
         } catch (MessagingException e) {
@@ -823,5 +855,17 @@ public class MailProcessing extends Application {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void restoration() {
+        Message msg = MosaicTrashList.get(touchedMosaicTrashListPosition);
+        try {
+            mosaicTrash.copyMessages(new Message[]{msg}, inbox);
+            msg.setFlag(Flags.Flag.DELETED, true);
+            mosaicTrash.close(true);
+            mosaicTrash.open(Folder.READ_WRITE);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

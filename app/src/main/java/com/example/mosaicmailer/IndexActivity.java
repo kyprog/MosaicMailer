@@ -230,6 +230,9 @@ public class IndexActivity extends AppCompatActivity
                 intent.putExtra("loginType", "Login");
                 startActivity(intent);
                 break;
+            case R.id.mosaicTrash:
+                intent = new Intent(getApplication(),MosaicTrashActivity.class);
+                startActivity(intent);
             default:
                 // ...処理を書きます
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

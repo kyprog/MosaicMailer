@@ -56,7 +56,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         if(addPoint+window < mp.MessageList.size()){
             mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
         }else if( (addPoint+window >= mp.MessageList.size()) && !(addPoint>=mp.MessageList.size())){
-            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()-1));
+            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()));
         }
         lenMailDataList = mailDataList.size();
     }
@@ -68,7 +68,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         if(addPoint+window < mp.MessageList.size()){
             mailDataList.addAll(mp.MessageList.subList(addPoint, addPoint+window));
         }else if( (addPoint+window >= mp.MessageList.size()) && !(addPoint>=mp.MessageList.size())){
-            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()-1));
+            mailDataList.addAll(mp.MessageList.subList(addPoint, mp.MessageList.size()));
         }
         lenMailDataList = mailDataList.size();
         notifyItemRangeInserted(addPoint, window);

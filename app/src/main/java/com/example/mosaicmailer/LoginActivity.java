@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
             mp.connect(mailaddress,password);
             mp.getMailListAll();
+            mp.getMosaicTrashAll();
             countDownLatch.countDown();
             //mp.setTestString("MVMVMVM");
         });
@@ -133,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
             //System.out.println(mailaddress+","+password);
             mp.connect(mailaddress,password);
             mp.getMailListAll();
+            mp.getMosaicTrashAll();
             //mp.setTestString("MVMVMVM");
             countDownLatch.countDown();
         });
