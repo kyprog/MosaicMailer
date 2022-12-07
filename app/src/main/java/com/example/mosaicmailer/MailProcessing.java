@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -75,6 +76,9 @@ public class MailProcessing extends Application {
     List<Message> SearchResultList = new ArrayList<Message>();
     int openSearchResultListPosition=-1;
     String presentSearchWord="";
+
+    //MosaicTrashList関連
+    List<Message> MosaicTrashList;
 
     //ダイアログ関連
     boolean scrollBottomUnreadFlag = false;//一番下の未読メールまでスクロールしたかを表すフラグ
@@ -721,8 +725,28 @@ public class MailProcessing extends Application {
         return flagged;
     }
 
+    public boolean FlaggedinSearchResultList(int ps){
+        Message msg = SearchResultList.get(ps);
+        boolean flagged = false;
+        try {
+            flagged = msg.getFlags().contains(Flags.Flag.FLAGGED);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return flagged;
+    }
+
     public void setFlaggedinMessageList(int ps, boolean state) {
         Message msg = MessageList.get(ps);
+        try {
+            msg.setFlag(Flags.Flag.FLAGGED, state);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFlaggedinSearchResultList(int ps, boolean state) {
+        Message msg = SearchResultList.get(ps);
         try {
             msg.setFlag(Flags.Flag.FLAGGED, state);
         } catch (MessagingException e) {

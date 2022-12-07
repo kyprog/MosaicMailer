@@ -157,13 +157,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    boolean flagged = mp.FlaggedinMessageList(ps);
+                    boolean flagged = mp.FlaggedinSearchResultList(ps);
                     if(flagged){
                         holder.star.setImageResource(R.drawable.ic_baseline_star_outline_36);
-                        mp.setFlaggedinMessageList(ps, false);
+                        mp.setFlaggedinSearchResultList(ps, false);
                     }else{
                         holder.star.setImageResource(R.drawable.ic_baseline_star_36);
-                        mp.setFlaggedinMessageList(ps, true);
+                        mp.setFlaggedinSearchResultList(ps, true);
                     }
                 });
             }
