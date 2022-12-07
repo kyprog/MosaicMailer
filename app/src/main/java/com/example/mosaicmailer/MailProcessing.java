@@ -389,11 +389,18 @@ public class MailProcessing extends Application {
     }
 
     public void deleteMessage(Message msg) {
-        Folder deleted = null;
         try {
+            Folder deleteFolder = store.getFolder("MosaicTrash");
             //deleted = store.getFolder("削除済みアイテム");
+            if (!deleteFolder.exists()) {
+                if (deleteFolder.create(Folder.HOLDS_MESSAGES)) {
+                    deleteFolder.setSubscribed(true);
+                    //System.out.println("Folder was created successfully");
+                }
+            }
+            inbox.copyMessages(new Message[]{msg}, deleteFolder);
             msg.setFlag(Flags.Flag.DELETED, true);
-            //deleted.appendMessages(new Message[]{msg});
+            //deleteFolder.appendMessages(new Message[]{msg});
             inbox.close(true);
             inbox.open(Folder.READ_WRITE);
         } catch (MessagingException e) {

@@ -168,8 +168,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //開いたメールのURL総数を表すログを書き出す
                 mp.writeLog(WINDOW,"all URL number of this mail is " + countAllLink);
 
-                //未読にする(モザイク状態のメールを開いた状態でメーラを終わると，未読になる不具合対策)
-                msg.setFlag(Flags.Flag.SEEN, false);
+                if(MosaicMode){
+                    //未読にする(モザイク状態のメールを開いた状態でメーラを終わると，未読になる不具合対策)
+                    msg.setFlag(Flags.Flag.SEEN, false);
+                }
 
                 //処理結果をhandler経由でUIに反映
                 HandlerCompat.createAsync(getMainLooper()).post(() ->{
