@@ -1,11 +1,20 @@
 package com.example.mosaicmailer;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import javax.mail.Flags;
+import javax.mail.search.FlagTerm;
+import javax.mail.search.FromStringTerm;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
 
 public class SettingInfoActivity extends AppCompatActivity {
     String settingType = "";
@@ -25,6 +34,21 @@ public class SettingInfoActivity extends AppCompatActivity {
         else{ getSupportActionBar().setTitle("ブラックリストの設定情報"); }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //設定表示用のTextView
+        TextView settingInfo = (TextView) findViewById(R.id.settingInfoTextView);
+        DatabaseHelper helper = null;
+        helper = new DatabaseHelper(this);
+        String[] cols = {"_id", "mailaddress", "keyword"};
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
+        cs.moveToFirst();
+
+        settingInfo.setText(
+                "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
+                "注意喚起メールに使われるキーワード\n"+cs.getString(2)
+        );
+
 
     }
 
