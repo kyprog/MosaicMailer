@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -176,12 +177,37 @@ public class MailProcessing extends Application {
 
     public void getMailListAll(){
         try {
-            MessageList = Arrays.asList(inbox.getMessages());
+            MessageList = sortByDate(Arrays.asList(inbox.getMessages()));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         //新しい順になるように逆順に並び替える
-        Collections.reverse(MessageList);
+        //Collections.reverse(MessageList);
+    }
+
+    private List<Message> sortByDate(List<Message> messages){
+        Message[] messagesArray = messages.toArray(new Message[messages.size()]);
+        List<Message> sortedMessagesList = new ArrayList<Message>();
+
+        for(Message tmp : messagesArray){
+            try {
+                int sortedSize = sortedMessagesList.size();
+                Date messagesDate = tmp.getReceivedDate();
+                boolean exception = true;
+                for(int i=0 ;i<sortedSize;i++){
+                    Date sortedDate = sortedMessagesList.get(i).getReceivedDate();
+                    if(messagesDate.after(sortedDate)){
+                        sortedMessagesList.add(i,tmp);
+                        exception = false;
+                        break;
+                    }
+                }
+                if(exception){sortedMessagesList.add(tmp);}
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        return sortedMessagesList;
     }
     /*
     public void getMailListN(int getListLen) {// メールをn件取得する．
