@@ -354,10 +354,11 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         holder.mrecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                //System.out.println("dy:"+dy);
-                //System.out.println("dy:"+dy);
-                System.out.println("topPosition" + mLinearLayoutManager.findFirstVisibleItemPosition() +
-                        "/" + "bottomPosition" + mLinearLayoutManager.findLastVisibleItemPosition());
+                //System.out.println("topPosition" + mLinearLayoutManager.findFirstVisibleItemPosition() +
+                //        "/" + "bottomPosition" + mLinearLayoutManager.findLastVisibleItemPosition());
+                //スクロール距離を計算するための位置番号のログを書き出す
+                mp.writeLog(WINDOW,"scroll topPosition " + mLinearLayoutManager.findFirstVisibleItemPosition() +
+                        "/" + "bottomPosition " + mLinearLayoutManager.findLastVisibleItemPosition());
             }
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
