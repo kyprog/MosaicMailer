@@ -271,12 +271,14 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     @Override
     public boolean onSupportNavigateUp() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            if(MosaicMode){
-                try {
+            try {
+                if(MosaicMode){
                     msg.setFlag(Flags.Flag.SEEN, false);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
+                }else{
+                    msg.setFlag(Flags.Flag.SEEN, true);
                 }
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 if(mp.habitFunction == false){
@@ -324,12 +326,14 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     @Override
     public void onBackPressed() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            if(MosaicMode){
-                try {
+            try {
+                if(MosaicMode){
                     msg.setFlag(Flags.Flag.SEEN, false);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
+                }else{
+                    msg.setFlag(Flags.Flag.SEEN, true);
                 }
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 if(mp.habitFunction == false){

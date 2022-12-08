@@ -42,12 +42,17 @@ public class SettingInfoActivity extends AppCompatActivity {
         String[] cols = {"_id", "mailaddress", "keyword"};
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
-        cs.moveToFirst();
 
-        settingInfo.setText(
-                "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
-                "注意喚起メールに使われるキーワード\n"+cs.getString(2)
-        );
+        if (cs.getCount()>0) {
+            cs.moveToFirst();
+            settingInfo.setText(
+                    "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
+                            "注意喚起メールに使われるキーワード\n"+cs.getString(2)
+            );
+        }else{
+            settingInfo.setText("注意喚起メールの送信元\nnothing\n\n注意喚起メールに使われるキーワード\nnothing");
+        }
+
 
 
     }
