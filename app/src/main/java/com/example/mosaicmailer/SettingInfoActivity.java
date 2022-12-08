@@ -52,9 +52,6 @@ public class SettingInfoActivity extends AppCompatActivity {
         }else{
             settingInfo.setText("注意喚起メールの送信元\nnothing\n\n注意喚起メールに使われるキーワード\nnothing");
         }
-
-
-
     }
 
     public void addOnClick(View v) {
