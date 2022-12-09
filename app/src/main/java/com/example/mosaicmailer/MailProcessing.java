@@ -20,9 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -95,6 +93,8 @@ public class MailProcessing extends Application {
     Snackbar SearchPhishingAlertInBrowse = null;
     Snackbar allSeenSnackbar = null;
     Snackbar noKeywordAlert = null;
+    Snackbar OpenHeadUpAlert = null;
+    Snackbar SearchPhishingAlert = null;
     String realURL = "";
     String mailURL = "";
     String senderName = "";
@@ -107,9 +107,11 @@ public class MailProcessing extends Application {
     boolean existAlert = false; //未読の注意喚起メールがあるかどうかのフラグ
     List<Message> AlertList = new ArrayList<Message>();
     String sourceAlertMail = "";
+    Message latestAlertMail = null;//直近で読んだ注意喚起メール
 
     //探索関連
     boolean searchPhishingMode = false; //フィッシングメールを探すフェーズかどうかのフラグ
+    List<Message> AlertInfoList = new ArrayList<Message>();
     String AlertMailSource = ""; //注意喚起メールの内容
 
     //削除関連
@@ -118,7 +120,7 @@ public class MailProcessing extends Application {
     //画面に表示されるメールの数
     int numberInViewable = 10;
 
-    //ログ関連----------------------------------
+    //ログ関連とイベント管理用フラグ----------------------------------
     final String logFileName="MosaicLog.log";
     ////機能on/off
     boolean habitFunction = true;
@@ -130,6 +132,8 @@ public class MailProcessing extends Application {
     boolean phaseSearchPhishing = false;
     ////起動
     boolean boot = false;
+    ////一番下の未読メールまでスクロールしたか
+    boolean scrolledBottomUnread = false;
     //-----------------------------------------
 
 
@@ -270,9 +274,27 @@ public class MailProcessing extends Application {
         }
     }
 
+    public void showOpenHeadUpAlert(View v){
+        if(messageFunction){
+            OpenHeadUpAlert = Snackbar.make(v, "注意喚起メールが来ています", Snackbar.LENGTH_INDEFINITE);
+            OpenHeadUpAlert.setBackgroundTint(getResources().getColor(R.color.red));
+            OpenHeadUpAlert.setTextColor(getResources().getColor(R.color.black));
+            OpenHeadUpAlert.show();
+        }
+    }
+
+    public void showSearchPhishingAlert(View v){
+        if(messageFunction){
+            SearchPhishingAlert = Snackbar.make(v, "注意喚起メールの情報をもとに，フィッシングメールを探してください", Snackbar.LENGTH_INDEFINITE);
+            SearchPhishingAlert.setBackgroundTint(getResources().getColor(R.color.red));
+            SearchPhishingAlert.setTextColor(getResources().getColor(R.color.black));
+            SearchPhishingAlert.show();
+        }
+    }
+
     public void SearchPhishingAlertInBrowse(View v){
         if(messageFunction) {
-            SearchPhishingAlertInBrowse = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールが来ていないか調べてください", Snackbar.LENGTH_INDEFINITE);
+            SearchPhishingAlertInBrowse = Snackbar.make(v.findViewById(R.id.body), "注意喚起メールの情報をもとに，フィッシングメールを探してください", Snackbar.LENGTH_INDEFINITE);
             SearchPhishingAlertInBrowse.setBackgroundTint(getResources().getColor(R.color.red));
             SearchPhishingAlertInBrowse.setTextColor(getResources().getColor(R.color.black));
             SearchPhishingAlertInBrowse.show();
@@ -514,6 +536,7 @@ public class MailProcessing extends Application {
                 };
                 SearchTerm SearchTerm = new AndTerm(terms);
                 AlertList = new ArrayList<Message>(Arrays.asList(inbox.search(SearchTerm)));
+                AlertInfoList = new ArrayList<>(AlertList);
 
                 if(AlertList.size()>0){
                     existAlert = true;
@@ -525,7 +548,41 @@ public class MailProcessing extends Application {
         }
     }
 
-    public boolean isAlertMessege(int ps) {
+    public boolean isAlertMessage(int ps) {//注意喚起メールかどうかの判定
+        try {
+            Message msg = MessageList.get(ps);
+            String[] idMsgs = msg.getHeader("Message-ID");
+            String idMsg = idMsgs[0];
+            System.out.println("count   :"+AlertInfoList.size());
+            for(Message alert : AlertInfoList){
+                String[] idAlerts = alert.getHeader("Message-ID");
+                String idAlert = idAlerts[0];
+                System.out.println("msg:"+idMsg+"/alert:"+idAlert);
+                if(idMsg.equals(idAlert)){return true;}
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean currentMessageIsAlertMessage() {//注意喚起メールかどうかの判定
+        try {
+            String[] idMsgs = currentMessage.getHeader("Message-ID");
+            String idMsg = idMsgs[0];
+            for(Message alert : AlertInfoList){
+                String[] idAlerts = alert.getHeader("Message-ID");
+                String idAlert = idAlerts[0];
+                //System.out.println("msg:"+idMsg+"/alert:"+idAlert);
+                if(idMsg.equals(idAlert)){return true;}
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isUnreadAlertMessege(int ps) {//未読注意喚起メールかどうかの判定
         try {
             Message msg = MessageList.get(ps);
             String[] idMsgs = msg.getHeader("Message-ID");
@@ -533,7 +590,24 @@ public class MailProcessing extends Application {
             for(Message alert : AlertList){
                 String[] idAlerts = alert.getHeader("Message-ID");
                 String idAlert = idAlerts[0];
+                System.out.println("msg:"+idMsg+"/alert:"+idAlert);
                 if(idMsg.equals(idAlert)){return true;}
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isLatestAlert(int ps) {
+        try{
+            Message msg = MessageList.get(ps);
+            String idMsg = msg.getHeader("Message-ID")[0];
+            if(latestAlertMail == null){
+                return false;
+            }else{
+                String idLatestAlert = latestAlertMail.getHeader("Message-ID")[0];
+                if(idMsg.equals(idLatestAlert)){return true;}
             }
         } catch (MessagingException e) {
             e.printStackTrace();

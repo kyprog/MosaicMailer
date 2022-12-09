@@ -1,8 +1,6 @@
 package com.example.mosaicmailer;
 
 
-import static android.os.Looper.getMainLooper;
-
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -14,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.os.HandlerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -224,15 +221,119 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
                 //System.out.println(ps);
-                mp.isAlertMail = false;
 
-                if(mp.habitFunction){//習慣化機能on
+                CountDownLatch countDownLatch = new CountDownLatch(1);
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    mp.isAlertMail = mp.isAlertMessage(ps);
+                    boolean isLatestAlert = mp.isLatestAlert(ps);
+                    boolean isUnreadAlert = mp.isUnreadAlertMessege(ps);
+                    try {
+                        System.out.println("mp.habitFunction="+mp.habitFunction);
+                        System.out.println("mp.phaseSearchAlertMail="+mp.phaseSearchAlertMail);
+                        System.out.println("mp.phaseSearchPhishing="+mp.phaseSearchPhishing);
+                        if (mp.habitFunction) {//習慣化機能onの場合
+                            if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
+                                if (isLatestAlert) {//見た注意喚起メールをタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    openMessage(ps);
+                                }
+                                else {//それ以外をタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    mp.showSearchPhishingAlert(v);
+                                }
+                            } else if (mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズ
+                                if (!mp.scrolledBottomUnread) {//一番下の未読メールまでスクロールしていないでタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    mp.showSearchHeadUpAlert(v);
+                                    mp.changeShowSearchedHeadUpAlertFlag(true);
+                                }
+                                else if (mp.existAlert) {//未読の注意喚起メールがある場合
+                                    if (isUnreadAlert) {//未読の注意喚起メールをタップした場合
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        //注意喚起メールがタップされたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap alertMail");
+                                        mp.latestAlertMail = mp.MessageList.get(ps);
+                                        openMessage(ps);
+                                    }
+                                    else {//未読の注意喚起メール以外をタップした場合
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                        mp.showOpenHeadUpAlert(v);
+                                    }
+                                }
+                            }
+                            else {//注意喚起メールを探すフェーズでもフィッシングメールを探すフェーズでもない
+                                //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                openMessage(ps);
+                            }
+                        }
+                        else {//習慣機能off
+                            if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
+                                if (isLatestAlert) {//見た注意喚起メールをタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    openMessage(ps);
+                                }
+                                else {//それ以外をタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    openMessage(ps);
+                                }
+                            } else if (mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズ
+                                if (!mp.scrolledBottomUnread) {//一番下の未読メールまでスクロールしていないでタップした場合
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    openMessage(ps);
+                                }
+                                else if (mp.existAlert) {//未読の注意喚起メールがある場合
+                                    if (isUnreadAlert) {//未読の注意喚起メールをタップした場合
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        //注意喚起メールがタップされたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW,"tap alertMail");
+                                        mp.latestAlertMail = mp.MessageList.get(ps);
+                                        openMessage(ps);
+                                    }
+                                    else {//未読の注意喚起メール以外をタップした場合
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        openMessage(ps);
+                                    }
+                                }
+                            }
+                            else {//注意喚起メールを探すフェーズでもフィッシングメールを探すフェーズでもない
+                                //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                openMessage(ps);
+                            }
+                        }
+                        countDownLatch.countDown();
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                });
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /*
+                if(mp.habitFunction){//習慣化機能onの場合
+                    System.out.println("------------------------------0");
                     if( !(mp.searchPhishingMode &&(ps!=mp.openMessageListPosition)) ){//!(フィッシングメール探すフェーズで，押したメールが注意喚起メールでないとき)
                         Executors.newSingleThreadExecutor().execute(() -> {
-                            boolean isAlert = mp.isAlertMessege(ps);
+                            boolean isAlert = mp.isAlertMessage(ps);
                             mp.isAlertMail = isAlert;
+                            System.out.println(isAlert);
                             HandlerCompat.createAsync(getMainLooper()).post(() ->{
+                                System.out.println("------------------------------1");
                                 if(mp.existAlert && isAlert){//注意喚起メールをタップした時
+                                    System.out.println("------------------------------2");
                                     try {
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
@@ -291,7 +392,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     }
                 }else{//習慣化機能off
                     Executors.newSingleThreadExecutor().execute(() -> {
-                        boolean isAlert = mp.isAlertMessege(ps);
+                        boolean isAlert = mp.isAlertMessage(ps);
                         HandlerCompat.createAsync(getMainLooper()).post(() ->{
                             if(mp.existAlert && isAlert){//注意喚起メールをタップした時
                                 try {
@@ -332,7 +433,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                             activity.startActivity(intent);
                         });
                     });
-                }
+                }*/
             }
         });
         holder.star.setOnClickListener(new View.OnClickListener() {
@@ -371,6 +472,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                         }
                         mp.changeShowSearchedHeadUpAlertFlag(false);
                         mp.changeSearchedHeadUpFlag(true);
+                        mp.scrolledBottomUnread = true;
                     }
                     //一番下の未読メールまでスクロールしたことを表すログの書き出し
                     mp.writeLog(WINDOW,"scroll to the bottom unread mail position");
@@ -388,6 +490,16 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         });
     }
 
+    private void openMessage(int ps){
+        Intent intent = new Intent(activity, BrowseActivity.class);
+        // Activity以外からActivityを呼び出すためのフラグを設定
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //開く位置のセット
+        mp.setOpenMessageListPosition(ps);
+        // 引き渡す値
+        intent.putExtra("ListType", "MailList");
+        activity.startActivity(intent);
+    }
     /**
      * リストの行数
      */

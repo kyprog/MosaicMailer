@@ -55,7 +55,7 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // フィッシングメールではないボタンを押した時の処理
-                if(mp.existAlert && mp.isAlertMail){//注意喚起メールの時
+                if(mp.currentMessageIsAlertMessage()){//注意喚起メールの時
                     mp.SearchPhishingAlertInBrowse(activity.getWindow().getDecorView());
                     mp.searchPhishingMode = true;
                     mp.AlertMailSource = activity.originalHTML; //注意喚起メールの内容をmailprocessingにわたす

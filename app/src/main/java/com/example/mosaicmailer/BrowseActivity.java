@@ -440,7 +440,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "forward");
         intent.putExtra("replyTextMessage", originalPlanText);
-        mp.setCurrentMessage(msg);
+        //mp.setCurrentMessage(msg);
         startActivity(intent);
     }
 
@@ -892,7 +892,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
         }
         if(ListType.equals("MailList")){
-            mp.dropAlert(mp.openMessageListPosition);
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                mp.dropAlert(mp.openMessageListPosition);
+                countDownLatch.countDown();
+            });
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

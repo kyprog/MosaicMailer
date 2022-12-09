@@ -80,6 +80,7 @@ public class IndexActivity extends AppCompatActivity
 
         //注意喚起メールを探すフェーズが始まったことを表すログの書き出し
         mp.phaseSearchAlertMail = true;
+        mp.scrolledBottomUnread = false;
         mp.writeLog(WINDOW,"start searchAlert");
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -119,6 +120,7 @@ public class IndexActivity extends AppCompatActivity
                 mp.SearchHeadUpAlert.dismiss();
             }
             mp.changeSearchedHeadUpFlag(true);
+            mp.scrolledBottomUnread = true;
             //System.out.println("-----");
         }
 
