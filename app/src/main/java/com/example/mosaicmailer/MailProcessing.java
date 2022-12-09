@@ -134,6 +134,9 @@ public class MailProcessing extends Application {
     boolean boot = false;
     ////一番下の未読メールまでスクロールしたか
     boolean scrolledBottomUnread = false;
+    ////現在開いているメールが注意喚起メールかどうか
+    boolean currentMessageIsAlert = false;
+
     //-----------------------------------------
 
 
@@ -194,7 +197,7 @@ public class MailProcessing extends Application {
 
     public void getMailListAll(){
         try {
-            MessageList = sortByDate(Arrays.asList(inbox.getMessages()));
+            MessageList = new ArrayList<Message>( sortByDate(Arrays.asList(inbox.getMessages())) );
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -204,7 +207,7 @@ public class MailProcessing extends Application {
 
     public void getMosaicTrashAll(){
         try {
-            MosaicTrashList = sortByDate(Arrays.asList(mosaicTrash.getMessages()));
+            MosaicTrashList = new ArrayList<Message>( sortByDate(Arrays.asList(mosaicTrash.getMessages())) );
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -422,13 +425,13 @@ public class MailProcessing extends Application {
             };
 
             SearchTerm term = new OrTerm(terms);
-            SearchResultList = new ArrayList<Message>(Arrays.asList(inbox.search(term)));
+            SearchResultList = new ArrayList<Message>( sortByDate(Arrays.asList(inbox.search(term))) );
             //SearchResultList = new ArrayList<Message>(Arrays.asList(inbox.search(term)));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         //新しい順になるように逆順に並び替える
-        Collections.reverse(SearchResultList);
+        //Collections.reverse(SearchResultList);
 
         return SearchResultList;
     }
@@ -566,7 +569,8 @@ public class MailProcessing extends Application {
         return false;
     }
 
-    public boolean currentMessageIsAlertMessage() {//注意喚起メールかどうかの判定
+    public boolean currentMessageIsAlertMessage() {//現在開いているメールが注意喚起メールかどうかの判定
+        currentMessageIsAlert = false;
         try {
             String[] idMsgs = currentMessage.getHeader("Message-ID");
             String idMsg = idMsgs[0];
@@ -574,12 +578,15 @@ public class MailProcessing extends Application {
                 String[] idAlerts = alert.getHeader("Message-ID");
                 String idAlert = idAlerts[0];
                 //System.out.println("msg:"+idMsg+"/alert:"+idAlert);
-                if(idMsg.equals(idAlert)){return true;}
+                if(idMsg.equals(idAlert)){
+                    currentMessageIsAlert = true;
+                    return currentMessageIsAlert;
+                }
             }
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-        return false;
+        return currentMessageIsAlert;
     }
 
     public boolean isUnreadAlertMessege(int ps) {//未読注意喚起メールかどうかの判定
@@ -634,6 +641,48 @@ public class MailProcessing extends Application {
                         //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                         phaseSearchAlertMail = false;
                         writeLog("tmp","end searchAlert");
+                    }
+                }
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dropAlert(String listType) {//dropついでにexist変更
+        try {
+            if(listType.equals("MailList")){
+                Message msg = MessageList.get(openMessageListPosition);
+                String[] idMsgs = msg.getHeader("Message-ID");
+                String idMsg = idMsgs[0];
+                for(int i=0; i<AlertList.size(); i++){
+                    String[] idAlerts = AlertList.get(i).getHeader("Message-ID");
+                    String idAlert = idAlerts[0];
+                    if(idMsg.equals(idAlert)){
+                        AlertList.remove(i);
+                        if(AlertList.size()==0){
+                            existAlert = false;
+                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                            phaseSearchAlertMail = false;
+                            writeLog("tmp","end searchAlert");
+                        }
+                    }
+                }
+            }else{
+                Message msg = MessageList.get(openSearchResultListPosition);
+                String[] idMsgs = msg.getHeader("Message-ID");
+                String idMsg = idMsgs[0];
+                for(int i=0; i<AlertList.size(); i++){
+                    String[] idAlerts = AlertList.get(i).getHeader("Message-ID");
+                    String idAlert = idAlerts[0];
+                    if(idMsg.equals(idAlert)){
+                        AlertList.remove(i);
+                        if(AlertList.size()==0){
+                            existAlert = false;
+                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                            phaseSearchAlertMail = false;
+                            writeLog("tmp","end searchAlert");
+                        }
                     }
                 }
             }

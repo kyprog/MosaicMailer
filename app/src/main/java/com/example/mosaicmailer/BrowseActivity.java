@@ -891,17 +891,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             mp.phaseConfirmMail = false;
             mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
         }
-        if(ListType.equals("MailList")){
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                mp.dropAlert(mp.openMessageListPosition);
-                countDownLatch.countDown();
-            });
-            try {
-                countDownLatch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            mp.dropAlert(ListType);
+            countDownLatch.countDown();
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
