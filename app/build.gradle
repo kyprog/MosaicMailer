@@ -36,6 +36,14 @@ android {
         enabled true
     }
     namespace 'com.example.mosaicmailer'
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
