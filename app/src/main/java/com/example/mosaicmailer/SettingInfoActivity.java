@@ -35,23 +35,51 @@ public class SettingInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //設定表示用のTextView
-        TextView settingInfo = (TextView) findViewById(R.id.settingInfoTextView);
-        DatabaseHelper helper = null;
-        helper = new DatabaseHelper(this);
-        String[] cols = {"_id", "mailaddress", "keyword"};
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
+        if(settingType.equals("headUp")){
+            //設定表示用のTextView
+            TextView settingInfo = (TextView) findViewById(R.id.settingInfoTextView);
+            DatabaseHelper helper = null;
+            helper = new DatabaseHelper(this);
+            String[] cols = {"_id", "mailaddress", "keyword"};
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
 
-        if (cs.getCount()>0) {
-            cs.moveToFirst();
-            settingInfo.setText(
-                    "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
-                            "注意喚起メールに使われるキーワード\n"+cs.getString(2)
-            );
-        }else{
-            settingInfo.setText("注意喚起メールの送信元\nnothing\n\n注意喚起メールに使われるキーワード\nnothing");
+            if (cs.getCount()>0) {
+                cs.moveToFirst();
+                settingInfo.setText(
+                        "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
+                                "注意喚起メールに使われるキーワード\n"+cs.getString(2)
+                );
+            }else{
+                settingInfo.setText("注意喚起メールの送信元\nnothing\n\n注意喚起メールに使われるキーワード\nnothing");
+            }
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(settingType.equals("headUp")){
+            //設定表示用のTextView
+            TextView settingInfo = (TextView) findViewById(R.id.settingInfoTextView);
+            DatabaseHelper helper = null;
+            helper = new DatabaseHelper(this);
+            String[] cols = {"_id", "mailaddress", "keyword"};
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
+
+            if (cs.getCount()>0) {
+                cs.moveToFirst();
+                settingInfo.setText(
+                        "注意喚起メールの送信元\n"+cs.getString(1)+"\n\n" +
+                                "注意喚起メールに使われるキーワード\n"+cs.getString(2)
+                );
+            }else{
+                settingInfo.setText("注意喚起メールの送信元\nnothing\n\n注意喚起メールに使われるキーワード\nnothing");
+            }
+        }
+
     }
 
     public void addOnClick(View v) {
