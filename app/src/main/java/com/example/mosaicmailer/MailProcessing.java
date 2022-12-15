@@ -1,6 +1,7 @@
 package com.example.mosaicmailer;
 
 import android.app.Application;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -160,7 +161,7 @@ public class MailProcessing extends Application {
         }
     }
 
-    public void connect(String username, String password) {
+    public boolean connect(String username, String password) {
         try{
             Properties props = new Properties();
             props.put("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -189,10 +190,25 @@ public class MailProcessing extends Application {
             accountInfo = username;
             passwordInfo = password;
 
+            try {
+                DatabaseHelper helper = new DatabaseHelper(this);
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.delete("accountsInfo", null, null);
+                ContentValues cv = new ContentValues();
+                cv.put("mailaddress", accountInfo);
+                cv.put("password", password);
+                db.insert("accountsInfo", null, cv);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } catch (MessagingException e) {
             e.printStackTrace();
+            //System.out.println("-------------");
+            return false;
         }
 
+        return true;
     }
 
     public void getMailListAll(){

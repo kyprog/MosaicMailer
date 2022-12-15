@@ -12,6 +12,9 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
@@ -39,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         //System.out.println("===habit="+mp.habitFunction+"/message="+mp.messageFunction+"===");
 
         //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
-        mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
-        mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
+        //mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
+        //mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
 
         if(!mp.boot){
             //起動ログの書き出し
@@ -61,9 +64,11 @@ public class LoginActivity extends AppCompatActivity {
             //ログ・ファイルの作成
             mp.createLog();
         }
+    }
 
-        //ログの書き出し
-        mp.writeLog(WINDOW,"onCreate");
+    @Override
+    public void onResume() {
+        super.onResume();
 
         if(loginType==null){
             //アカウント情報をDBから探す．
@@ -74,7 +79,9 @@ public class LoginActivity extends AppCompatActivity {
                 Cursor cs = db.query("accountsInfo", cols, null, null, null, null, null, null);
                 if (cs.getCount()>0) {
                     cs.moveToFirst();
-                    login(cs.getString(1), cs.getString(2));
+                    ((TextView)findViewById(R.id.editTextTextPersonName)).setText(cs.getString(1));
+                    ((TextView)findViewById(R.id.editTextTextPassword)).setText(cs.getString(2));
+                    //login(cs.getString(1), cs.getString(2));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -84,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginClick(View view) {
         progressBar.setVisibility(android.widget.ProgressBar.VISIBLE);
+        //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログイン処理中", Snackbar.LENGTH_INDEFINITE);
+        //loginSnackbar.show();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
 
@@ -93,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = inputPassword.getText().toString();
             //System.out.println(mailaddress+","+password);
 
+            /*
             //アカウント情報のDBに登録
             try {
                 helper = new DatabaseHelper(this);
@@ -105,9 +115,19 @@ public class LoginActivity extends AppCompatActivity {
                 //db.insertWithOnConflict("books", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
             mp.connect(mailaddress,password);
+
+            /*
+            loginSuccess = false;
+            loginSuccess = mp.connect(mailaddress,password);
+            if(loginSuccess == false){
+                //progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
+                //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログインに失敗しました", Snackbar.LENGTH_SHORT);
+                //loginSnackbar.show();
+                return;
+            }*/
             mp.getMailListAll();
             mp.getMosaicTrashAll();
             countDownLatch.countDown();
@@ -129,10 +149,20 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(String mailaddress, String password) {
         progressBar.setVisibility(android.widget.ProgressBar.VISIBLE);
+        //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログイン処理中", Snackbar.LENGTH_INDEFINITE);
+        //loginSnackbar.show();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             //System.out.println(mailaddress+","+password);
+            //loginSuccess = false;
             mp.connect(mailaddress,password);
+            /*
+            if(loginSuccess == false){
+                //progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
+                //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログインに失敗しました", Snackbar.LENGTH_SHORT);
+                //loginSnackbar.show();
+                return;
+            }*/
             mp.getMailListAll();
             mp.getMosaicTrashAll();
             //mp.setTestString("MVMVMVM");
