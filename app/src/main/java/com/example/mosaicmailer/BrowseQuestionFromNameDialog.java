@@ -86,7 +86,7 @@ public class BrowseQuestionFromNameDialog extends DialogFragment {
                         if(exist) {//本当は,その差出人名が来ていた場合
                             TextView question = layout.findViewById(R.id.textView11);
                             question.setText("本当に覚えはないのですか？");
-                            dismiss();
+                            //dismiss();
                         }else{//本当に,その差出人名が来ていない場合
                             //気をつけてねダイアログ遷移
                             activity.checkedMailAddress = true;
