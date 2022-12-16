@@ -481,20 +481,22 @@ public class MailProcessing extends Application {
         String senderAddressTmp;
         for(Message m : MessageList){
             try {
-                addrFrom = (InternetAddress) m.getFrom()[0];
-                senderTmp = addrFrom.getPersonal();
-                if(senderTmp==null){
-                    senderAddressTmp = addrFrom.getAddress();
-                    if(senderAddressTmp.equals(senderMailAddress)){
+                if(m.getFlags().contains(Flags.Flag.SEEN)){
+                    addrFrom = (InternetAddress) m.getFrom()[0];
+                    senderTmp = addrFrom.getPersonal();
+                    if(senderTmp==null){
+                        senderAddressTmp = addrFrom.getAddress();
+                        if(senderAddressTmp.equals(senderMailAddress)){
+                            senderCount++;
+                            if(senderCount>=1){
+                                return true;
+                            }
+                        }
+                    }else if(senderTmp.equals(senderName)){
                         senderCount++;
-                        if(senderCount>=2){
+                        if(senderCount>=1){
                             return true;
                         }
-                    }
-                }else if(senderTmp.equals(senderName)){
-                    senderCount++;
-                    if(senderCount>=2){
-                        return true;
                     }
                 }
 

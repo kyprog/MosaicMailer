@@ -9,18 +9,21 @@
             android:id="@+id/inbox"
             android:icon="@drawable/ic_baseline_inbox_24"
             android:title="受信トレイ" />
+        <!--
         <item
             android:id="@+id/sentMail"
             android:icon="@drawable/ic_baseline_send_24"
-            android:title="送信済み" />
+            android:title="送信済み" />-->
+        <!--
         <item
             android:id="@+id/flag"
             android:icon="@drawable/ic_baseline_outlined_flag_24"
-            android:title="フラグ付き" />
+            android:title="フラグ付き" />-->
+        <!--
         <item
             android:id="@+id/spam"
             android:icon="@drawable/ic_baseline_not_interested_24"
-            android:title="迷惑メール" />
+            android:title="迷惑メール" />-->
         <item
             android:id="@+id/mosaicTrash"
             android:icon="@drawable/ic_baseline_delete_24"
