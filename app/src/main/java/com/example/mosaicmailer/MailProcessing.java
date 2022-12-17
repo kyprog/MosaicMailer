@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -86,6 +88,12 @@ public class MailProcessing extends Application {
     boolean SearchedHeadUpFlag =false;//注意喚起メールを探したかどうかのフラグ
     boolean showSearchedHeadUpAlertFlag =false;//SearchHeadUpAlertアラートが出現しているかどうか
     boolean noKeywordAlertFlag = false;
+    String realURL = "";
+    String mailURL = "";
+    String senderName = "";
+    String senderMailAddress = "";
+
+    //メッセージ
     Snackbar SearchHeadUpAlert = null;
     Snackbar CheckAlert = null;
     Snackbar ReportAlert = null;
@@ -96,10 +104,6 @@ public class MailProcessing extends Application {
     Snackbar noKeywordAlert = null;
     Snackbar OpenHeadUpAlert = null;
     Snackbar SearchPhishingAlert = null;
-    String realURL = "";
-    String mailURL = "";
-    String senderName = "";
-    String senderMailAddress = "";
 
     //確認した位置
     int linkInfoIndex = 0;
@@ -391,6 +395,42 @@ public class MailProcessing extends Application {
             DeleteAlert.setBackgroundTint(getResources().getColor(R.color.red));
             DeleteAlert.setTextColor(getResources().getColor(R.color.black));
             DeleteAlert.show();
+        }
+    }
+
+    public  void dismissAllSnackbar(){
+        if((SearchHeadUpAlert != null)&&(SearchHeadUpAlert.isShown())){
+            SearchHeadUpAlert.dismiss();
+        }
+        if((SearchHeadUpAlert != null)&&(SearchHeadUpAlert.isShown())){
+            SearchHeadUpAlert.dismiss();
+        }
+        if((CheckAlert != null)&&(CheckAlert.isShown())){
+            CheckAlert.dismiss();
+        }
+        if((ReportAlert != null)&&(ReportAlert.isShown())){
+            ReportAlert.dismiss();
+        }
+        if((DeleteAlert != null)&&(DeleteAlert.isShown())){
+            DeleteAlert.dismiss();
+        }
+        if((SearchPhishingAlertInList != null)&&(SearchPhishingAlertInList.isShown())){
+            SearchPhishingAlertInList.dismiss();
+        }
+        if((SearchPhishingAlertInBrowse != null)&&(SearchPhishingAlertInBrowse.isShown())){
+            SearchPhishingAlertInBrowse.dismiss();
+        }
+        if((allSeenSnackbar != null)&&(allSeenSnackbar.isShown())){
+            allSeenSnackbar.dismiss();
+        }
+        if((noKeywordAlert != null)&&(noKeywordAlert.isShown())){
+            noKeywordAlert.dismiss();
+        }
+        if((OpenHeadUpAlert != null)&&(OpenHeadUpAlert.isShown())){
+            OpenHeadUpAlert.dismiss();
+        }
+        if((SearchPhishingAlert != null)&&(SearchPhishingAlert.isShown())){
+            SearchPhishingAlert.dismiss();
         }
     }
 

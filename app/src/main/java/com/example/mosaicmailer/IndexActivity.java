@@ -174,22 +174,24 @@ public class IndexActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView mailAddress = (TextView) headerView.findViewById(R.id.mailAddress);
         mailAddress.setText(mp.accountInfo);
-        CountDownLatch countDownLatch = new CountDownLatch(1);
+        //CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             mp.reloadMessageList("MailList");
             //mainAdapter = new IndexAdapter(getApplication(), recyclerView);
-            countDownLatch.countDown();
+            //countDownLatch.countDown();
             //処理結果をhandler経由でUIに反映
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 //recyclerView.setAdapter(mainAdapter);
                 mainAdapter.reload(mp.MessageList);
             });
         });
+        /*
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+
         if(mp.searchPhishingMode){
             mp.SearchPhishingAlertInList(this.getWindow().getDecorView());
         }

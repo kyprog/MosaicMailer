@@ -232,9 +232,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     mp.writeLog(WINDOW,"delete mail");
 
                     mp.deleteMessage(msg);
-                    mp.reloadMessageList(ListType);
+                    //mp.reloadMessageList(ListType);
                     countDownLatch.countDown();
                 });
+
                 try {
                     countDownLatch.await();
                 } catch (InterruptedException e) {
