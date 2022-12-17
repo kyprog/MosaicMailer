@@ -45,24 +45,16 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/body"
         app:layout_constraintEnd_toStartOf="@+id/replyButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:onClick="QuestionDialog"
-            app:srcCompat="@android:mipmap/sym_def_app_icon" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0"
             android:onClick="QuestionDialog"
             android:orientation="vertical">
@@ -70,7 +62,7 @@
             <TextView
                 android:id="@+id/sender"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30sp"
                 android:onClick="QuestionDialog"
                 android:text="差出人"
                 android:textSize="20sp" />
@@ -78,7 +70,7 @@
             <TextView
                 android:id="@+id/receiver"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30sp"
                 android:onClick="QuestionDialog"
                 android:text="To:宛先"
                 android:textSize="20sp" />
@@ -113,7 +105,8 @@
         app:layout_constraintBottom_toTopOf="@+id/body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <WebView
         android:id="@+id/body"
