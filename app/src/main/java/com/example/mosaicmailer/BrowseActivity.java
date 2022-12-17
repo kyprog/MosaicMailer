@@ -182,6 +182,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         ((TextView) findViewById(R.id.sender)).setText(sender);
                     }
                     ((TextView) findViewById(R.id.receiver)).setText("To:"+toAddress.toString());
+                    System.out.println("link number is "+linkInfoList.size());
                     if(mp.habitFunction){//習慣化機能on
                         if(MosaicMode){
                             //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
@@ -379,16 +380,20 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
     @Override
     public boolean onLongClick(View v) {
+        System.out.println("long taped");
         if(v == body){
+            System.out.println("is body");
             //長押しした箇所の情報を取得
             WebView.HitTestResult hittestresult = body.getHitTestResult();
             if( hittestresult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE){
+                System.out.println("is SRC_ANCHOR_TYPE");
                 String url = hittestresult.getExtra();
                 int linkInfoIndex = 0;
                 for(LinkInfo linkTmp : linkInfoList){
-                    //System.out.println(url);
-                    //System.out.println(linkTmp.href);
+                    System.out.println(url);
+                    System.out.println(linkTmp.href);
                     if(url.equals(linkTmp.href)){
+                        System.out.println("---------------------");
                         url = url.substring(0, url.length()-linkTmp.countSharp);
                         mp.setMailURL(linkTmp.linkText);
                         mp.setRealURL(url);

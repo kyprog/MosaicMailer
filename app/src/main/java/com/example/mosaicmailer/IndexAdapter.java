@@ -231,6 +231,8 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                         System.out.println("mp.habitFunction="+mp.habitFunction);
                         System.out.println("mp.phaseSearchAlertMail="+mp.phaseSearchAlertMail);
                         System.out.println("mp.phaseSearchPhishing="+mp.phaseSearchPhishing);
+                        System.out.println("mp.scrolledBottomUnread="+mp.scrolledBottomUnread);
+                        System.out.println("mp.existAlert="+mp.existAlert);
                         if (mp.habitFunction) {//習慣化機能onの場合
                             if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
@@ -244,7 +246,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                     mp.showSearchPhishingAlert(v);
                                 }
                             } else if (mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズ
-                                if (!mp.scrolledBottomUnread) {//一番下の未読メールまでスクロールしていないでタップした場合
+                                if (mp.scrolledBottomUnread == false) {//一番下の未読メールまでスクロールしていないでタップした場合
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
                                     mp.showSearchHeadUpAlert(v);
@@ -479,6 +481,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     if(!mp.existAlert){
                         //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                         mp.phaseSearchAlertMail = false;
+                        mp.scrolledBottomUnread = true;
                         mp.writeLog(WINDOW,"end searchAlert");
                     }
                 }

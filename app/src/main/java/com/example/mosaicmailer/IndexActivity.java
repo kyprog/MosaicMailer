@@ -121,6 +121,7 @@ public class IndexActivity extends AppCompatActivity
             }
             mp.changeSearchedHeadUpFlag(true);
             mp.scrolledBottomUnread = true;
+            if(!mp.existAlert){mp.phaseSearchAlertMail = false;}
             //System.out.println("-----");
         }
 
