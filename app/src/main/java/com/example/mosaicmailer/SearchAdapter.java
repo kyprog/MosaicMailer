@@ -52,7 +52,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
 
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.sender_image);
+            //image = itemView.findViewById(R.id.sender_image);
             star = itemView.findViewById(R.id.star);
             sender = itemView.findViewById(R.id.sender_name);
             title = itemView.findViewById(R.id.title);

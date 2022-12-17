@@ -89,7 +89,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
 
         MainViewHolder(@NonNull View itemView) {
             super(itemView);
-            senderImage = itemView.findViewById(R.id.sender_image);
+            //senderImage = itemView.findViewById(R.id.sender_image);
             star = itemView.findViewById(R.id.star);
             sender = itemView.findViewById(R.id.sender_name);
             title = itemView.findViewById(R.id.title);

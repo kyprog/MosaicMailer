@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mail_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_style"
     android:orientation="horizontal"
-    android:padding="16dp"
-    android:id="@+id/mail_list">
+    android:padding="16dp">
 
+    <!--
     <ImageView
         android:id="@+id/sender_image"
         android:layout_width="wrap_content"
@@ -15,6 +16,7 @@
         android:layout_weight="0"
         android:contentDescription="sender_icon"
         app:srcCompat="@android:mipmap/sym_def_app_icon" />
+        -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,14 +27,14 @@
         <TextView
             android:id="@+id/sender_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24sp"
             android:text="TextView"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24sp"
             android:text="TextView"
             android:textSize="18sp" />
 

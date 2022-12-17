@@ -69,7 +69,7 @@ public class SettingActivity extends AppCompatActivity {
 
     public void exportLogOnClick(View v) {
         log = mp.readLog();
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//APIレベル19以降
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, mp.logFileName);
