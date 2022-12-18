@@ -18,10 +18,15 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -39,6 +44,7 @@ import javax.mail.internet.InternetAddress;
 public class BrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
+    ArrayList<LinkInfo> newLinkInfoList = new ArrayList<LinkInfo>();
     int countCheckedLink = 0;//チェックしたリンク数
     int countAllLink = 0;//リンクの総数
     boolean MosaicMode = true;
@@ -103,14 +109,14 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //URLをタップしたことを表すログを書き出す
                 mp.writeLog(WINDOW,"tap URL");
                 if(MosaicMode){
-                    //System.out.println("[MosaicModeOn]tap "+url);
+                    ////System.out.println("[MosaicModeOn]tap "+url);
                     mp.showLinkTapAlert(findViewById(R.id.bottomLinearLayout));
                     view.stopLoading();
                     return false;
                 }else{
                     // trueを返すことで、WebView内で開かないようにさせる
                     // 今回はデフォルトのウェブブラウザでリンク先を開く
-                    //System.out.println("tap "+url);
+                    ////System.out.println("tap "+url);
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
                     return true;
@@ -167,13 +173,14 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 for(Address toTmp : toArray){
                     toAddress.append(toTmp.toString());
                 }
-                //System.out.println("-------------"+toAddress);
+                ////System.out.println("-------------"+toAddress);
 
                 //差出人のメールアドレス取得
                 mp.setSenderMailAddress(addrFrom.getAddress());
 
                 //メールの本文中のテキストをモザイク化しセッティング
                 String mosaicMailStr = Mosaic();
+                //extractLinkInfo(originalHTML);
 
                 //メール内のリンク一覧数の取得
                 countAllLink = linkInfoList.size();
@@ -195,7 +202,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         ((TextView) findViewById(R.id.sender)).setText(sender);
                     }
                     ((TextView) findViewById(R.id.receiver)).setText("To:"+toAddress.toString());
-                    System.out.println("link number is "+linkInfoList.size());
+                    //System.out.println("link number is "+linkInfoList.size());
                     if(mp.habitFunction){//習慣化機能on
                         if(MosaicMode){
                             //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
@@ -212,14 +219,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
 
-                    //System.out.println(mosaicMailStr);
+                    ////System.out.println(mosaicMailStr);
                     /*for(LinkInfo l : linkInfoList){
-                        System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
+                        //System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
                     }*/
                     //body.setMovementMethod(new ScrollingMovementMethod());
                     //((TextView) findViewById(R.id.body)).setText(ss);
                     //((TextView) findViewById(R.id.body)).setMovementMethod(LinkMovementMethod.getInstance());
                 });
+
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
@@ -235,7 +243,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             public void run() {
                 //TextView text = (TextView) findViewById(R.id.textView);
                 //text.setText(src);    // STEP4
-                System.out.println(src);
+                //System.out.println(src);
             }
         });
     }*/
@@ -406,24 +414,24 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
     @Override
     public boolean onLongClick(View v) {
-        System.out.println("long taped");
+        //System.out.println("long taped");
         if(v == body){
-            System.out.println("is body");
+            //System.out.println("is body");
             //長押しした箇所の情報を取得
             WebView.HitTestResult hittestresult = body.getHitTestResult();
             if( hittestresult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE){
-                System.out.println("is SRC_ANCHOR_TYPE");
+                //System.out.println("is SRC_ANCHOR_TYPE");
                 String url = hittestresult.getExtra();
                 int linkInfoIndex = 0;
                 for(LinkInfo linkTmp : linkInfoList){
-                    System.out.println(url);
-                    System.out.println(linkTmp.href);
+                    //System.out.println(url);
+                    //System.out.println(linkTmp.href);
                     if(url.equals(linkTmp.href)){
-                        System.out.println("url.equals(linkTmp.href)");
+                        //System.out.println("url.equals(linkTmp.href)");
                         url = url.substring(0, url.length()-linkTmp.countSharp);
                         mp.setMailURL(linkTmp.linkText);
                         mp.setRealURL(url);
-                        //System.out.println(linkTmp.linkText);
+                        ////System.out.println(linkTmp.linkText);
                         mp.setLinkInfoIndex(linkInfoIndex);
 
                         //URLの確認画面を開いたことを表すログを書き出す
@@ -454,7 +462,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     public void reply(View view){
         Intent intent = new Intent(getApplication(), CreateActivity.class);
         intent.putExtra("createType", "reply");
-        //System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
+        ////System.out.println("CreateActivity:originalPlanText=" + originalPlanText);
         intent.putExtra("replyTextMessage", originalPlanText);
         startActivity(intent);
     }
@@ -508,12 +516,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //　Multipart形式のメールの場合
                 Multipart multiContent = (Multipart) mailContent;
                 originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
-                //System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
+                ////System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
-                //System.out.println("\n"+html+"\n");
+                ////System.out.println("\n"+html+"\n");
                 extractImginMlt(multiContent);//imageを抽出し，ImgPartListに追加
                 if(html == null){
-                    //System.out.println("html==null");
+                    ////System.out.println("html==null");
                     html = xformHTML(originalPlanText);//html形式に直す
                 }
                 html = setImageInHTML(html);
@@ -606,6 +614,19 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         return escapeStr;
     }
 
+
+    private void extractLinkInfo(String html){
+        Document document = Jsoup.parse(html);
+        //タグから要素をすべて取得する // 今回は a タグ
+        Elements elements = document.getElementsByTag("a");
+        for (Element element :elements) {
+            // 取得した要素の href属性の値を表示する
+            System.out.println("linktext:" + element.text());
+            System.out.println("URL:" + element.attr("href"));
+        }
+    }
+
+
     private String setImageInHTML(String html) {
 
         StringBuilder htmlBuilder = new StringBuilder();
@@ -626,7 +647,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     try {
                         if(img.getHeader("Content-ID")[0].contains(src)){
                             String[] fileName = img.getFileName().split("\\.");
-                            //System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
+                            ////System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
 
                             //画像のバイト列取得
                             ByteArrayOutputStream byOutStr = new ByteArrayOutputStream();
@@ -654,9 +675,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     }
 
     public String insertMosaicToHTML(String html) {
-
         //tagを正規表現で探す準備
-        String tagRegex = "<(\".*?\"|'.*?'|[^'\"])*?>";
+        //String tagRegex = "<(\".*?\"|'.*?'|[^'\"])*?>";
+        String tagRegex = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
         Pattern tagPtrn = Pattern.compile(tagRegex, Pattern.CASE_INSENSITIVE);
         Matcher tagMtch = tagPtrn.matcher(html);
 
@@ -714,9 +735,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         for(int i=styleInsertIndex; i<tagInfoList.size(); i++){
             tagMtch.find(tagInfoList.get(i).start);
             String group = tagMtch.group();
+
             if(group.startsWith("</head")){
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, style);
                 diff += styleLen;
+            }
+            else if(group.startsWith("</body")){
+                mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
+                diff += endMosaicLen;
+                bodyFlag = false;
+                break;
             }
             else if(group.startsWith("<body")){
                 mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
@@ -728,17 +756,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
                 diff += startMosaicLen;
             }
-            else if(group.startsWith("</body")){
-                mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
-                diff += endMosaicLen;
-                bodyFlag = false;
-                break;
-            }
             else if(group.startsWith("<a")){
                 aFlag = true;
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
                 diff += endMosaicLen;
-
+                /*
                 //リンクテキスト取得
                 LinkInfo anchor = new LinkInfo();
                 for(int j=i; j<tagInfoList.size(); j++){
@@ -748,12 +770,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     }
                 }
                 //anchor.linkText = mosaicHtml.substring(tagInfoList.get(i).end + diff, tagInfoList.get(i+1).start + diff);
-                //System.out.println(anchor.linkText);
+                ////System.out.println(anchor.linkText);
 
                 //URL取得
                 Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
                 Matcher StdUrlMtch = StdUrlPtrn.matcher(group);
-                //System.out.println(group);
+                ////System.out.println(group);
 
                 if(StdUrlMtch.find(0)){
                     anchor.href = StdUrlMtch.group();
@@ -782,14 +804,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     diff += hashLen;
                     anchor.countSharp = hashLen;
 
-                    //System.out.println("anchor.href = "+anchor.href);
+                    ////System.out.println("anchor.href = "+anchor.href);
 
 
                     //linkInfoListに追加
                     linkInfoList.add(anchor);
-                }
-
-
+                }*/
             }
             else if(group.startsWith("<img")){
                 /*
@@ -805,7 +825,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                             try {
                                 if(img.getHeader("Content-ID")[0].contains(src)){
                                     String[] fileName = img.getFileName().split("\\.");
-                                    System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
+                                    //System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
 
                                     //画像のバイト列取得
                                     ByteArrayOutputStream byOutStr = new ByteArrayOutputStream();
@@ -832,7 +852,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 */
                 continue;
             }
-            else if(group.startsWith("<br")){
+            else if(group.startsWith("<br") || group.startsWith("<hr") ){
                 continue;
             }else if(bodyFlag && !aFlag){
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
@@ -841,6 +861,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 diff += startMosaicLen;
             }
         }
+        System.out.println(mosaicHtml.toString());
         return mosaicHtml.toString();
     }
 
@@ -853,7 +874,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 BodyPart bodypart = mltPart.getBodyPart(i);
                 String bodyContentType = bodypart.getContentType();
 
-                //System.out.println("====bodyContentType=" + bodyContentType + "(BrowseActivity)====");
+                ////System.out.println("====bodyContentType=" + bodyContentType + "(BrowseActivity)====");
                 if(bodyContentType.contains("multipart")){
                     Multipart multiContent = (Multipart) bodypart.getContent();
                     plain = extractPlaininMlt(multiContent);

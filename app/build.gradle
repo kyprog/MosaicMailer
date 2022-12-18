@@ -58,6 +58,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'commons-io:commons-io:2.5'
+    implementation 'org.jsoup:jsoup:1.13.1'
     //implementation 'com.github.scribejava:scribejava-apis:8.3.2'
     //implementation 'com.github.scribejava:scribejava-core:8.3.2'
     //implementation 'com.microsoft.azure:msal4j:1.7.1'
