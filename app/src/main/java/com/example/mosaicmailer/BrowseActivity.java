@@ -8,9 +8,11 @@ import androidx.fragment.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -49,6 +51,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     String originalHTML;
     String originalPlanText;
     ArrayList<BodyPart> ImgPartList = new ArrayList<>();
+
+    //private Handler handler = new Handler();
 
     final String WINDOW = "mail_browse_window";
 
@@ -112,13 +116,21 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     return true;
                 }
             }
+            /*
+            @Override
+            public void onPageFinished(WebView view, String url) {    // STEP3
+                view.loadUrl("javascript:window.BrowseActivity.viewSource(document.documentElement.outerHTML);");
+            }*/
         });
         //body.getSettings().setLoadWithOverviewMode(true);
         //body.getSettings().setUseWideViewPort(true);
+        //body.getSettings().setJavaScriptEnabled(true);
         body.getSettings().setBuiltInZoomControls(true);
         body.getSettings().setDisplayZoomControls(false);
         body.setLongClickable(true);
         body.setOnLongClickListener(this);
+
+        //body.addJavascriptInterface(this, "BrowseActivity");    // STEP1
 
         //データを受け取る
         ListType = getIntent().getStringExtra("ListType");
@@ -135,7 +147,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //このメールが既読か未読か調べる
                 seen = msg.getFlags().contains(Flags.Flag.SEEN);
-                if(seen){
+                if(seen || !mp.habitFunction){
                     MosaicMode = false;
                 }else{
                     MosaicMode = true;
@@ -155,6 +167,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 for(Address toTmp : toArray){
                     toAddress.append(toTmp.toString());
                 }
+                //System.out.println("-------------"+toAddress);
 
                 //差出人のメールアドレス取得
                 mp.setSenderMailAddress(addrFrom.getAddress());
@@ -213,6 +226,19 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         });
 
     }
+
+    /*
+    @JavascriptInterface    // STEP2
+    public void viewSource(final String src) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                //TextView text = (TextView) findViewById(R.id.textView);
+                //text.setText(src);    // STEP4
+                System.out.println(src);
+            }
+        });
+    }*/
 
     // メニューをActivity上に設置する
     @Override
@@ -393,7 +419,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     System.out.println(url);
                     System.out.println(linkTmp.href);
                     if(url.equals(linkTmp.href)){
-                        System.out.println("---------------------");
+                        System.out.println("url.equals(linkTmp.href)");
                         url = url.substring(0, url.length()-linkTmp.countSharp);
                         mp.setMailURL(linkTmp.linkText);
                         mp.setRealURL(url);
@@ -484,8 +510,10 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 originalPlanText = extractPlaininMlt(multiContent);//　text/plainの抽出
                 //System.out.println("=====originalPlanText=" + originalPlanText + "(BrowseActivity)=====");
                 String html = extractHTMLinMlt(multiContent);//　text/htmlの抽出
+                //System.out.println("\n"+html+"\n");
                 extractImginMlt(multiContent);//imageを抽出し，ImgPartListに追加
                 if(html == null){
+                    //System.out.println("html==null");
                     html = xformHTML(originalPlanText);//html形式に直す
                 }
                 html = setImageInHTML(html);
@@ -527,6 +555,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         String editHtmlStr = editHtml.toString();
         Pattern MoUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
         Matcher MoUrlMtch = MoUrlPtrn.matcher(editHtmlStr);
+
         ////ズレ
         int diff = 0;
         while (MoUrlMtch.find()){
@@ -567,6 +596,13 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 .replace("×", "&times;")
                 .replace("÷", "&divide;")
                 .replace("=", "&equals;");
+        return escapeStr;
+    }
+
+    private String reverseEscapeStr(String str) {
+        String escapeStr = str.replace("&amp;", "&")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">");
         return escapeStr;
     }
 
@@ -661,6 +697,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         boolean bodyFlag = false;
         //aタグが見つかったかフラグ
         boolean aFlag = false;
+
         //mosaic開始タグ
         String startMosaic = "<div id=\"Mosaic\">";
         int startMosaicLen = startMosaic.length();
@@ -694,6 +731,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             else if(group.startsWith("</body")){
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
                 diff += endMosaicLen;
+                bodyFlag = false;
                 break;
             }
             else if(group.startsWith("<a")){
@@ -720,6 +758,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 if(StdUrlMtch.find(0)){
                     anchor.href = StdUrlMtch.group();
 
+                    //anchor.href = reverseEscapeStr(anchor.href);
+
                     //URLがユニークかどうかのフラグ
                     boolean uniqueHref = false;
                     //追加する#の数
@@ -741,6 +781,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
                     diff += hashLen;
                     anchor.countSharp = hashLen;
+
+                    //System.out.println("anchor.href = "+anchor.href);
+
 
                     //linkInfoListに追加
                     linkInfoList.add(anchor);
@@ -791,8 +834,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             }
             else if(group.startsWith("<br")){
                 continue;
-            }
-            else if(bodyFlag && !aFlag){
+            }else if(bodyFlag && !aFlag){
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
                 diff += endMosaicLen;
                 mosaicHtml.insert(tagInfoList.get(i).end + diff, startMosaic);
