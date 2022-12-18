@@ -65,7 +65,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     class LinkInfo{
         String linkText;
         String href;
-        int countSharp;
+        //int countSharp;
         boolean check = false;
     }
 
@@ -175,12 +175,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //メール内のリンク一覧数の取得
                 countAllLink = linkInfoList.size();
-
-                System.out.println("countAllLink:"+countAllLink);
-                for(LinkInfo tmp:linkInfoList){
-                    System.out.println("linkText:"+tmp.linkText);
-                    System.out.println("href:"+tmp.href);
-                }
 
                 //開いたメールのURL総数を表すログを書き出す
                 mp.writeLog(WINDOW,"all URL number of this mail is " + countAllLink);
@@ -412,7 +406,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     //System.out.println(linkTmp.href);
                     if(url.equals(linkTmp.href)){
                         //System.out.println("url.equals(linkTmp.href)");
-                        url = url.substring(0, url.length()-linkTmp.countSharp);
+                        while(url.endsWith("#")){
+                            url = url.substring(0, url.length()-1);
+                        }
                         mp.setMailURL(linkTmp.linkText);
                         mp.setRealURL(url);
                         ////System.out.println(linkTmp.linkText);
@@ -723,6 +719,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 "</style>";
         int styleLen = style.length();
 
+        ArrayList<String> URLList = new ArrayList<String>();
+        //URL取得の準備
+        Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
 
         for(int i=styleInsertIndex; i<tagInfoList.size(); i++){
             tagMtch.find(tagInfoList.get(i).start);
@@ -752,6 +751,35 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 aFlag = true;
                 mosaicHtml.insert(tagInfoList.get(i).start + diff, endMosaic);
                 diff += endMosaicLen;
+
+                Matcher StdUrlMtch = StdUrlPtrn.matcher(group);
+
+                if(StdUrlMtch.find(0)) {
+                    String URL = StdUrlMtch.group();
+
+                    //URLがユニークかどうかのフラグ
+                    boolean uniqueHref = false;
+                    //追加する#の数
+                    int hashLen = 0;
+
+                    while (!uniqueHref) {
+                        uniqueHref = true;
+                        for (String tmp : URLList) {
+                            if (URL.equals(tmp)) {
+                                URL = URL + "#";
+                                hashLen++;
+                                uniqueHref = false;
+                                break;
+                            }
+                        }
+                    }
+                    //URLListへの追加
+                    URLList.add(URL);
+
+                    //#の追加
+                    mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
+                    diff += hashLen;
+                }
                 /*
                 //リンクテキスト取得
                 LinkInfo anchor = new LinkInfo();
