@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +45,6 @@ import javax.mail.internet.InternetAddress;
 public class BrowseActivity extends AppCompatActivity implements View.OnLongClickListener{
     MailProcessing mp;
     ArrayList<LinkInfo> linkInfoList = new ArrayList<LinkInfo>();
-    ArrayList<LinkInfo> newLinkInfoList = new ArrayList<LinkInfo>();
     int countCheckedLink = 0;//チェックしたリンク数
     int countAllLink = 0;//リンクの総数
     boolean MosaicMode = true;
@@ -57,8 +57,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     String originalHTML;
     String originalPlanText;
     ArrayList<BodyPart> ImgPartList = new ArrayList<>();
-
-    //private Handler handler = new Handler();
 
     final String WINDOW = "mail_browse_window";
 
@@ -122,11 +120,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     return true;
                 }
             }
-            /*
-            @Override
-            public void onPageFinished(WebView view, String url) {    // STEP3
-                view.loadUrl("javascript:window.BrowseActivity.viewSource(document.documentElement.outerHTML);");
-            }*/
         });
         //body.getSettings().setLoadWithOverviewMode(true);
         //body.getSettings().setUseWideViewPort(true);
@@ -135,8 +128,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         body.getSettings().setDisplayZoomControls(false);
         body.setLongClickable(true);
         body.setOnLongClickListener(this);
-
-        //body.addJavascriptInterface(this, "BrowseActivity");    // STEP1
 
         //データを受け取る
         ListType = getIntent().getStringExtra("ListType");
@@ -180,10 +171,16 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //メールの本文中のテキストをモザイク化しセッティング
                 String mosaicMailStr = Mosaic();
-                //extractLinkInfo(originalHTML);
+                extractLinkInfo(mosaicMailStr);
 
                 //メール内のリンク一覧数の取得
                 countAllLink = linkInfoList.size();
+
+                System.out.println("countAllLink:"+countAllLink);
+                for(LinkInfo tmp:linkInfoList){
+                    System.out.println("linkText:"+tmp.linkText);
+                    System.out.println("href:"+tmp.href);
+                }
 
                 //開いたメールのURL総数を表すログを書き出す
                 mp.writeLog(WINDOW,"all URL number of this mail is " + countAllLink);
@@ -234,19 +231,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         });
 
     }
-
-    /*
-    @JavascriptInterface    // STEP2
-    public void viewSource(final String src) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                //TextView text = (TextView) findViewById(R.id.textView);
-                //text.setText(src);    // STEP4
-                //System.out.println(src);
-            }
-        });
-    }*/
 
     // メニューをActivity上に設置する
     @Override
@@ -615,14 +599,22 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     }
 
 
-    private void extractLinkInfo(String html){
+    private void extractLinkInfo(String html){//リンクテキストとURLの取得
+
         Document document = Jsoup.parse(html);
-        //タグから要素をすべて取得する // 今回は a タグ
         Elements elements = document.getElementsByTag("a");
+
         for (Element element :elements) {
-            // 取得した要素の href属性の値を表示する
-            System.out.println("linktext:" + element.text());
-            System.out.println("URL:" + element.attr("href"));
+            LinkInfo anchor = new LinkInfo();
+            anchor.linkText = element.text();
+            if( (anchor.linkText!=null) && (!anchor.linkText.isBlank()) ){
+
+                anchor.href = element.attr("href");
+                if(Patterns.WEB_URL.matcher(anchor.href).matches()){
+                    //linkInfoListに追加
+                    linkInfoList.add(anchor);
+                }
+            }
         }
     }
 
