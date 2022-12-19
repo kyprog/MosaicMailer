@@ -60,6 +60,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
     final String WINDOW = "mail_browse_window";
 
+    //メールを開いた時刻と閉じた時刻
+    long startTime,endTime;
+
     static BrowseActivity instance = new BrowseActivity();
 
     class LinkInfo{
@@ -224,6 +227,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             }
         });
 
+        // メールを開いたの時刻を取得
+        startTime = System.currentTimeMillis();
+
     }
 
     // メニューをActivity上に設置する
@@ -268,6 +274,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     mp.writeLog(WINDOW,"end confirmation mailAddress&URL");
                 }
 
+                // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
+                endTime = System.currentTimeMillis();
+                mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
                 finish();
                 return true;
             case R.id.reply:
@@ -311,6 +320,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
+                    // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
+                    endTime = System.currentTimeMillis();
+                    mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
                     finish();
                 }
                 else if(!mp.phishingFlag){
@@ -329,6 +341,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
+                    // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
+                    endTime = System.currentTimeMillis();
+                    mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
                     finish();
                 }
             });
@@ -366,6 +381,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
+                    // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
+                    endTime = System.currentTimeMillis();
+                    mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
                     finish();
                 }
                 else if(!mp.phishingFlag){
@@ -384,6 +402,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
+                    // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
+                    endTime = System.currentTimeMillis();
+                    mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
                     finish();
                 }
             });
