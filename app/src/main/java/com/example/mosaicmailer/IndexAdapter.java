@@ -279,7 +279,8 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
-                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    //見た注意喚起メールがタップされたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW,"tap checked alertMail");
                                     openMessage(ps);
                                 }
                                 else {//それ以外をタップした場合

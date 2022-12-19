@@ -110,7 +110,7 @@ public class MailProcessing extends Application {
 
     //注意喚起メール関連
     boolean existAlert = false; //未読の注意喚起メールがあるかどうかのフラグ
-    List<Message> AlertList = new ArrayList<Message>();
+    List<Message> AlertList = new ArrayList<Message>();//未読の注意喚起メール一覧
     String sourceAlertMail = "";
     Message latestAlertMail = null;//直近で読んだ注意喚起メール
 
