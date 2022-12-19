@@ -1007,7 +1007,7 @@ public class MailProcessing extends Application {
     }
 
     private String timeStr() {
-        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
         final Date date = new Date(System.currentTimeMillis());
         return df.format(date);
     }
