@@ -36,6 +36,7 @@ public class SettingFunctionActivity extends PreferenceActivity {
         //System.out.println("numberInViewable is "+mp.numberInViewable);
 
         //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
+        mp.writeLog(WINDOW,"change function");
         mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
         mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
 
