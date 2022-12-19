@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SettingActivity extends AppCompatActivity {
     final String WINDOW = "mail_setting_window";
@@ -72,7 +75,11 @@ public class SettingActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//APIレベル19以降
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TITLE, mp.logFileName);
+
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+        final Date date = new Date(System.currentTimeMillis());
+
+        intent.putExtra(Intent.EXTRA_TITLE, "MosaicLog"+df.format(date)+"_"+mp.accountInfo);
         resultLauncher.launch(intent);
 
     }
