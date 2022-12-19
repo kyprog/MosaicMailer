@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -141,7 +142,8 @@ public class MailProcessing extends Application {
     boolean scrolledBottomUnread = false;
     ////現在開いているメールが注意喚起メールかどうか
     boolean currentMessageIsAlert = false;
-
+    ////KYのアドレス一覧
+    String[] addressKYs = {"s18t312@kagawa-u.ac.jp"};
     //-----------------------------------------
 
 
@@ -645,6 +647,27 @@ public class MailProcessing extends Application {
             e.printStackTrace();
         }
         return currentMessageIsAlert;
+    }
+
+    public boolean isFromKY(int ps, String listType) {//FromがKYかどうか
+        try {
+            Message msg = MessageList.get(ps);;
+
+            if(listType.equals("search")){
+                msg = SearchResultList.get(ps);
+            }
+
+            final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
+            String mailAddress = addrFrom.getAddress();
+            for(String addressKY : addressKYs){
+                if(mailAddress.equals(addressKY)){
+                    return true;
+                }
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean isUnreadAlertMessege(int ps) {//未読注意喚起メールかどうかの判定

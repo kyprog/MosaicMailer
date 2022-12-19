@@ -227,6 +227,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     mp.isAlertMail = mp.isAlertMessage(ps);
                     boolean isLatestAlert = mp.isLatestAlert(ps);
                     boolean isUnreadAlert = mp.isUnreadAlertMessege(ps);
+                    boolean isFromKY = mp.isFromKY(ps, "index");
                     try {
                         //System.out.println("mp.habitFunction="+mp.habitFunction);
                         //System.out.println("mp.phaseSearchAlertMail="+mp.phaseSearchAlertMail);
@@ -237,40 +238,60 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                             if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    mp.writeLog(WINDOW,"tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                     openMessage(ps);
                                 }
                                 else {//それ以外をタップした場合
-                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    if(isFromKY) {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    }else{
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"******\" [can't open]");
+                                    }
                                     mp.showSearchPhishingAlert(v);
                                 }
                             } else if (mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズ
                                 if (mp.scrolledBottomUnread == false) {//一番下の未読メールまでスクロールしていないでタップした場合
-                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    if(isFromKY) {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                    }else{
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"******\" [can't open]");
+                                    }
                                     mp.showSearchHeadUpAlert(v);
                                     mp.changeShowSearchedHeadUpAlertFlag(true);
                                 }
                                 else if (mp.existAlert) {//未読の注意喚起メールがある場合
                                     if (isUnreadAlert) {//未読の注意喚起メールをタップした場合
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                         //注意喚起メールがタップされたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap unread alertMail");
                                         mp.latestAlertMail = mp.MessageList.get(ps);
                                         openMessage(ps);
                                     }
                                     else {//未読の注意喚起メール以外をタップした場合
-                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                        if(isFromKY) {
+                                            //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                            mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can't open]");
+                                        }else{
+                                            //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                            mp.writeLog(WINDOW, "tap mail in index \"******\" [can't open]");
+                                        }
                                         mp.showOpenHeadUpAlert(v);
                                     }
                                 }
                             }
                             else {//注意喚起メールを探すフェーズでもフィッシングメールを探すフェーズでもない
-                                //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                if(isFromKY) {
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                }else{
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail in index \"******\" [can open]");
+                                }
                                 openMessage(ps);
                             }
                         }
@@ -278,41 +299,61 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                             if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    mp.writeLog(WINDOW,"tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                     //見た注意喚起メールがタップされたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap checked alertMail");
                                     openMessage(ps);
                                 }
                                 else {//それ以外をタップした場合
-                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    if(isFromKY) {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    }else{
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"******\" [can open]");
+                                    }
                                     openMessage(ps);
                                 }
                             } else if (mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズ
                                 if (!mp.scrolledBottomUnread) {//一番下の未読メールまでスクロールしていないでタップした場合
-                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    if(isFromKY) {
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    }else{
+                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                        mp.writeLog(WINDOW, "tap mail in index \"******\" [can open]");
+                                    }
                                     openMessage(ps);
                                 }
                                 else if (mp.existAlert) {//未読の注意喚起メールがある場合
                                     if (isUnreadAlert) {//未読の注意喚起メールをタップした場合
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                         //注意喚起メールがタップされたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap unread alertMail");
                                         mp.latestAlertMail = mp.MessageList.get(ps);
                                         openMessage(ps);
                                     }
                                     else {//未読の注意喚起メール以外をタップした場合
-                                        //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        if(isFromKY) {
+                                            //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                            mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                        }else{
+                                            //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                            mp.writeLog(WINDOW, "tap mail in index \"******\" [can open]");
+                                        }
                                         openMessage(ps);
                                     }
                                 }
                             }
                             else {//注意喚起メールを探すフェーズでもフィッシングメールを探すフェーズでもない
-                                //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
-                                mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                if(isFromKY) {
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail in index \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                }else{
+                                    //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
+                                    mp.writeLog(WINDOW, "tap mail in index \"******\" [can open]");
+                                }
                                 openMessage(ps);
                             }
                         }

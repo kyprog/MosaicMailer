@@ -126,16 +126,26 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MainViewHo
             @Override
             public void onClick(View v) {
                 int ps = holder.getLayoutPosition();
-                //System.out.println(ps);
 
                 try {
                     boolean unreadtmp = !mp.SearchResultList.get(ps).getFlags().contains(Flags.Flag.SEEN);
+                    boolean isFromKY = mp.isFromKY(ps, "search");
                     if(unreadtmp == true){
-                        //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
-                        mp.writeLog(WINDOW,"tap mail \"" + mp.SearchResultList.get(ps).getSubject() + "\" [unread]");
+                        if(isFromKY) {
+                            //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                            mp.writeLog(WINDOW,"tap mail in search \"" + mp.SearchResultList.get(ps).getSubject() + "\" [unread]");
+                        }else{
+                            //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                            mp.writeLog(WINDOW,"tap mail in search \"******\" [unread]");
+                        }
                     }else{
-                        //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
-                        mp.writeLog(WINDOW,"tap mail \"" + mp.SearchResultList.get(ps).getSubject() + "\" [read]");
+                        if(isFromKY) {
+                            //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                            mp.writeLog(WINDOW,"tap mail in search \"" + mp.SearchResultList.get(ps).getSubject() + "\" [read]");
+                        }else{
+                            //開いたメールのタイトルとそのメールが未読メールかどうかを表すログの書き出し
+                            mp.writeLog(WINDOW,"tap mail in search \"******\" [read]");
+                        }
                     }
                 } catch (MessagingException e) {
                     e.printStackTrace();

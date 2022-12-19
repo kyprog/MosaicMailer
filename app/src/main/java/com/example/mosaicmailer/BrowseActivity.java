@@ -161,6 +161,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 String sender = addrFrom.getPersonal();
                 mp.setSenderName(sender);
 
+                //差出人のメールアドレス取得
+                mp.setSenderMailAddress(addrFrom.getAddress());
+
                 //メールの受信者の取得
                 final Address[] toArray = msg.getRecipients(Message.RecipientType.TO);
                 StringBuilder toAddress = new StringBuilder();
@@ -168,9 +171,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     toAddress.append(toTmp.toString());
                 }
                 ////System.out.println("-------------"+toAddress);
-
-                //差出人のメールアドレス取得
-                mp.setSenderMailAddress(addrFrom.getAddress());
 
                 //メールの本文中のテキストをモザイク化しセッティング
                 String mosaicMailStr = Mosaic();
