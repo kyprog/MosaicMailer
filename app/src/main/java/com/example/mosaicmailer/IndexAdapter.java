@@ -257,7 +257,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                         //注意喚起メールがタップされたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW,"tap alertMail");
+                                        mp.writeLog(WINDOW,"tap unread alertMail");
                                         mp.latestAlertMail = mp.MessageList.get(ps);
                                         openMessage(ps);
                                     }
@@ -279,6 +279,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
+                                    mp.writeLog(WINDOW,"tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                     openMessage(ps);
                                 }
                                 else {//それ以外をタップした場合
@@ -297,7 +298,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW, "tap mail \"" + mp.MessageList.get(ps).getSubject() + "\" [can open]");
                                         //注意喚起メールがタップされたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW,"tap alertMail");
+                                        mp.writeLog(WINDOW,"tap unread alertMail");
                                         mp.latestAlertMail = mp.MessageList.get(ps);
                                         openMessage(ps);
                                     }
@@ -340,7 +341,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                         //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                         mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
                                         //注意喚起メールがタップされたかどうかを表すログの書き出し
-                                        mp.writeLog(WINDOW,"tap alertMail");
+                                        mp.writeLog(WINDOW,"tap unread alertMail");
                                     } catch (MessagingException e) {
                                         e.printStackTrace();
                                     }
@@ -401,7 +402,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                                     //タップしたメールのタイトルと開けたかどうかを表すログの書き出し
                                     mp.writeLog(WINDOW,"tap mail \"" + mp. MessageList.get(ps).getSubject() + "\" [can open]");
                                     //注意喚起メールがタップされたかどうかを表すログの書き出し
-                                    mp.writeLog(WINDOW,"tap alertMail");
+                                    mp.writeLog(WINDOW,"tap unread alertMail");
                                 } catch (MessagingException e) {
                                     e.printStackTrace();
                                 }
