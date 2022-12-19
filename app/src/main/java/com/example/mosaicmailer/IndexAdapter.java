@@ -456,33 +456,28 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
         });
         holder.mrecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                //System.out.println("topPosition" + mLinearLayoutManager.findFirstVisibleItemPosition() +
-                //        "/" + "bottomPosition" + mLinearLayoutManager.findLastVisibleItemPosition());
-                //スクロール距離を計算するための位置番号のログを書き出す
-                //mp.writeLog(WINDOW,"scroll topPosition " + mLinearLayoutManager.findFirstVisibleItemPosition() +
-                //        "/" + "bottomPosition " + mLinearLayoutManager.findLastVisibleItemPosition());
-            }
-            @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState){
                 int ps = holder.getLayoutPosition();
-                //System.out.println(ps);
-                if(!mp.SearchedHeadUpFlag && ps+1>=mp.oldestMailPosition){
-                    if( mp.showSearchedHeadUpAlertFlag){
-                        if(mp.messageFunction){
-                            mp.SearchHeadUpAlert.dismiss();
+                if(mp.phaseSearchAlertMail) {//注意喚起メールを探すフェーズの時
+                    if (/*!mp.SearchedHeadUpFlag &&*/ ps + 1 >= mp.oldestMailPosition) {//一番下の未読メールまでスクロールした時
+                        if(mp.scrolledBottomUnread == false){//一番下の未読メールまでスクロールしたと判定されてない時
+                            //一番下の未読メールまでスクロールしたことを表すログの書き出し
+                            mp.writeLog(WINDOW, "scroll to the bottom unread mail position");
+                            mp.scrolledBottomUnread = true;
                         }
-                        mp.changeShowSearchedHeadUpAlertFlag(false);
-                        mp.changeSearchedHeadUpFlag(true);
-                        mp.scrolledBottomUnread = true;
-                    }
-                    //一番下の未読メールまでスクロールしたことを表すログの書き出し
-                    mp.writeLog(WINDOW,"scroll to the bottom unread mail position");
-                    if(!mp.existAlert){
-                        //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
-                        mp.phaseSearchAlertMail = false;
-                        mp.scrolledBottomUnread = true;
-                        mp.writeLog(WINDOW,"end searchAlert");
+
+                        if (mp.showSearchedHeadUpAlertFlag) {//注意喚起メールを探せメッセージが出ている時
+                            if (mp.messageFunction) {
+                                mp.SearchHeadUpAlert.dismiss();
+                            }
+                            mp.changeShowSearchedHeadUpAlertFlag(false);
+                        }
+                        if (!mp.existAlert) {
+                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                            mp.changeSearchedHeadUpFlag(true);
+                            mp.phaseSearchAlertMail = false;
+                            mp.writeLog(WINDOW, "end searchAlert");
+                        }
                     }
                 }
 
