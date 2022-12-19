@@ -121,7 +121,12 @@ public class IndexActivity extends AppCompatActivity
             }
             mp.changeSearchedHeadUpFlag(true);
             mp.scrolledBottomUnread = true;
-            if(!mp.existAlert){mp.phaseSearchAlertMail = false;}
+            //画面内に一番下の未読メールがある場合と無い場合がわかるように，画面内に一番下の未読メールが収まっているかどうか表すログの書き出し
+            mp.writeLog(WINDOW, "bottom unread mail exist in the screen");
+            if(!mp.existAlert){
+                mp.phaseSearchAlertMail = false;
+                mp.writeLog(WINDOW, "end searchAlert");
+            }
             //System.out.println("-----");
         }
 

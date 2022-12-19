@@ -228,11 +228,11 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                     boolean isLatestAlert = mp.isLatestAlert(ps);
                     boolean isUnreadAlert = mp.isUnreadAlertMessege(ps);
                     try {
-                        System.out.println("mp.habitFunction="+mp.habitFunction);
-                        System.out.println("mp.phaseSearchAlertMail="+mp.phaseSearchAlertMail);
-                        System.out.println("mp.phaseSearchPhishing="+mp.phaseSearchPhishing);
-                        System.out.println("mp.scrolledBottomUnread="+mp.scrolledBottomUnread);
-                        System.out.println("mp.existAlert="+mp.existAlert);
+                        //System.out.println("mp.habitFunction="+mp.habitFunction);
+                        //System.out.println("mp.phaseSearchAlertMail="+mp.phaseSearchAlertMail);
+                        //System.out.println("mp.phaseSearchPhishing="+mp.phaseSearchPhishing);
+                        //System.out.println("mp.scrolledBottomUnread="+mp.scrolledBottomUnread);
+                        //System.out.println("mp.existAlert="+mp.existAlert);
                         if (mp.habitFunction) {//習慣化機能onの場合
                             if (mp.phaseSearchPhishing) {//フィッシングメールを探すフェーズ
                                 if (isLatestAlert) {//見た注意喚起メールをタップした場合
