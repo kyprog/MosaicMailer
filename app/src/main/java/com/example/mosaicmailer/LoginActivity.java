@@ -23,7 +23,6 @@ import java.util.concurrent.Executors;
 public class LoginActivity extends AppCompatActivity {
     MailProcessing mp;
     DatabaseHelper helper = null;
-    ProgressBar progressBar;
     String loginType=null;
     final String WINDOW = "login_window";
 
@@ -54,8 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         //開いた画面のログの書き出し
         mp.writeLog(WINDOW,"open " + WINDOW);
 
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
         //ログインタイプ
         loginType = getIntent().getStringExtra("loginType");
 
@@ -90,9 +87,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginClick(View view) {
-        progressBar.setVisibility(android.widget.ProgressBar.VISIBLE);
-        //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログイン処理中", Snackbar.LENGTH_INDEFINITE);
-        //loginSnackbar.show();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
 
@@ -138,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
         if(loginType==null){
             Intent intent = new Intent(getApplication(), IndexActivity.class);
             startActivity(intent);
@@ -148,9 +141,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(String mailaddress, String password) {
-        progressBar.setVisibility(android.widget.ProgressBar.VISIBLE);
-        //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログイン処理中", Snackbar.LENGTH_INDEFINITE);
-        //loginSnackbar.show();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Executors.newSingleThreadExecutor().execute(() -> {
             //System.out.println(mailaddress+","+password);
@@ -173,7 +163,6 @@ public class LoginActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
         Intent intent = new Intent(getApplication(), IndexActivity.class);
         startActivity(intent);
 
