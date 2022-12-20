@@ -2,6 +2,13 @@ plugins {
     id 'com.android.application'
 }
 
+static def getCustomVersionCode() {
+    return new Date().format('yyMMdd').toInteger()
+}
+static def getCustomVersionCode2() {
+    return new Date().format('HHmmss').toInteger()
+}
+
 android {
     compileSdk 33
 
@@ -10,7 +17,7 @@ android {
         minSdk 21
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "1.0-${getCustomVersionCode()}${getCustomVersionCode2()}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

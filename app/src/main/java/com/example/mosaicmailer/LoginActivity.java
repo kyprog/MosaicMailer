@@ -3,8 +3,11 @@ package com.example.mosaicmailer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -43,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
             mp.createLog();//ログ・ファイルの作成
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("firstBoot", false).apply();//値変更
+        }
+
+        String newVersionName = getVersionName(this);
+        String currentVersionName = pref.getString("versionName","1.0");
+        if(!newVersionName.equals(currentVersionName)){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("versionName", newVersionName ).apply();//値変更
+            mp.writeLog(WINDOW,"update");
         }
 
         if(!mp.boot){
@@ -161,6 +172,17 @@ public class LoginActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(getApplication(), IndexActivity.class);
         startActivity(intent);
+    }
 
+    public static String getVersionName(Context context){//バージョン名を取得する
+        PackageManager pm = context.getPackageManager();
+        String versionName = "";
+        try{
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        }catch(PackageManager.NameNotFoundException e){
+            e.printStackTrace();
+        }
+        return versionName;
     }
 }
