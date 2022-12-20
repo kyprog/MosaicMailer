@@ -74,7 +74,7 @@ public class SettingActivity extends AppCompatActivity {
         log = mp.readLog();
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//APIレベル19以降
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
+        intent.setType("text/csv");
 
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
         final Date date = new Date(System.currentTimeMillis());
