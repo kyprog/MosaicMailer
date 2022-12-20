@@ -38,11 +38,12 @@ public class LoginActivity extends AppCompatActivity {
         mp.habitFunction = pref.getBoolean("habitFunction", true);
         mp.messageFunction = pref.getBoolean("messageFunction", true);
         mp.numberInViewable = Integer.parseInt( pref.getString("numberInViewable","10") )-1;
-        //System.out.println("===habit="+mp.habitFunction+"/message="+mp.messageFunction+"===");
 
-        //習慣化機能とメッセージ機能がonかoffどうか表すログの書き出し
-        //mp.writeLog(WINDOW,"habit function is "+ mp.habitFunction);
-        //mp.writeLog(WINDOW,"message function is "+ mp.messageFunction);
+        if( pref.getBoolean("firstBoot", true) ){//初回起動の際，ログ・ファイルを生成する
+            mp.createLog();//ログ・ファイルの作成
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("firstBoot", false).apply();//値変更
+        }
 
         if(!mp.boot){
             //起動ログの書き出し
@@ -56,11 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         //ログインタイプ
         loginType = getIntent().getStringExtra("loginType");
 
-        File file = this.getFileStreamPath(mp.logFileName);
-        if(!file.exists()){
-            //ログ・ファイルの作成
-            mp.createLog();
-        }
     }
 
     @Override
