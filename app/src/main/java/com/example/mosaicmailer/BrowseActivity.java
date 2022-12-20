@@ -68,7 +68,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
     class LinkInfo{
         String linkText;
         String href;
-        //int countSharp;
+        //int countSharp = 0;
         boolean check = false;
     }
 
@@ -147,6 +147,14 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //このメールが既読か未読か調べる
                 seen = msg.getFlags().contains(Flags.Flag.SEEN);
+                if(seen){
+                    //未読メールを開いたことを表すログを書き出す
+                    mp.writeLog(WINDOW,"open unread mail");
+                }else{
+                    //既読メールを開いたことを表すログを書き出す
+                    mp.writeLog(WINDOW,"open read mail");
+                }
+
                 if(seen || !mp.habitFunction){
                     MosaicMode = false;
                 }else{
@@ -212,14 +220,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     }else{//習慣化機能off
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
-
-                    ////System.out.println(mosaicMailStr);
-                    /*for(LinkInfo l : linkInfoList){
-                        //System.out.println("linkText="+ l.linkText + "  /  href=" + l.href );
-                    }*/
-                    //body.setMovementMethod(new ScrollingMovementMethod());
-                    //((TextView) findViewById(R.id.body)).setText(ss);
-                    //((TextView) findViewById(R.id.body)).setMovementMethod(LinkMovementMethod.getInstance());
                 });
 
             } catch (MessagingException e) {
@@ -801,96 +801,8 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                     mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
                     diff += hashLen;
                 }
-                /*
-                //リンクテキスト取得
-                LinkInfo anchor = new LinkInfo();
-                for(int j=i; j<tagInfoList.size(); j++){
-                    if(tagInfoList.get(j).leafStartTag){
-                        anchor.linkText = mosaicHtml.substring(tagInfoList.get(j).end + diff, tagInfoList.get(j+1).start + diff);
-                        break;
-                    }
-                }
-                //anchor.linkText = mosaicHtml.substring(tagInfoList.get(i).end + diff, tagInfoList.get(i+1).start + diff);
-                ////System.out.println(anchor.linkText);
-
-                //URL取得
-                Pattern StdUrlPtrn = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
-                Matcher StdUrlMtch = StdUrlPtrn.matcher(group);
-                ////System.out.println(group);
-
-                if(StdUrlMtch.find(0)){
-                    anchor.href = StdUrlMtch.group();
-
-                    //anchor.href = reverseEscapeStr(anchor.href);
-
-                    //URLがユニークかどうかのフラグ
-                    boolean uniqueHref = false;
-                    //追加する#の数
-                    int hashLen = 0;
-
-                    while (!uniqueHref){
-                        uniqueHref = true;
-                        for(LinkInfo linkTmp : linkInfoList){
-                            if(anchor.href.equals(linkTmp.href)){
-                                anchor.href = anchor.href + "#";
-                                hashLen++;
-                                uniqueHref = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    //#の追加
-                    mosaicHtml.insert(tagInfoList.get(i).start + diff + StdUrlMtch.end(), StringUtils.repeat("#", hashLen));
-                    diff += hashLen;
-                    anchor.countSharp = hashLen;
-
-                    ////System.out.println("anchor.href = "+anchor.href);
-
-
-                    //linkInfoListに追加
-                    linkInfoList.add(anchor);
-                }*/
             }
             else if(group.startsWith("<img")){
-                /*
-                String imageTagRegex = "src\\s*=\\s*([\"'])(.*?)\\1";
-                Pattern imageTagPtrn = Pattern.compile(imageTagRegex, Pattern.CASE_INSENSITIVE);
-                Matcher imageTagMtch = imageTagPtrn.matcher(mosaicHtml.substring(tagInfoList.get(i).start + diff, tagInfoList.get(i).end + diff));
-                if(imageTagMtch.find()){
-                    String src = imageTagMtch.group(2);
-                    if(src.startsWith("cid:")){
-                        src = src.substring(4);
-                        imageTagMtch.start();
-                        for(BodyPart img : ImgPartList){
-                            try {
-                                if(img.getHeader("Content-ID")[0].contains(src)){
-                                    String[] fileName = img.getFileName().split("\\.");
-                                    //System.out.println("---img.getFileName():" + img.getFileName() + "(BrowseActivity)---");
-
-                                    //画像のバイト列取得
-                                    ByteArrayOutputStream byOutStr = new ByteArrayOutputStream();
-                                    img.writeTo(byOutStr);
-                                    String img_content = byOutStr.toString("utf-8");
-                                    int content_start = img_content.indexOf("Content-Transfer-Encoding")+"Content-Transfer-Encoding".length();
-                                    content_start = img_content.indexOf("base64",content_start)+"base64".length();
-                                    img_content = img_content.substring(content_start);
-                                    img_content = img_content.replaceAll("\r\n|\r|\n","");
-                                    String imgData = "data:image/" + fileName[fileName.length-1] + ";"
-                                            + img.getHeader("Content-transfer-encoding")[0] + "," + img_content;
-                                    mosaicHtml.delete(tagInfoList.get(i).start + diff +imageTagMtch.start(2), tagInfoList.get(i).start + diff +imageTagMtch.end(2));
-                                    mosaicHtml.insert(tagInfoList.get(i).start + diff +imageTagMtch.start(2), imgData);
-                                    diff += imageTagMtch.start(2) - imageTagMtch.end(2);
-                                    diff += imgData.length();
-                                    break;
-                                }
-                            } catch (MessagingException | IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-                */
                 continue;
             }
             else if(group.startsWith("<br") || group.startsWith("<hr") ){
