@@ -1091,16 +1091,26 @@ public class MailProcessing extends Application {
 
     public String restoration() {
         Message msg = MosaicTrashList.get(touchedMosaicTrashListPosition);
-        String restoreSubject = "";
+        String restoreSubject = "******";
         try {
             mosaicTrash.copyMessages(new Message[]{msg}, inbox);
             msg.setFlag(Flags.Flag.DELETED, true);
             //mosaicTrash.close(true);
             //mosaicTrash.open(Folder.READ_WRITE);
-            restoreSubject = msg.getSubject();;
+
+            final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
+            String mailAddress = addrFrom.getAddress();
+            for(String addressKY : addressKYs){
+                if(mailAddress.equals(addressKY)){
+                    restoreSubject = msg.getSubject();
+                    break;
+                }
+            }
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
         return restoreSubject;
     }
 }
