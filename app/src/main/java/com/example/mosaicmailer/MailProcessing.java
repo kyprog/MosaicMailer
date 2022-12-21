@@ -603,6 +603,7 @@ public class MailProcessing extends Application {
 
                 if(AlertList.size()>0){
                     existAlert = true;
+                    phaseSearchAlertMail = true;
                 }else{
                     existAlert = false;
                     if(phaseSearchAlertMail && scrolledBottomUnread){
