@@ -90,7 +90,7 @@ public class IndexActivity extends AppCompatActivity
             mp.searchAlert();//注意喚起メールが来ていないか調べる．
             if(mp.existAlert){
                 //注意喚起メールが来ているかどうか表すログの書き出し
-                mp.writeLog(WINDOW,"alertMail come");
+                mp.writeLog(WINDOW,mp.AlertList.size() + " alertMail come");
             }else{
                 //注意喚起メールが来ているかどうか表すログの書き出し
                 mp.writeLog(WINDOW,"alertMail don't come");

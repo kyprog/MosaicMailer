@@ -605,7 +605,7 @@ public class MailProcessing extends Application {
                     existAlert = true;
                 }else{
                     existAlert = false;
-                    if(phaseSearchAlertMail){
+                    if(phaseSearchAlertMail && scrolledBottomUnread){
                         //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                         phaseSearchAlertMail = false;
                         writeLog("tmp","end searchAlert");
@@ -726,7 +726,7 @@ public class MailProcessing extends Application {
                     AlertList.remove(i);
                     if(AlertList.size()==0){
                         existAlert = false;
-                        if(phaseSearchAlertMail){
+                        if(phaseSearchAlertMail && scrolledBottomUnread){
                             //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                             phaseSearchAlertMail = false;
                             writeLog("tmp","end searchAlert");
@@ -752,7 +752,7 @@ public class MailProcessing extends Application {
                         AlertList.remove(i);
                         if(AlertList.size()==0){
                             existAlert = false;
-                            if(phaseSearchAlertMail){
+                            if(phaseSearchAlertMail && scrolledBottomUnread){
                                 //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                                 phaseSearchAlertMail = false;
                                 writeLog("tmp","end searchAlert");
@@ -771,7 +771,7 @@ public class MailProcessing extends Application {
                         AlertList.remove(i);
                         if(AlertList.size()==0){
                             existAlert = false;
-                            if(phaseSearchAlertMail){
+                            if(phaseSearchAlertMail && scrolledBottomUnread){
                                 //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                                 phaseSearchAlertMail = false;
                                 writeLog("tmp","end searchAlert");

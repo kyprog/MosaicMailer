@@ -568,7 +568,7 @@ public class IndexAdapter extends RecyclerView.Adapter<IndexAdapter.MainViewHold
                             }
                             mp.changeShowSearchedHeadUpAlertFlag(false);
                         }
-                        if (!mp.existAlert) {
+                        if (!mp.existAlert && mp.scrolledBottomUnread) {
                             //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
                             mp.changeSearchedHeadUpFlag(true);
                             mp.phaseSearchAlertMail = false;
