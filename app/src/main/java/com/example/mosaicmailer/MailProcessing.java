@@ -1089,15 +1089,18 @@ public class MailProcessing extends Application {
         return result;
     }
 
-    public void restoration() {
+    public String restoration() {
         Message msg = MosaicTrashList.get(touchedMosaicTrashListPosition);
+        String restoreSubject = "";
         try {
             mosaicTrash.copyMessages(new Message[]{msg}, inbox);
             msg.setFlag(Flags.Flag.DELETED, true);
             //mosaicTrash.close(true);
             //mosaicTrash.open(Folder.READ_WRITE);
+            restoreSubject = msg.getSubject();;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        return restoreSubject;
     }
 }

@@ -172,9 +172,9 @@ public class MosaicTrashAdapter extends RecyclerView.Adapter<MosaicTrashAdapter.
                 int ps = holder.getLayoutPosition();
                 Executors.newSingleThreadExecutor().execute(() -> {
                     mp.touchedMosaicTrashListPosition = ps;
-                    mp.restoration();
+                    String subject = mp.restoration();
                     //メールを復元したことを表すログを書き出す
-                    mp.writeLog(WINDOW,"restore mail");
+                    mp.writeLog(WINDOW,"restore mail \""+subject+"\"");
                     mp.reloadMessageList("MosaicTrash");
                     reload(mp.MosaicTrashList);
                 });
