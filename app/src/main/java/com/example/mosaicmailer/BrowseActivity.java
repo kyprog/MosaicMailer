@@ -230,6 +230,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         // メールを開いたの時刻を取得
         startTime = System.currentTimeMillis();
 
+        //習慣化機能offの時
+
+
     }
 
     // メニューをActivity上に設置する
@@ -320,6 +323,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
+                    if( mp.currentMessageIsAlertMessage() ){//注意喚起メールの時
+                        mp.searchPhishingMode = true;
+                        mp.AlertMailSource = originalHTML; //注意喚起メールの内容をmailprocessingにわたす
+
+                        //注意喚起メールの情報をもとにフィッシングメールを探すフェーズが始まったことを表すログを書き出す
+                        mp.phaseSearchPhishing = true;
+                        mp.writeLog(WINDOW,"start searching for phishing mails");
+                    }
+
                     // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す
                     endTime = System.currentTimeMillis();
                     mp.writeLog(WINDOW, "mailTime "+(endTime-startTime)/1000+"s");
@@ -379,6 +391,15 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが終わったことを表すログの書き出し
                         mp.phaseConfirmMail = false;
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
+                    }
+
+                    if( mp.currentMessageIsAlertMessage() ){//注意喚起メールの時
+                        mp.searchPhishingMode = true;
+                        mp.AlertMailSource = originalHTML; //注意喚起メールの内容をmailprocessingにわたす
+
+                        //注意喚起メールの情報をもとにフィッシングメールを探すフェーズが始まったことを表すログを書き出す
+                        mp.phaseSearchPhishing = true;
+                        mp.writeLog(WINDOW,"start searching for phishing mails");
                     }
 
                     // メールを閉じた時刻を取得しメールを開いていた時間を取得しログに書き出す

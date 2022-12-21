@@ -198,6 +198,9 @@ public class IndexActivity extends AppCompatActivity
             e.printStackTrace();
         }*/
 
+        //注意喚起メールが来ていないか調べる．
+        mp.searchAlert();
+
         if(mp.searchPhishingMode){
             mp.SearchPhishingAlertInList(this.getWindow().getDecorView());
         }

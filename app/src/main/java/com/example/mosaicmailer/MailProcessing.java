@@ -603,6 +603,13 @@ public class MailProcessing extends Application {
 
                 if(AlertList.size()>0){
                     existAlert = true;
+                }else{
+                    existAlert = false;
+                    if(phaseSearchAlertMail){
+                        //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                        phaseSearchAlertMail = false;
+                        writeLog("tmp","end searchAlert");
+                    }
                 }
 
             }
@@ -678,7 +685,7 @@ public class MailProcessing extends Application {
             for(Message alert : AlertList){
                 String[] idAlerts = alert.getHeader("Message-ID");
                 String idAlert = idAlerts[0];
-                System.out.println("msg:"+idMsg+"/alert:"+idAlert);
+                //System.out.println("msg:"+idMsg+"/alert:"+idAlert);
                 if(idMsg.equals(idAlert)){return true;}
             }
         } catch (MessagingException e) {
@@ -719,9 +726,11 @@ public class MailProcessing extends Application {
                     AlertList.remove(i);
                     if(AlertList.size()==0){
                         existAlert = false;
-                        //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
-                        phaseSearchAlertMail = false;
-                        writeLog("tmp","end searchAlert");
+                        if(phaseSearchAlertMail){
+                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                            phaseSearchAlertMail = false;
+                            writeLog("tmp","end searchAlert");
+                        }
                     }
                 }
             }
@@ -743,9 +752,11 @@ public class MailProcessing extends Application {
                         AlertList.remove(i);
                         if(AlertList.size()==0){
                             existAlert = false;
-                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
-                            phaseSearchAlertMail = false;
-                            writeLog("tmp","end searchAlert");
+                            if(phaseSearchAlertMail){
+                                //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                                phaseSearchAlertMail = false;
+                                writeLog("tmp","end searchAlert");
+                            }
                         }
                     }
                 }
@@ -760,9 +771,11 @@ public class MailProcessing extends Application {
                         AlertList.remove(i);
                         if(AlertList.size()==0){
                             existAlert = false;
-                            //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
-                            phaseSearchAlertMail = false;
-                            writeLog("tmp","end searchAlert");
+                            if(phaseSearchAlertMail){
+                                //注意喚起メールを探すフェーズが終わったことを表すログの書き出し
+                                phaseSearchAlertMail = false;
+                                writeLog("tmp","end searchAlert");
+                            }
                         }
                     }
                 }
