@@ -60,8 +60,15 @@ public class SearchActivity extends AppCompatActivity {
                 boolean searchedAlertKeyword = mp.AlertMailSource.contains(s);
 
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    //javamailで検索し，該当するメッセージ一覧を取得する
-                    mp.searchMessages(s);
+                    if(!mp.searchPhishingMode){
+                        //javamailで検索し，該当するメッセージ一覧を取得する
+                        mp.searchMessages(s);
+                    }else{
+                        if(searchedAlertKeyword){
+                            //javamailで検索し，該当するメッセージ一覧を取得する
+                            mp.searchMessages(s);
+                        }
+                    }
 
                     //検索結果の未読メール数
                     int countUnread = mp.countUnreadInSearchResultList();
