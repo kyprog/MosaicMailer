@@ -218,6 +218,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                             body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                         }
                     }else{//習慣化機能off
+                        //URLとメールアドレスを確認しフィッシングメールかどうか判定するフェーズが始まったことを表すログの書き出し
+                        mp.phaseConfirmMail = true;
+                        mp.writeLog(WINDOW,"start confirmation mailAddress&URL");
                         body.loadDataWithBaseURL(null, originalHTML, "text/html", "utf-8", null);
                     }
                 });
@@ -250,8 +253,17 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             case R.id.delete:
                 CountDownLatch countDownLatch = new CountDownLatch(1);
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    //学習者が削除したことを表すログを書き出す
-                    mp.writeLog(WINDOW,"delete mail");
+                    boolean isFromKY = mp.isFromKY(msg);
+                    try {
+                        if(isFromKY) {//学習者が削除したことを表すログを書き出す
+                            mp.writeLog(WINDOW, "delete mail \"" + msg.getSubject() + "\"");
+                        }
+                        else{//学習者が削除したことを表すログを書き出す
+                            mp.writeLog(WINDOW, "delete mail \"******\"");
+                        }
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
 
                     mp.deleteMessage(msg);
                     //mp.reloadMessageList(ListType);
@@ -306,6 +318,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+            boolean isAlertMessage = mp.currentMessageIsAlertMessage();
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 if(mp.habitFunction == false){
                     //戻るボタンを押したことを表すログを書き出す
@@ -323,7 +336,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
-                    if( mp.currentMessageIsAlertMessage() ){//注意喚起メールの時
+                    if( isAlertMessage ){//注意喚起メールの時
                         mp.searchPhishingMode = true;
                         mp.AlertMailSource = originalHTML; //注意喚起メールの内容をmailprocessingにわたす
 
@@ -376,6 +389,9 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+
+            boolean isAlertMessage = mp.currentMessageIsAlertMessage();
+
             HandlerCompat.createAsync(getMainLooper()).post(() ->{
                 if(mp.habitFunction == false){
                     //戻るボタンを押したことを表すログを書き出す
@@ -393,7 +409,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                         mp.writeLog(WINDOW, "end confirmation mailAddress&URL");
                     }
 
-                    if( mp.currentMessageIsAlertMessage() ){//注意喚起メールの時
+                    if( isAlertMessage ){//注意喚起メールの時
                         mp.searchPhishingMode = true;
                         mp.AlertMailSource = originalHTML; //注意喚起メールの内容をmailprocessingにわたす
 
@@ -557,7 +573,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
         } catch (IOException | MessagingException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     public String xformHTML(String plainText) {
@@ -835,7 +851,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 diff += startMosaicLen;
             }
         }
-        System.out.println(mosaicHtml.toString());
+        //System.out.println(mosaicHtml.toString());
         return mosaicHtml.toString();
     }
 

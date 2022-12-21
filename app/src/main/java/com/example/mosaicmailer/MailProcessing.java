@@ -498,8 +498,8 @@ public class MailProcessing extends Application {
         try {
             inbox.copyMessages(new Message[]{msg}, mosaicTrash);
             msg.setFlag(Flags.Flag.DELETED, true);
-            inbox.close(true);
-            inbox.open(Folder.READ_WRITE);
+            //inbox.close(true);
+            //inbox.open(Folder.READ_WRITE);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -623,11 +623,11 @@ public class MailProcessing extends Application {
             Message msg = MessageList.get(ps);
             String[] idMsgs = msg.getHeader("Message-ID");
             String idMsg = idMsgs[0];
-            System.out.println("count   :"+AlertInfoList.size());
+            //System.out.println("count   :"+AlertInfoList.size());
             for(Message alert : AlertInfoList){
                 String[] idAlerts = alert.getHeader("Message-ID");
                 String idAlert = idAlerts[0];
-                System.out.println("msg:"+idMsg+"/alert:"+idAlert);
+                //System.out.println("msg:"+idMsg+"/alert:"+idAlert);
                 if(idMsg.equals(idAlert)){return true;}
             }
         } catch (MessagingException e) {
@@ -664,6 +664,21 @@ public class MailProcessing extends Application {
                 msg = SearchResultList.get(ps);
             }
 
+            final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
+            String mailAddress = addrFrom.getAddress();
+            for(String addressKY : addressKYs){
+                if(mailAddress.equals(addressKY)){
+                    return true;
+                }
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isFromKY(Message msg) {//FromがKYかどうか
+        try {
             final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
             String mailAddress = addrFrom.getAddress();
             for(String addressKY : addressKYs){
@@ -1079,8 +1094,8 @@ public class MailProcessing extends Application {
         try {
             mosaicTrash.copyMessages(new Message[]{msg}, inbox);
             msg.setFlag(Flags.Flag.DELETED, true);
-            mosaicTrash.close(true);
-            mosaicTrash.open(Folder.READ_WRITE);
+            //mosaicTrash.close(true);
+            //mosaicTrash.open(Folder.READ_WRITE);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
