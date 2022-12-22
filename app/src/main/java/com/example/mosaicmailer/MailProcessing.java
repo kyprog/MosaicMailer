@@ -378,17 +378,15 @@ public class MailProcessing extends Application {
     }
 
     public void ReportAlert(View v) {
-        if(messageFunction) {
-            ReportAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
-            ReportAlert.setBackgroundTint(getResources().getColor(R.color.red));
-            ReportAlert.setTextColor(getResources().getColor(R.color.black));
-            ReportAlert.setAction("しました", view -> {
-                //学習者が報告したと答えたことを表すログを書き出す
-                writeLog("tmp","answer \"reported\"");
-                DeleteAlert(v);
-            });
-            ReportAlert.show();
-        }
+        ReportAlert = Snackbar.make(v.findViewById(R.id.bottomLinearLayout), "フィッシングメールの報告をしてください", Snackbar.LENGTH_INDEFINITE);
+        ReportAlert.setBackgroundTint(getResources().getColor(R.color.red));
+        ReportAlert.setTextColor(getResources().getColor(R.color.black));
+        ReportAlert.setAction("しました", view -> {
+            //学習者が報告したと答えたことを表すログを書き出す
+            writeLog("tmp","answer \"reported\"");
+            DeleteAlert(v);
+        });
+        ReportAlert.show();
     }
 
     public void DeleteAlert(View v) {

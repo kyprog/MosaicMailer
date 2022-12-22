@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.mosaicmailer",
+  "applicationId": "com.example.mosaicmailer221222232615",
   "variantName": "release",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "attributes": [],
       "versionCode": 1,
-      "versionName": "1.0-221221213257",
+      "versionName": "1.0-221222232615",
       "outputFile": "app-release.apk"
     }
   ],
