@@ -54,6 +54,27 @@ public class BrowseQuestionFinalDialog extends DialogFragment {
             }
         });
 
+        layout.findViewById(R.id.DontKnowPhishingButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // フィッシングメールであるボタンを押した時の処理
+                activity.removeMosaic();
+                if(mp.messageFunction){
+                    mp.CheckAlert.dismiss();
+                }
+                //フィッシングメールと判断したことを表すログを書き出す
+                mp.writeLog(WINDOW,"judge this mail as phishing(don't know)");
+
+                //フィッシングメールと判断したメールを報告し削除するフェーズが始まったことを表すログを書き出す
+                mp.phaseReportAndRemove = true;
+                mp.writeLog(WINDOW,"start reporting & removing");
+
+                mp.ReportAlert(activity.getWindow().getDecorView());
+                mp.phishingFlag = true;
+                dismiss();
+            }
+        });
+
         layout.findViewById(R.id.NoPhishingButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

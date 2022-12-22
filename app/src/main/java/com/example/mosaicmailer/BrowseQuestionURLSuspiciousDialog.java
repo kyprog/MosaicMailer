@@ -26,8 +26,8 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
     boolean judgeFlag = false;
     TextView judgeText;
     String[] quiestions = {
-            "ドメイン名に全角の文字が使用されていますか",
-            "ドメイン名にIPアドレスが使用されていますか"
+            "ドメイン名(赤い文字の部分)に全角の文字が使用されていますか．\n使用されているなら怪しい，使用されてないなら怪しくないを押してください",
+            "ドメイン名(赤い文字の部分)にIPアドレスが使用されていますか．\n使用されているなら怪しい，使用されてないなら怪しくないを押してください"
             /*"一般的でないTLDが使われていますか",*/
             /*"サブドメインに公式ドメインが使われているかどうか",*/
     };
@@ -74,7 +74,7 @@ public class BrowseQuestionURLSuspiciousDialog extends DialogFragment {
 
         //質問文2の表示
         TextView question2 = layout.findViewById(R.id.textView6);
-        question2.setText("上記を踏まえて，このURLは怪しいですか");
+        question2.setText("");
 
         layout.findViewById(R.id.SuspectButton).setOnClickListener(new View.OnClickListener() {
             @Override
