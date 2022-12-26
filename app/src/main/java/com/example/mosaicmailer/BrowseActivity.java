@@ -163,7 +163,6 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //メールの件名を取得
                 String subject =  msg.getSubject();
-
                 //メールの差出人名を取得
                 final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
                 String sender = addrFrom.getPersonal();
@@ -175,8 +174,12 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //メールの受信者の取得
                 final Address[] toArray = msg.getRecipients(Message.RecipientType.TO);
                 StringBuilder toAddress = new StringBuilder();
-                for(Address toTmp : toArray){
-                    toAddress.append(toTmp.toString());
+                if(toArray == null){
+                    toAddress.append("null");
+                }else{
+                    for(Address toTmp : toArray){
+                        toAddress.append(toTmp.toString());
+                    }
                 }
                 ////System.out.println("-------------"+toAddress);
 

@@ -157,14 +157,6 @@ public class IndexActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         updateFlag = true;
-
-        /*
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        String msg = "";
-        msg += "習慣化機能：" + pref.getBoolean("habitFunction", true);
-        msg += "\nメッセージ機能：" + pref.getBoolean("messageFunction", true);
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        */
     }
 
     @Override

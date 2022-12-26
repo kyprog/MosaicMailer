@@ -101,34 +101,9 @@ public class LoginActivity extends AppCompatActivity {
             String mailaddress = inputMailaddress.getText().toString();
             EditText inputPassword = (EditText) findViewById(R.id.editTextTextPassword);
             String password = inputPassword.getText().toString();
-            //System.out.println(mailaddress+","+password);
-
-            /*
-            //アカウント情報のDBに登録
-            try {
-                helper = new DatabaseHelper(this);
-                SQLiteDatabase db = helper.getWritableDatabase();
-                db.delete("accountsInfo", null, null);
-                ContentValues cv = new ContentValues();
-                cv.put("mailaddress", mailaddress);
-                cv.put("password", password);
-                db.insert("accountsInfo", null, cv);
-                //db.insertWithOnConflict("books", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
 
             mp.connect(mailaddress,password);
 
-            /*
-            loginSuccess = false;
-            loginSuccess = mp.connect(mailaddress,password);
-            if(loginSuccess == false){
-                //progressBar.setVisibility(android.widget.ProgressBar.INVISIBLE);
-                //loginSnackbar = Snackbar.make(findViewById(R.id.loginError), "ログインに失敗しました", Snackbar.LENGTH_SHORT);
-                //loginSnackbar.show();
-                return;
-            }*/
             mp.getMailListAll();
             mp.getMosaicTrashAll();
             countDownLatch.countDown();
