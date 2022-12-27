@@ -36,6 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="件名"
+        android:textColor="#000000"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -65,6 +66,7 @@
                 android:layout_height="30sp"
                 android:onClick="QuestionDialog"
                 android:text="差出人"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -73,6 +75,7 @@
                 android:layout_height="30sp"
                 android:onClick="QuestionDialog"
                 android:text="To:宛先"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
         </LinearLayout>

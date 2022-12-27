@@ -163,6 +163,7 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
 
                 //メールの件名を取得
                 String subject =  msg.getSubject();
+
                 //メールの差出人名を取得
                 final InternetAddress addrFrom = (InternetAddress) msg.getFrom()[0];
                 String sender = addrFrom.getPersonal();

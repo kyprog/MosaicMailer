@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="To"
+            android:textColor="#000000"
             android:textSize="24sp" />
 
         <EditText
@@ -60,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cc"
+            android:textColor="#000000"
             android:textSize="24sp" />
 
         <EditText
@@ -87,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Bcc"
+            android:textColor="#000000"
             android:textSize="24sp" />
 
         <EditText
@@ -107,6 +110,7 @@
         android:ems="10"
         android:hint="件名"
         android:inputType="textEmailSubject"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
