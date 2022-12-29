@@ -48,17 +48,19 @@ public class LoginActivity extends AppCompatActivity {
             editor.putBoolean("firstBoot", false).apply();//値変更
         }
 
-        String newVersionName = getVersionName(this);
-        String currentVersionName = pref.getString("versionName","1.0");
-        if(!newVersionName.equals(currentVersionName)){
+        int newVersionCode = getVersionCode(this);
+        int currentVersionCode = pref.getInt("versionCode",1);
+        //System.out.println("newVersionCode="+newVersionCode);
+        if(newVersionCode!=currentVersionCode){
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString("versionName", newVersionName ).apply();//値変更
-            mp.writeLog(WINDOW,"update");
+            editor.putInt("versionCode", newVersionCode ).apply();//値変更
+            //System.out.println("currentVersionCode="+pref.getInt("versionCode",1));
+            mp.writeLog(WINDOW,"update version"+newVersionCode);
         }
 
         if(!mp.boot){
             //起動ログの書き出し
-            mp.writeLog(WINDOW,"boot MosaicMailer");
+            mp.writeLog(WINDOW,"boot MosaicMailer [version"+newVersionCode+"]");
             mp.boot=true;
         }
 
@@ -149,15 +151,15 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static String getVersionName(Context context){//バージョン名を取得する
+    public static int getVersionCode(Context context){//バージョン名を取得する
         PackageManager pm = context.getPackageManager();
-        String versionName = "";
+        int versionCode = 0;
         try{
             PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
-            versionName = packageInfo.versionName;
+            versionCode = packageInfo.versionCode;
         }catch(PackageManager.NameNotFoundException e){
             e.printStackTrace();
         }
-        return versionName;
+        return versionCode;
     }
 }

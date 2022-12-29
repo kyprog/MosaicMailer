@@ -143,7 +143,7 @@ public class MailProcessing extends Application {
     ////現在開いているメールが注意喚起メールかどうか
     boolean currentMessageIsAlert = false;
     ////KYのアドレス一覧
-    String[] addressKYs = {"s18t312@kagawa-u.ac.jp"};
+    String[] addressKYs = {"s18t312@kagawa-u.ac.jp","s18t312@outlook.com"};
     //-----------------------------------------
 
 
