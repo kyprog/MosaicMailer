@@ -2,23 +2,14 @@ plugins {
     id 'com.android.application'
 }
 
-static def getCustomVersionCode() {
-    return new Date().format('yyMMdd').toInteger()
-}
-static def getCustomVersionCode2() {
-    return new Date().format('HHmmss').toInteger()
-}
-
 android {
     compileSdk 33
 
     defaultConfig {
-        //applicationId "com.example.mosaicmailer${getCustomVersionCode()}${getCustomVersionCode2()}"
         applicationId "com.example.mosaicmailer"
         minSdk 21
         targetSdk 33
         versionCode 1
-        //versionName "1.0-${getCustomVersionCode()}${getCustomVersionCode2()}"
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
