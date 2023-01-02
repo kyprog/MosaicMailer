@@ -148,11 +148,11 @@ public class BrowseActivity extends AppCompatActivity implements View.OnLongClic
                 //このメールが既読か未読か調べる
                 seen = msg.getFlags().contains(Flags.Flag.SEEN);
                 if(seen){
-                    //未読メールを開いたことを表すログを書き出す
-                    mp.writeLog(WINDOW,"open unread mail");
-                }else{
                     //既読メールを開いたことを表すログを書き出す
                     mp.writeLog(WINDOW,"open read mail");
+                }else{
+                    //未読メールを開いたことを表すログを書き出す
+                    mp.writeLog(WINDOW,"open unread mail");
                 }
 
                 if(seen || !mp.habitFunction){
