@@ -59,6 +59,7 @@ public class MailProcessing extends Application {
     Store store = null;
     Folder inbox = null;
     Folder mosaicTrash = null;
+    Folder junk = null;
 
     //現在開いているメッセージ
     Message currentMessage=null;
@@ -143,7 +144,7 @@ public class MailProcessing extends Application {
     ////現在開いているメールが注意喚起メールかどうか
     boolean currentMessageIsAlert = false;
     ////KYのアドレス一覧
-    String[] addressKYs = {"s18t312@kagawa-u.ac.jp","s18t312@outlook.com"};
+    String[] addressKYs = {"s18t312@kagawa-u.ac.jp","s18t312@outlook.com","mai1training0@outlook.com","mai1training1@outlook.com","mai1training2@outlook.com","mai1training3@outlook.com"};
     //-----------------------------------------
 
 
@@ -186,6 +187,7 @@ public class MailProcessing extends Application {
             
             inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
+
             mosaicTrash = store.getFolder("MosaicTrash");
             if (!mosaicTrash.exists()) {
                 if (mosaicTrash.create(Folder.HOLDS_MESSAGES)) {
@@ -193,6 +195,18 @@ public class MailProcessing extends Application {
                 }
             }
             mosaicTrash.open(Folder.READ_WRITE);
+
+            junk = store.getFolder("Junk");
+            junk.open(Folder.READ_WRITE);
+            SearchTerm[] terms = new SearchTerm[addressKYs.length];
+            for (int i=0; i<terms.length; i++){
+                terms[i] = new FromStringTerm(addressKYs[i]);
+            }
+            SearchTerm term = new OrTerm(terms);
+            Message[] tmp = junk.search(term);
+            junk.copyMessages(tmp, inbox);
+            for(Message m : tmp){m.setFlag(Flags.Flag.DELETED, true);}
+
             accountInfo = username;
             passwordInfo = password;
 
