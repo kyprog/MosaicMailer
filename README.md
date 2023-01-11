@@ -13,7 +13,5 @@
 - 生じた場合，習慣化に影響するバグかどうか
 
 ## version
-version2:未読メール(open unread mail)と既読メール(open read mail)のログが逆だったのを修正したもの(version1は逆)
-<!--
-## 研究とは直接関係ない思いつきいい感じに人が気づきそうなホモグリフ攻撃を検出したい
--->
+- version2:未読メール(open unread mail)と既読メール(open read mail)のログが逆だったのを修正したもの(version1は逆)
+- version4:習慣化機能offのときの，全部URLを確認したかログに残せるようになった．
