@@ -59,9 +59,24 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(!mp.boot){
-            //起動ログの書き出し
-            mp.writeLog(WINDOW,"boot MosaicMailer [version"+newVersionCode+"]");
-            mp.boot=true;
+            helper = new DatabaseHelper(this);
+            String[] cols = {"_id", "mailaddress", "keyword"};
+            try {
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cs = db.query("HeadsUpInfo", cols, null, null, null, null, null, null);
+                if (cs.getCount()>0) {
+                    cs.moveToFirst();
+                    //起動ログの書き出し
+                    mp.writeLog(WINDOW,"boot MosaicMailer [version"+newVersionCode+"]["+cs.getString(1)+"/"+cs.getString(2)+"]");
+                    mp.boot=true;
+                }else{
+                    //起動ログの書き出し
+                    mp.writeLog(WINDOW,"boot MosaicMailer [version"+newVersionCode+"][null/null]");
+                    mp.boot=true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //開いた画面のログの書き出し

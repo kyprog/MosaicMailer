@@ -41,6 +41,10 @@ public class BrowseNormalURLDialog extends DialogFragment {
         realURL.setScrollbarFadingEnabled(false);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        activity.setChecked(mp.linkInfoIndex);
+        activity.checkedAll();
+
         return builder.setView(layout).create();
     }
 }

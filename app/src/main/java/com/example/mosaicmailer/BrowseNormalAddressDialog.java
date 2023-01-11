@@ -49,6 +49,10 @@ public class BrowseNormalAddressDialog extends DialogFragment {
         mailAddress.setScrollbarFadingEnabled(false);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        activity.checkedMailAddress = true;
+        activity.checkedAll();
+
         return builder.setView(layout).create();
     }
 }
